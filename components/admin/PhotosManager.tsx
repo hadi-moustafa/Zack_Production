@@ -3,10 +3,26 @@
 import { useState } from "react";
 import Image from "next/image";
 import { photoPublicUrl } from "@/lib/supabaseClient";
+import { SECTION_PHOTO_KEYS } from "@/lib/content";
 import type { Photo } from "@/lib/types";
 
-export default function PhotosManager({ initialPhotos }: { initialPhotos: Photo[] }) {
+type SectionSlot = keyof typeof SECTION_PHOTO_KEYS; // "hero" | "about" | "contact"
+
+const SLOT_LABELS: Record<SectionSlot, string> = {
+  hero: "Hero background",
+  about: "About photo",
+  contact: "Contact background",
+};
+
+export default function PhotosManager({
+  initialPhotos,
+  initialSectionPhotos,
+}: {
+  initialPhotos: Photo[];
+  initialSectionPhotos: Record<SectionSlot, string>;
+}) {
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
+  const [sectionPhotos, setSectionPhotos] = useState(initialSectionPhotos);
   const [uploading, setUploading] = useState(false);
   const [category, setCategory] = useState("");
   const [caption, setCaption] = useState("");
@@ -45,7 +61,29 @@ export default function PhotosManager({ initialPhotos }: { initialPhotos: Photo[
   async function handleDelete(id: string) {
     if (!confirm("Delete this photo?")) return;
     const res = await fetch(`/api/photos?id=${id}`, { method: "DELETE" });
-    if (res.ok) setPhotos((prev) => prev.filter((p) => p.id !== id));
+    if (!res.ok) return;
+
+    setPhotos((prev) => prev.filter((p) => p.id !== id));
+    const photo = photos.find((p) => p.id === id);
+    if (!photo) return;
+    // Clear any section slot that was using this photo.
+    const clearedSlots = (Object.keys(sectionPhotos) as SectionSlot[]).filter(
+      (slot) => sectionPhotos[slot] === photo.storage_path
+    );
+    if (clearedSlots.length > 0) {
+      setSectionPhotos((prev) => {
+        const next = { ...prev };
+        clearedSlots.forEach((slot) => (next[slot] = ""));
+        return next;
+      });
+      await fetch("/api/content", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          entries: clearedSlots.map((slot) => ({ key: SECTION_PHOTO_KEYS[slot], value: "" })),
+        }),
+      });
+    }
   }
 
   async function handleEdit(id: string, field: "category" | "caption", value: string) {
@@ -79,9 +117,25 @@ export default function PhotosManager({ initialPhotos }: { initialPhotos: Photo[
     });
   }
 
+  async function assignSlot(slot: SectionSlot, storagePath: string) {
+    // Toggle off if this photo is already assigned to the slot.
+    const nextValue = sectionPhotos[slot] === storagePath ? "" : storagePath;
+    setSectionPhotos((prev) => ({ ...prev, [slot]: nextValue }));
+    await fetch("/api/content", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entries: [{ key: SECTION_PHOTO_KEYS[slot], value: nextValue }] }),
+    });
+  }
+
   return (
     <section>
       <h2 className="text-lg font-semibold">Photos</h2>
+      <p className="mt-1 text-sm text-neutral-500">
+        Upload photos for the gallery, then use the buttons on each photo to also use it as the
+        hero, about, or contact section background. If a section has none assigned, it falls back
+        to the first uploaded photos in gallery order.
+      </p>
 
       <form onSubmit={handleUpload} className="mt-4 flex flex-wrap items-end gap-3">
         <div>
@@ -141,6 +195,27 @@ export default function PhotosManager({ initialPhotos }: { initialPhotos: Photo[
               className="mt-1 w-full rounded border border-neutral-200 px-2 py-1 text-sm"
               placeholder="Caption"
             />
+
+            <div className="mt-2 flex flex-wrap gap-1">
+              {(Object.keys(SLOT_LABELS) as SectionSlot[]).map((slot) => {
+                const active = sectionPhotos[slot] === photo.storage_path;
+                return (
+                  <button
+                    key={slot}
+                    onClick={() => assignSlot(slot, photo.storage_path)}
+                    className={`rounded-full border px-2 py-1 text-[0.7rem] ${
+                      active
+                        ? "border-neutral-900 bg-neutral-900 text-white"
+                        : "border-neutral-300 text-neutral-600 hover:border-neutral-900"
+                    }`}
+                  >
+                    {active ? "✓ " : ""}
+                    {SLOT_LABELS[slot]}
+                  </button>
+                );
+              })}
+            </div>
+
             <div className="mt-2 flex items-center justify-between">
               <div className="flex gap-1">
                 <button

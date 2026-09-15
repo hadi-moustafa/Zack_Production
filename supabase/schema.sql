@@ -70,6 +70,9 @@ insert into public.page_content (key, value) values
   ('pricing_description', 'Choose the package that fits your needs, or get in touch for something custom.'),
   ('contact_description', 'Have a project in mind? Reach out and let''s talk.'),
   ('contact_phone', ''),
+  ('hero_photo_path', ''),
+  ('about_photo_path', ''),
+  ('contact_photo_path', ''),
   ('footer_email', 'contact@example.com'),
   ('footer_tagline', 'Capturing real moments, one frame at a time.')
 on conflict (key) do nothing;

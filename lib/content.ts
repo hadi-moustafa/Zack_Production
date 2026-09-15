@@ -31,9 +31,19 @@ export const CONTENT_FIELDS: ContentField[] = [
   { key: "footer_tagline", label: "Footer tagline", group: "Contact & Footer", placeholder: "Capturing real moments, one frame at a time." },
 ];
 
-export const CONTENT_DEFAULTS: Record<string, string> = Object.fromEntries(
-  CONTENT_FIELDS.map((f) => [f.key, f.placeholder ?? ""])
-);
+// Which uploaded photo (by storage_path) backs each section's background image.
+// Stored in page_content like everything else, but picked from the Photos
+// manager rather than typed in as text.
+export const SECTION_PHOTO_KEYS = {
+  hero: "hero_photo_path",
+  about: "about_photo_path",
+  contact: "contact_photo_path",
+} as const;
+
+export const CONTENT_DEFAULTS: Record<string, string> = {
+  ...Object.fromEntries(CONTENT_FIELDS.map((f) => [f.key, f.placeholder ?? ""])),
+  ...Object.fromEntries(Object.values(SECTION_PHOTO_KEYS).map((key) => [key, ""])),
+};
 
 export function withDefaults(content: Record<string, string>): Record<string, string> {
   return { ...CONTENT_DEFAULTS, ...content };

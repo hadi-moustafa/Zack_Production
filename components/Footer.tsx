@@ -1,3 +1,4 @@
+import Link from "next/link";
 import SocialLinks from "@/components/SocialLinks";
 import type { SocialLink } from "@/lib/types";
 
@@ -19,7 +20,15 @@ export default function Footer({
             {tagline} · © {new Date().getFullYear()}
           </p>
         ) : null}
-        <SocialLinks links={socialLinks} />
+        <div className="flex items-center gap-5">
+          <SocialLinks links={socialLinks} />
+          <Link
+            href="/admin/dashboard"
+            className="text-xs text-[var(--text-secondary)] transition hover:text-[var(--accent-gold)]"
+          >
+            Admin
+          </Link>
+        </div>
       </div>
     </footer>
   );

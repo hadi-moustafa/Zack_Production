@@ -6,6 +6,7 @@ import ContentManager from "@/components/admin/ContentManager";
 import SocialLinksManager from "@/components/admin/SocialLinksManager";
 import ContactSubmissionsList from "@/components/admin/ContactSubmissionsList";
 import type { Photo, PricingPackage, PageContent, SocialLink, ContactSubmission } from "@/lib/types";
+import { withDefaults, SECTION_PHOTO_KEYS } from "@/lib/content";
 
 export default async function AdminDashboardPage() {
   const supabase = await createServerSupabaseClient();
@@ -24,6 +25,7 @@ export default async function AdminDashboardPage() {
     features: Array.isArray(p.features) ? p.features : [],
   })) as PricingPackage[];
   const content = (contentRes.data ?? []) as PageContent[];
+  const contentMap = withDefaults(Object.fromEntries(content.map((c) => [c.key, c.value])));
   const socialLinks = (socialRes.data ?? []) as SocialLink[];
   const submissions = (submissionsRes.data ?? []) as ContactSubmission[];
 
@@ -36,7 +38,14 @@ export default async function AdminDashboardPage() {
 
       <div className="mt-10 space-y-16">
         <ContentManager initialContent={content} />
-        <PhotosManager initialPhotos={photos} />
+        <PhotosManager
+          initialPhotos={photos}
+          initialSectionPhotos={{
+            hero: contentMap[SECTION_PHOTO_KEYS.hero],
+            about: contentMap[SECTION_PHOTO_KEYS.about],
+            contact: contentMap[SECTION_PHOTO_KEYS.contact],
+          }}
+        />
         <PricingManager initialPackages={pricingPackages} />
         <SocialLinksManager initialLinks={socialLinks} />
         <ContactSubmissionsList submissions={submissions} />

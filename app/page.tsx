@@ -1,5 +1,5 @@
 import { supabasePublic } from "@/lib/supabasePublic";
-import { withDefaults } from "@/lib/content";
+import { withDefaults, SECTION_PHOTO_KEYS } from "@/lib/content";
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -38,9 +38,12 @@ async function getData() {
 export default async function Home() {
   const { photos, pricingPackages, content, socialLinks } = await getData();
 
-  const heroPhoto = photos[0]?.storage_path ?? null;
-  const aboutPhoto = photos[1]?.storage_path ?? photos[0]?.storage_path ?? null;
-  const contactPhoto = photos[2]?.storage_path ?? photos[0]?.storage_path ?? null;
+  const heroPhoto =
+    content[SECTION_PHOTO_KEYS.hero] || photos[0]?.storage_path || null;
+  const aboutPhoto =
+    content[SECTION_PHOTO_KEYS.about] || photos[1]?.storage_path || photos[0]?.storage_path || null;
+  const contactPhoto =
+    content[SECTION_PHOTO_KEYS.contact] || photos[2]?.storage_path || photos[0]?.storage_path || null;
 
   return (
     <>
