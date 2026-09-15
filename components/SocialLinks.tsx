@@ -1,48 +1,49 @@
-import type { ReactElement } from "react";
 import type { SocialLink } from "@/lib/types";
+import { IconInstagram, IconTiktok, IconYoutube, IconTwitter } from "@/components/icons";
 
-const ICONS: Record<string, ReactElement> = {
-  instagram: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-      <path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.21 8.8 2.2 12 2.2zm0 1.8c-3.15 0-3.5.01-4.73.07-.96.04-1.48.2-1.83.34-.46.18-.79.39-1.13.74-.35.34-.56.67-.74 1.13-.14.35-.3.87-.34 1.83C3.17 8.5 3.16 8.85 3.16 12s.01 3.5.07 4.73c.04.96.2 1.48.34 1.83.18.46.39.79.74 1.13.34.35.67.56 1.13.74.35.14.87.3 1.83.34 1.23.06 1.58.07 4.73.07s3.5-.01 4.73-.07c.96-.04 1.48-.2 1.83-.34.46-.18.79-.39 1.13-.74.35-.34.56-.67.74-1.13.14-.35.3-.87.34-1.83.06-1.23.07-1.58.07-4.73s-.01-3.5-.07-4.73c-.04-.96-.2-1.48-.34-1.83a3.02 3.02 0 0 0-.74-1.13 3.02 3.02 0 0 0-1.13-.74c-.35-.14-.87-.3-1.83-.34C15.5 4.01 15.15 4 12 4zm0 3.65a4.35 4.35 0 1 1 0 8.7 4.35 4.35 0 0 1 0-8.7zm0 1.8a2.55 2.55 0 1 0 0 5.1 2.55 2.55 0 0 0 0-5.1zm5.5-2a1.02 1.02 0 1 1-2.04 0 1.02 1.02 0 0 1 2.04 0z" />
-    </svg>
-  ),
-  facebook: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-      <path d="M13.5 21v-7.5h2.5l.5-3h-3V8.5c0-.9.25-1.5 1.53-1.5H16.5V4.3c-.27-.04-1.2-.11-2.28-.11-2.26 0-3.8 1.38-3.8 3.9v2.18H8v3h2.42V21h3.08z" />
-    </svg>
-  ),
-  twitter: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-      <path d="M22 5.9c-.7.3-1.5.5-2.3.6.8-.5 1.5-1.3 1.8-2.3-.8.5-1.7.8-2.6 1a4.1 4.1 0 0 0-7 3.7A11.6 11.6 0 0 1 3.4 4.6a4.1 4.1 0 0 0 1.3 5.5c-.6 0-1.3-.2-1.8-.5v.1c0 2 1.4 3.6 3.3 4-.3.1-.7.1-1.1.1-.3 0-.5 0-.8-.1a4.1 4.1 0 0 0 3.8 2.9A8.3 8.3 0 0 1 2 18.4a11.6 11.6 0 0 0 6.3 1.9c7.5 0 11.7-6.4 11.7-11.9v-.5c.8-.6 1.5-1.3 2-2z" />
-    </svg>
-  ),
+const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
+  instagram: IconInstagram,
+  tiktok: IconTiktok,
+  youtube: IconYoutube,
+  twitter: IconTwitter,
 };
 
 const LABELS: Record<string, string> = {
   instagram: "Instagram",
-  facebook: "Facebook",
-  twitter: "Twitter / X",
+  tiktok: "TikTok",
+  youtube: "YouTube",
+  twitter: "X / Twitter",
 };
 
-export default function SocialLinks({ links }: { links: SocialLink[] }) {
+export default function SocialLinks({
+  links,
+  className = "",
+  iconClassName = "h-4 w-4",
+}: {
+  links: SocialLink[];
+  className?: string;
+  iconClassName?: string;
+}) {
   const active = links.filter((l) => l.url);
   if (active.length === 0) return null;
 
   return (
-    <div className="flex gap-4">
-      {active.map((link) => (
-        <a
-          key={link.platform}
-          href={link.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={LABELS[link.platform] || link.platform}
-          className="text-neutral-500 transition hover:text-neutral-900"
-        >
-          {ICONS[link.platform] || <span className="text-sm">{link.platform}</span>}
-        </a>
-      ))}
+    <div className={`flex gap-3 ${className}`}>
+      {active.map((link) => {
+        const Icon = ICONS[link.platform];
+        return (
+          <a
+            key={link.platform}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={LABELS[link.platform] || link.platform}
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border-subtle)] text-[var(--text-secondary)] transition hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)]"
+          >
+            {Icon ? <Icon className={iconClassName} /> : <span className="text-xs">{link.platform}</span>}
+          </a>
+        );
+      })}
     </div>
   );
 }

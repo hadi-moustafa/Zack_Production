@@ -1,4 +1,6 @@
 import { supabasePublic } from "@/lib/supabasePublic";
+import { withDefaults } from "@/lib/content";
+import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Gallery from "@/components/Gallery";
@@ -25,8 +27,8 @@ async function getData() {
     ...p,
     features: Array.isArray(p.features) ? p.features : [],
   })) as PricingPackage[];
-  const content = Object.fromEntries(
-    ((contentRes.data ?? []) as PageContent[]).map((c) => [c.key, c.value])
+  const content = withDefaults(
+    Object.fromEntries(((contentRes.data ?? []) as PageContent[]).map((c) => [c.key, c.value]))
   );
   const socialLinks = (socialRes.data ?? []) as SocialLink[];
 
@@ -36,30 +38,50 @@ async function getData() {
 export default async function Home() {
   const { photos, pricingPackages, content, socialLinks } = await getData();
 
-  const photographerName = content.photographer_name || "Photographer";
-  const heroTagline = content.hero_tagline || "";
-  const aboutBio = content.about_bio || "";
-  const footerEmail = content.footer_email || "";
-
   const heroPhoto = photos[0]?.storage_path ?? null;
   const aboutPhoto = photos[1]?.storage_path ?? photos[0]?.storage_path ?? null;
+  const contactPhoto = photos[2]?.storage_path ?? photos[0]?.storage_path ?? null;
 
   return (
-    <main className="flex-1">
-      <Hero
-        photographerName={photographerName}
-        tagline={heroTagline}
-        heroPhotoPath={heroPhoto}
-      />
-      <About bio={aboutBio} photoPath={aboutPhoto} />
-      <Gallery photos={photos} />
-      <Pricing packages={pricingPackages} />
-      <ContactForm />
-      <Footer
-        photographerName={photographerName}
-        email={footerEmail}
+    <>
+      <Nav
+        name={content.photographer_name}
+        subtitle={content.brand_subtitle}
         socialLinks={socialLinks}
       />
-    </main>
+      <main className="flex-1">
+        <Hero
+          headline={content.hero_headline}
+          tagline={content.hero_tagline}
+          scriptTagline={content.hero_script_tagline}
+          locationText={content.location_text}
+          capabilityWords={content.capability_words}
+          signatureCredit={content.signature_credit}
+          heroPhotoPath={heroPhoto}
+        />
+        <About
+          bio={content.about_bio}
+          photoPath={aboutPhoto}
+          photoCaption={content.about_photo_caption}
+          photographerName={content.photographer_name}
+          locationText={content.location_text}
+        />
+        <Gallery photos={photos} />
+        <Pricing packages={pricingPackages} description={content.pricing_description} />
+        <ContactForm
+          description={content.contact_description}
+          phone={content.contact_phone}
+          email={content.footer_email}
+          locationText={content.location_text}
+          socialLinks={socialLinks}
+          backgroundPhotoPath={contactPhoto}
+        />
+        <Footer
+          photographerName={content.photographer_name}
+          tagline={content.footer_tagline}
+          socialLinks={socialLinks}
+        />
+      </main>
+    </>
   );
 }

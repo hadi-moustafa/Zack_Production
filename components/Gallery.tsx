@@ -5,9 +5,22 @@ import Image from "next/image";
 import { photoPublicUrl } from "@/lib/supabaseClient";
 import type { Photo } from "@/lib/types";
 
+const INITIAL_COUNT = 8;
+
+// Cycle of grid spans to create a masonry-like, variable-width layout.
+const SPAN_PATTERN = [
+  "sm:col-span-2 sm:row-span-2", // large square
+  "row-span-1",
+  "row-span-2", // portrait
+  "sm:col-span-2", // landscape
+  "row-span-1",
+  "row-span-2",
+];
+
 export default function Gallery({ photos }: { photos: Photo[] }) {
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   const categories = useMemo(() => {
     const set = new Set(photos.map((p) => p.category));
@@ -22,54 +35,74 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
     [photos, activeCategory]
   );
 
+  const shownPhotos = showAll ? visiblePhotos : visiblePhotos.slice(0, INITIAL_COUNT);
+
   if (photos.length === 0) return null;
 
   return (
-    <section id="portfolio" className="mx-auto max-w-6xl px-6 py-20 sm:px-12">
-      <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-500">
-        Portfolio
-      </h2>
-
-      {categories.length > 2 ? (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {categories.map((cat) => (
+    <section id="gallery" className="bg-[var(--bg-dark)] py-24">
+      <div className="mx-auto max-w-6xl px-6 sm:px-10">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="eyebrow">My work</p>
+            <h2 className="font-serif-display mt-4 text-4xl font-semibold text-[var(--text-primary)] sm:text-5xl">
+              Photo Gallery
+            </h2>
+          </div>
+          {visiblePhotos.length > INITIAL_COUNT ? (
             <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`rounded-full border px-4 py-1.5 text-sm transition ${
-                activeCategory === cat
-                  ? "border-neutral-900 bg-neutral-900 text-white"
-                  : "border-neutral-300 text-neutral-600 hover:border-neutral-900"
-              }`}
+              onClick={() => setShowAll((v) => !v)}
+              className="text-sm font-semibold uppercase tracking-widest text-[var(--accent-gold)] hover:opacity-80"
             >
-              {cat}
+              {showAll ? "View less" : "View more →"}
+            </button>
+          ) : null}
+        </div>
+
+        {categories.length > 2 ? (
+          <div className="mt-6 flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => {
+                  setActiveCategory(cat);
+                  setShowAll(false);
+                }}
+                className={`rounded-full border px-4 py-1.5 text-sm transition ${
+                  activeCategory === cat
+                    ? "border-[var(--accent-gold)] text-[var(--accent-gold)]"
+                    : "border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--accent-gold)]"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="mt-10 grid auto-rows-[10rem] grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+          {shownPhotos.map((photo, i) => (
+            <button
+              key={photo.id}
+              onClick={() => setLightboxIndex(i)}
+              className={`group relative overflow-hidden rounded-md bg-neutral-900 ${SPAN_PATTERN[i % SPAN_PATTERN.length]}`}
+            >
+              <Image
+                src={photoPublicUrl(photo.storage_path)}
+                alt={photo.caption || photo.category}
+                fill
+                loading="lazy"
+                sizes="(min-width: 768px) 25vw, 45vw"
+                className="object-cover transition duration-300 group-hover:scale-105"
+              />
             </button>
           ))}
         </div>
-      ) : null}
-
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4">
-        {visiblePhotos.map((photo, i) => (
-          <button
-            key={photo.id}
-            onClick={() => setLightboxIndex(i)}
-            className="group relative aspect-square overflow-hidden rounded-md bg-neutral-100"
-          >
-            <Image
-              src={photoPublicUrl(photo.storage_path)}
-              alt={photo.caption || photo.category}
-              fill
-              loading="lazy"
-              sizes="(min-width: 768px) 30vw, 45vw"
-              className="object-cover transition duration-300 group-hover:scale-105"
-            />
-          </button>
-        ))}
       </div>
 
       {lightboxIndex !== null ? (
         <Lightbox
-          photos={visiblePhotos}
+          photos={shownPhotos}
           index={lightboxIndex}
           onClose={() => setLightboxIndex(null)}
           onNavigate={setLightboxIndex}
@@ -103,7 +136,7 @@ function Lightbox({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
       onClick={onClose}
     >
       <button

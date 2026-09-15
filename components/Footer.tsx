@@ -3,28 +3,22 @@ import type { SocialLink } from "@/lib/types";
 
 export default function Footer({
   photographerName,
-  email,
+  tagline,
   socialLinks,
 }: {
   photographerName: string;
-  email: string;
+  tagline: string;
   socialLinks: SocialLink[];
 }) {
   return (
-    <footer className="border-t border-neutral-200 py-10">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-6 text-center sm:flex-row sm:justify-between sm:px-12 sm:text-left">
-        <p className="text-sm text-neutral-500">
-          © {new Date().getFullYear()} {photographerName}. All rights reserved.
-          {email ? (
-            <>
-              {" "}
-              ·{" "}
-              <a href={`mailto:${email}`} className="hover:text-neutral-900">
-                {email}
-              </a>
-            </>
-          ) : null}
-        </p>
+    <footer className="border-t border-[var(--border-subtle)] bg-[var(--bg-dark)] py-8">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-6 text-center sm:flex-row sm:justify-between sm:px-10 sm:text-left">
+        <span className="font-script text-2xl text-[var(--accent-gold)]">{photographerName}</span>
+        {tagline ? (
+          <p className="text-xs text-[var(--text-secondary)]">
+            {tagline} · © {new Date().getFullYear()}
+          </p>
+        ) : null}
         <SocialLinks links={socialLinks} />
       </div>
     </footer>

@@ -58,16 +58,39 @@ create table if not exists public.contact_submissions (
 -- ---------------------------------------------------------------------------
 insert into public.page_content (key, value) values
   ('photographer_name', 'Zack'),
+  ('brand_subtitle', 'PRODUCTION'),
+  ('location_text', 'City, Country'),
+  ('hero_headline', 'Real Moments'),
   ('hero_tagline', 'Capturing moments that last a lifetime'),
+  ('hero_script_tagline', 'Every frame tells a story'),
+  ('capability_words', 'Photos · Videos · Stories'),
+  ('signature_credit', '— Zack'),
   ('about_bio', 'Write a short bio about the photographer here. Edit this from the admin dashboard.'),
-  ('footer_email', 'contact@example.com')
+  ('about_photo_caption', 'Behind the lens'),
+  ('pricing_description', 'Choose the package that fits your needs, or get in touch for something custom.'),
+  ('contact_description', 'Have a project in mind? Reach out and let''s talk.'),
+  ('contact_phone', ''),
+  ('footer_email', 'contact@example.com'),
+  ('footer_tagline', 'Capturing real moments, one frame at a time.')
 on conflict (key) do nothing;
 
 insert into public.social_links (platform, url) values
   ('instagram', ''),
-  ('facebook', ''),
+  ('tiktok', ''),
+  ('youtube', ''),
   ('twitter', '')
 on conflict (platform) do nothing;
+
+-- Seed a starter set of pricing packages only if none exist yet, so a fresh
+-- project has something to show without blocking on admin data entry.
+insert into public.pricing_packages (name, price, features, sort_order)
+select * from (values
+  ('Basic', '$250', '["1 hour session", "20 edited photos", "Online gallery"]'::jsonb, 0),
+  ('Standard', '$450', '["2 hour session", "50 edited photos", "Online gallery", "Print release"]'::jsonb, 1),
+  ('Premium', '$750', '["4 hour session", "100 edited photos", "Online gallery", "Print release", "Second shooter"]'::jsonb, 2),
+  ('Custom', '', '["Events", "Weddings", "Commercial", "Real Estate"]'::jsonb, 3)
+) as seed(name, price, features, sort_order)
+where not exists (select 1 from public.pricing_packages);
 
 -- ---------------------------------------------------------------------------
 -- Row Level Security
