@@ -19,14 +19,16 @@ export default function AdminLoginPage() {
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-    setLoading(false);
     if (error) {
+      setLoading(false);
       setError(error.message);
       return;
     }
 
+    // Stay in the loading state through navigation — this component is
+    // about to unmount, so there's no "success" state to show here; the
+    // dashboard's own loading.tsx takes over as soon as the URL changes.
     router.push("/admin/dashboard");
-    router.refresh();
   }
 
   return (
@@ -74,9 +76,16 @@ export default function AdminLoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-6 w-full rounded-lg bg-neutral-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-80"
         >
-          {loading ? "Signing in…" : "Sign in"}
+          {loading ? (
+            <>
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              Signing in…
+            </>
+          ) : (
+            "Sign in"
+          )}
         </button>
       </form>
     </main>
