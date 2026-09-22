@@ -79,7 +79,9 @@ on conflict (key) do nothing;
 
 insert into public.social_links (platform, url) values
   ('instagram', ''),
+  ('facebook', ''),
   ('tiktok', ''),
+  ('whatsapp', ''),
   ('youtube', ''),
   ('twitter', '')
 on conflict (platform) do nothing;

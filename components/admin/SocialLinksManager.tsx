@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import type { SocialLink } from "@/lib/types";
+import { SOCIAL_LABELS, SOCIAL_PLACEHOLDERS, withSocialDefaults } from "@/lib/social";
 
 export default function SocialLinksManager({ initialLinks }: { initialLinks: SocialLink[] }) {
-  const [links, setLinks] = useState<SocialLink[]>(initialLinks);
+  const [links, setLinks] = useState<SocialLink[]>(withSocialDefaults(initialLinks));
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -30,14 +31,14 @@ export default function SocialLinksManager({ initialLinks }: { initialLinks: Soc
       <div className="mt-4 space-y-3">
         {links.map((link) => (
           <div key={link.platform}>
-            <label className="block text-sm font-medium capitalize text-neutral-700">
-              {link.platform}
+            <label className="block text-sm font-medium text-neutral-700">
+              {SOCIAL_LABELS[link.platform] ?? link.platform}
             </label>
             <input
               type="url"
               value={link.url}
               onChange={(e) => update(link.platform, e.target.value)}
-              placeholder="https://..."
+              placeholder={SOCIAL_PLACEHOLDERS[link.platform] ?? "https://..."}
               className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
             />
           </div>
