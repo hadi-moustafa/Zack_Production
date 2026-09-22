@@ -29,7 +29,14 @@ const SPAN_PATTERN = [
   "row-span-2",
 ];
 
-export default function Gallery({ photos }: { photos: Photo[] }) {
+export default function Gallery({
+  photos,
+  includeStaticWork = true,
+}: {
+  photos: Photo[];
+  /** Set to false once the built-in media has been imported into the DB, to avoid showing it twice. */
+  includeStaticWork?: boolean;
+}) {
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
@@ -42,15 +49,17 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
       src: photoPublicUrl(p.storage_path),
       caption: p.caption,
     }));
-    const fromStatic: GalleryItem[] = STATIC_WORK_ITEMS.map((w) => ({
-      id: w.id,
-      kind: w.kind,
-      category: w.category,
-      src: w.src,
-      caption: w.caption,
-    }));
+    const fromStatic: GalleryItem[] = includeStaticWork
+      ? STATIC_WORK_ITEMS.map((w) => ({
+          id: w.id,
+          kind: w.kind,
+          category: w.category,
+          src: w.src,
+          caption: w.caption,
+        }))
+      : [];
     return [...fromDb, ...fromStatic];
-  }, [photos]);
+  }, [photos, includeStaticWork]);
 
   const categories = useMemo(() => {
     const set = new Set(items.map((p) => p.category));

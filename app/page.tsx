@@ -66,7 +66,7 @@ export default async function Home() {
           photographerName={content.photographer_name}
           locationText={content.location_text}
         />
-        <Gallery photos={photos} />
+        <Gallery photos={photos} includeStaticWork={content.static_media_imported !== "1"} />
         <Pricing packages={pricingPackages} description={content.pricing_description} />
         <ContactForm
           description={content.contact_description}

@@ -72,6 +72,7 @@ export default function AdminTabs({
               about: contentMap[SECTION_PHOTO_KEYS.about],
               contact: contentMap[SECTION_PHOTO_KEYS.contact],
             }}
+            staticMediaImported={contentMap.static_media_imported === "1"}
           />
         ) : null}
         {tab === "content" ? <ContentManager initialContent={content} /> : null}

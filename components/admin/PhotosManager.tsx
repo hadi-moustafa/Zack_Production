@@ -6,7 +6,7 @@ import { photoPublicUrl } from "@/lib/supabaseClient";
 import { SECTION_PHOTO_KEYS } from "@/lib/content";
 import { STATIC_WORK_ITEMS } from "@/lib/staticWork";
 import type { Photo } from "@/lib/types";
-import { Card, SectionHeading, TextInput, DangerLink } from "@/components/admin/ui";
+import { Card, SectionHeading, TextInput, SecondaryButton, DangerLink } from "@/components/admin/ui";
 import CategoryPicker from "@/components/admin/CategoryPicker";
 import { IconCamera, IconVideo, IconPlay, IconUpload } from "@/components/icons";
 
@@ -24,9 +24,11 @@ const VIDEO_ACCEPT = "video/mp4,video/webm,video/quicktime";
 export default function PhotosManager({
   initialPhotos,
   initialSectionPhotos,
+  staticMediaImported,
 }: {
   initialPhotos: Photo[];
   initialSectionPhotos: Record<SectionSlot, string>;
+  staticMediaImported: boolean;
 }) {
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
   const [sectionPhotos, setSectionPhotos] = useState(initialSectionPhotos);
@@ -34,6 +36,9 @@ export default function PhotosManager({
   const [category, setCategory] = useState("");
   const [caption, setCaption] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [imported, setImported] = useState(staticMediaImported);
+  const [importing, setImporting] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
 
   const photoInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -146,8 +151,37 @@ export default function PhotosManager({
     });
   }
 
+  async function importStaticMedia() {
+    setImporting(true);
+    setImportError(null);
+    const res = await fetch("/api/photos/import-static", { method: "POST" });
+    const body = await res.json().catch(() => ({}));
+    setImporting(false);
+
+    if (!res.ok) {
+      setImportError(body.error || "Import failed.");
+      return;
+    }
+
+    setPhotos((prev) => [...prev, ...body.photos]);
+    setImported(true);
+  }
+
   return (
     <div className="space-y-6">
+      {!imported ? (
+        <Card>
+          <SectionHeading
+            title="Import built-in gallery media"
+            description="Brings the Weddings photos and the Food, Promotions, Graduations, and Wedding video reels into your library so you can edit, re-categorize, delete, or reassign them here — one-time action."
+          />
+          <SecondaryButton onClick={importStaticMedia} disabled={importing}>
+            {importing ? "Importing…" : "Import now"}
+          </SecondaryButton>
+          {importError ? <p className="mt-3 text-sm text-red-600">{importError}</p> : null}
+        </Card>
+      ) : null}
+
       <Card>
         <SectionHeading
           title="Add photo or video"
