@@ -1,6 +1,11 @@
 import Image from "next/image";
 import { photoPublicUrl } from "@/lib/supabaseClient";
+import { publicFileExists } from "@/lib/publicAsset";
 import { IconArrowRight, IconPin } from "@/components/icons";
+import HeroVideo from "@/components/HeroVideo";
+
+const HERO_VIDEO_MP4 = "/videos/hero.mp4";
+const HERO_VIDEO_WEBM = "/videos/hero.webm";
 
 export default function Hero({
   headline,
@@ -19,6 +24,11 @@ export default function Hero({
   signatureCredit: string;
   heroPhotoPath: string | null;
 }) {
+  const hasMp4 = publicFileExists("videos/hero.mp4");
+  const hasWebm = publicFileExists("videos/hero.webm");
+  const hasVideo = hasMp4 || hasWebm;
+  const heroPoster = heroPhotoPath ? photoPublicUrl(heroPhotoPath) : undefined;
+
   return (
     <section
       id="home"
@@ -27,7 +37,13 @@ export default function Hero({
       <div className="letterbox-bar letterbox-top" />
       <div className="letterbox-bar letterbox-bottom" />
 
-      {heroPhotoPath ? (
+      {hasVideo ? (
+        <HeroVideo
+          mp4Src={hasMp4 ? HERO_VIDEO_MP4 : undefined}
+          webmSrc={hasWebm ? HERO_VIDEO_WEBM : undefined}
+          poster={heroPoster}
+        />
+      ) : heroPhotoPath ? (
         <div className="absolute inset-0">
           <Image
             src={photoPublicUrl(heroPhotoPath)}

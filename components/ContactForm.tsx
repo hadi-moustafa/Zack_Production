@@ -78,7 +78,7 @@ export default function ContactForm({
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-10">
         <div className="grid gap-12 lg:grid-cols-3">
-          <Reveal>
+          <Reveal playSound>
             <div className="section-index">
               <span className="num">04</span>
               <span className="line" />

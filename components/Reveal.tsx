@@ -1,18 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useSound } from "@/components/sound/SoundProvider";
 
 export default function Reveal({
   children,
   className = "",
   delay = 0,
+  playSound = false,
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  /** Play a soft film-advance click when this reveal enters the viewport. Reserve for one per-section trigger. */
+  playSound?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const sound = useSound();
 
   useEffect(() => {
     const el = ref.current;
@@ -21,6 +26,7 @@ export default function Reveal({
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true);
+          if (playSound) sound?.playReel();
           observer.disconnect();
         }
       },
@@ -28,6 +34,7 @@ export default function Reveal({
     );
     observer.observe(el);
     return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

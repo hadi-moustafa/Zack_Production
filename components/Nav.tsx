@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import SocialLinks from "@/components/SocialLinks";
+import SoundToggle from "@/components/sound/SoundToggle";
 import { IconMenu, IconClose } from "@/components/icons";
 import type { SocialLink } from "@/lib/types";
 
@@ -56,17 +57,22 @@ export default function Nav({
           ))}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-4 lg:flex">
           <SocialLinks links={socialLinks.filter((l) => l.platform !== "twitter")} />
+          <SoundToggle />
         </div>
 
-        <button
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Toggle menu"
-          className="text-[var(--text-primary)] lg:hidden"
-        >
-          {open ? <IconClose className="h-6 w-6" /> : <IconMenu className="h-6 w-6" />}
-        </button>
+        <div className="flex items-center gap-3 lg:hidden">
+          <SoundToggle />
+          <button
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle menu"
+            data-no-sound
+            className="text-[var(--text-primary)]"
+          >
+            {open ? <IconClose className="h-6 w-6" /> : <IconMenu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
 
       <nav

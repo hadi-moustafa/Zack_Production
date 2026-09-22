@@ -91,6 +91,24 @@ export function IconYoutube(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function IconSpeakerOn(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" {...props}>
+      <path d="M4 9.5h3.2L12 5.8v12.4l-4.8-3.7H4z" strokeLinejoin="round" />
+      <path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function IconSpeakerOff(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" {...props}>
+      <path d="M4 9.5h3.2L12 5.8v12.4l-4.8-3.7H4z" strokeLinejoin="round" />
+      <path d="m16 9 4.5 4.5M20.5 9 16 13.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function IconTwitter(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
