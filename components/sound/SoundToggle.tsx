@@ -12,7 +12,7 @@ export default function SoundToggle({ className = "" }: { className?: string }) 
       type="button"
       data-no-sound
       onClick={sound.toggle}
-      aria-label={sound.enabled ? "Mute sound effects" : "Enable sound effects"}
+      aria-label={sound.enabled ? "Mute sound" : "Enable sound"}
       aria-pressed={sound.enabled}
       className={`flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border-subtle)] text-[var(--text-secondary)] transition hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] ${className}`}
     >

@@ -5,13 +5,13 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 type SoundContextValue = {
   enabled: boolean;
   toggle: () => void;
-  playReel: () => void;
+  /** Hero (or any) video whose audio should follow the global sound toggle. */
+  registerVideo: (el: HTMLVideoElement) => () => void;
 };
 
 const SoundContext = createContext<SoundContextValue | null>(null);
 
 const SHUTTER_SRC = "/sounds/shutter.mp3";
-const REEL_SRC = "/sounds/reel.mp3";
 const STORAGE_KEY = "zp-sound-enabled";
 const POOL_SIZE = 4;
 
@@ -28,18 +28,21 @@ export default function SoundProvider({ children }: { children: React.ReactNode 
   const [enabled, setEnabled] = useState(true);
   const [hydrated, setHydrated] = useState(false);
   const shutterPool = useRef<HTMLAudioElement[]>([]);
-  const reelPool = useRef<HTMLAudioElement[]>([]);
   const shutterIndex = useRef(0);
-  const reelIndex = useRef(0);
+  const videoEls = useRef<Set<HTMLVideoElement>>(new Set());
+  const enabledRef = useRef(enabled);
+
+  useEffect(() => {
+    enabledRef.current = enabled;
+  }, [enabled]);
 
   useEffect(() => {
     shutterPool.current = createPool(SHUTTER_SRC);
-    reelPool.current = createPool(REEL_SRC);
 
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
-      // One-time sync from localStorage on mount, before paint would be ideal,
-      // but this runs client-only so the server-rendered default never flashes.
+      // One-time sync from localStorage on mount — this runs client-only so
+      // the server-rendered default never flashes.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       if (stored !== null) setEnabled(stored === "1");
     } catch {
@@ -57,10 +60,12 @@ export default function SoundProvider({ children }: { children: React.ReactNode 
     }
   }, [enabled, hydrated]);
 
-  // Unlock audio playback on the first user gesture (browser autoplay policy).
+  // Unlock audio playback on the first user gesture (browser autoplay policy),
+  // and — if sound is on by preference — bring any registered video's audio
+  // in at the same time.
   useEffect(() => {
     const unlock = () => {
-      [...shutterPool.current, ...reelPool.current].forEach((audio) => {
+      shutterPool.current.forEach((audio) => {
         audio
           .play()
           .then(() => {
@@ -69,6 +74,12 @@ export default function SoundProvider({ children }: { children: React.ReactNode 
           })
           .catch(() => {});
       });
+      if (enabledRef.current) {
+        videoEls.current.forEach((video) => {
+          video.muted = false;
+          video.play().catch(() => {});
+        });
+      }
     };
     window.addEventListener("pointerdown", unlock, { once: true });
     window.addEventListener("keydown", unlock, { once: true });
@@ -78,10 +89,10 @@ export default function SoundProvider({ children }: { children: React.ReactNode 
     };
   }, []);
 
-  function playFromPool(pool: React.MutableRefObject<HTMLAudioElement[]>, index: React.MutableRefObject<number>) {
-    if (!enabled || pool.current.length === 0) return;
-    const audio = pool.current[index.current % pool.current.length];
-    index.current += 1;
+  function playShutter() {
+    if (!enabled || shutterPool.current.length === 0) return;
+    const audio = shutterPool.current[shutterIndex.current % shutterPool.current.length];
+    shutterIndex.current += 1;
     audio.currentTime = 0;
     audio.play().catch(() => {});
   }
@@ -93,7 +104,7 @@ export default function SoundProvider({ children }: { children: React.ReactNode 
       const target = e.target as HTMLElement | null;
       const el = target?.closest<HTMLElement>("button, a[href]");
       if (!el || el.closest("[data-no-sound]")) return;
-      playFromPool(shutterPool, shutterIndex);
+      playShutter();
     };
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
@@ -103,10 +114,23 @@ export default function SoundProvider({ children }: { children: React.ReactNode 
   const value = useMemo<SoundContextValue>(
     () => ({
       enabled,
-      toggle: () => setEnabled((v) => !v),
-      playReel: () => playFromPool(reelPool, reelIndex),
+      toggle: () => {
+        setEnabled((prev) => {
+          const next = !prev;
+          videoEls.current.forEach((video) => {
+            video.muted = !next;
+            if (next) video.play().catch(() => {});
+          });
+          return next;
+        });
+      },
+      registerVideo: (el: HTMLVideoElement) => {
+        videoEls.current.add(el);
+        return () => {
+          videoEls.current.delete(el);
+        };
+      },
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [enabled]
   );
 

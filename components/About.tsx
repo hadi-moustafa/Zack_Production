@@ -46,7 +46,7 @@ export default function About({
           </div>
         </Reveal>
 
-        <Reveal delay={120} playSound>
+        <Reveal delay={120}>
           <div className="section-index">
             <span className="num">02</span>
             <span className="line" />

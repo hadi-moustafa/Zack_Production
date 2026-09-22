@@ -43,7 +43,7 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
   return (
     <section id="gallery" className="bg-[var(--bg-dark)] py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-10">
-        <Reveal playSound className="flex flex-wrap items-end justify-between gap-4">
+        <Reveal className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <div className="section-index">
               <span className="num">01</span>

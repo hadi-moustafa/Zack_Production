@@ -24,7 +24,7 @@ export default function Pricing({
   return (
     <section id="pricing" className="bg-[var(--bg-dark-alt)] py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-10">
-        <Reveal playSound className="mx-auto max-w-2xl text-center">
+        <Reveal className="mx-auto max-w-2xl text-center">
           <div className="section-index justify-center">
             <span className="num">03</span>
             <span className="line" />
