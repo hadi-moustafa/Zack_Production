@@ -7,7 +7,8 @@ import { withDefaults } from "@/lib/content";
 export default async function AdminDashboardPage() {
   const supabase = await createServerSupabaseClient();
 
-  const [photosRes, pricingRes, contentRes, socialRes, submissionsRes] = await Promise.all([
+  const [{ data: userData }, photosRes, pricingRes, contentRes, socialRes, submissionsRes] = await Promise.all([
+    supabase.auth.getUser(),
     supabase.from("photos").select("*").order("sort_order", { ascending: true }),
     supabase.from("pricing_packages").select("*").order("sort_order", { ascending: true }),
     supabase.from("page_content").select("*"),
@@ -45,6 +46,7 @@ export default async function AdminDashboardPage() {
           pricingPackages={pricingPackages}
           socialLinks={socialLinks}
           submissions={submissions}
+          userEmail={userData.user?.email ?? ""}
         />
       </main>
     </div>

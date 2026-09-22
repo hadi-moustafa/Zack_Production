@@ -6,10 +6,11 @@ import PhotosManager from "@/components/admin/PhotosManager";
 import PricingManager from "@/components/admin/PricingManager";
 import SocialLinksManager from "@/components/admin/SocialLinksManager";
 import ContactSubmissionsList from "@/components/admin/ContactSubmissionsList";
+import AccountSettings from "@/components/admin/AccountSettings";
 import { SECTION_PHOTO_KEYS } from "@/lib/content";
 import type { Photo, PricingPackage, PageContent, SocialLink, ContactSubmission } from "@/lib/types";
 
-type TabId = "media" | "content" | "pricing" | "social" | "messages";
+type TabId = "media" | "content" | "pricing" | "social" | "messages" | "account";
 
 export default function AdminTabs({
   photos,
@@ -18,6 +19,7 @@ export default function AdminTabs({
   pricingPackages,
   socialLinks,
   submissions,
+  userEmail,
 }: {
   photos: Photo[];
   content: PageContent[];
@@ -25,6 +27,7 @@ export default function AdminTabs({
   pricingPackages: PricingPackage[];
   socialLinks: SocialLink[];
   submissions: ContactSubmission[];
+  userEmail: string;
 }) {
   const [tab, setTab] = useState<TabId>("media");
 
@@ -34,6 +37,7 @@ export default function AdminTabs({
     { id: "pricing", label: "Pricing", count: pricingPackages.length },
     { id: "social", label: "Social Links" },
     { id: "messages", label: "Messages", count: submissions.length },
+    { id: "account", label: "Account" },
   ];
 
   return (
@@ -79,6 +83,7 @@ export default function AdminTabs({
         {tab === "pricing" ? <PricingManager initialPackages={pricingPackages} /> : null}
         {tab === "social" ? <SocialLinksManager initialLinks={socialLinks} /> : null}
         {tab === "messages" ? <ContactSubmissionsList submissions={submissions} /> : null}
+        {tab === "account" ? <AccountSettings userEmail={userEmail} /> : null}
       </div>
     </div>
   );
