@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SocialLinks from "@/components/SocialLinks";
 import { IconMenu, IconClose } from "@/components/icons";
 import type { SocialLink } from "@/lib/types";
 
 const LINKS = [
   { href: "#home", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#gallery", label: "Gallery" },
+  { href: "#about", label: "Who I Am" },
+  { href: "#gallery", label: "Work" },
   { href: "#pricing", label: "Pricing" },
   { href: "#contact", label: "Contact" },
 ];
@@ -23,13 +23,25 @@ export default function Nav({
   socialLinks: SocialLink[];
 }) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 sm:px-10">
+    <header
+      className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ${
+        scrolled || open ? "bg-[var(--bg-dark)]/85 backdrop-blur-md border-b border-[var(--border-subtle)]" : "bg-transparent"
+      }`}
+    >
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-10 sm:py-5">
         <a href="#home" className="leading-none">
-          <span className="font-script block text-3xl text-[var(--accent-gold)]">{name}</span>
-          <span className="eyebrow mt-0.5 block text-[0.65rem]">{subtitle}</span>
+          <span className="font-script block text-2xl text-[var(--accent-gold)] sm:text-3xl">{name}</span>
+          <span className="eyebrow mt-0.5 block text-[0.6rem]">{subtitle}</span>
         </a>
 
         <nav className="hidden items-center gap-8 lg:flex">
@@ -37,7 +49,7 @@ export default function Nav({
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium tracking-wide text-[var(--text-primary)] transition hover:text-[var(--accent-gold)]"
+              className="relative text-sm font-medium tracking-wide text-[var(--text-primary)] transition hover:text-[var(--accent-gold)] after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-[var(--accent-gold)] after:transition-all after:duration-300 hover:after:w-full"
             >
               {link.label}
             </a>
@@ -57,23 +69,26 @@ export default function Nav({
         </button>
       </div>
 
-      {open ? (
-        <nav className="flex flex-col gap-1 bg-[var(--bg-dark)]/95 px-6 pb-6 lg:hidden">
-          {LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="py-2 text-sm font-medium tracking-wide text-[var(--text-primary)] hover:text-[var(--accent-gold)]"
-            >
-              {link.label}
-            </a>
-          ))}
-          <div className="pt-3">
-            <SocialLinks links={socialLinks.filter((l) => l.platform !== "twitter")} />
-          </div>
-        </nav>
-      ) : null}
+      <nav
+        className={`flex flex-col gap-1 overflow-hidden bg-[var(--bg-dark)]/95 px-5 backdrop-blur-md transition-[max-height,opacity,padding] duration-300 lg:hidden ${
+          open ? "max-h-96 py-2 pb-6 opacity-100" : "max-h-0 py-0 opacity-0"
+        }`}
+      >
+        {LINKS.map((link, i) => (
+          <a
+            key={link.href}
+            href={link.href}
+            onClick={() => setOpen(false)}
+            className="border-b border-[var(--border-subtle)] py-3 text-base font-medium tracking-wide text-[var(--text-primary)] hover:text-[var(--accent-gold)]"
+            style={{ transitionDelay: `${i * 30}ms` }}
+          >
+            {link.label}
+          </a>
+        ))}
+        <div className="pt-4">
+          <SocialLinks links={socialLinks.filter((l) => l.platform !== "twitter")} />
+        </div>
+      </nav>
     </header>
   );
 }

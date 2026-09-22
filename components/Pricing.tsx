@@ -1,5 +1,6 @@
 import type { PricingPackage } from "@/lib/types";
 import { IconArrowRight, IconCamera, IconStar } from "@/components/icons";
+import Reveal from "@/components/Reveal";
 
 const TIER_ICON: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
   basic: IconCamera,
@@ -18,42 +19,53 @@ export default function Pricing({
 
   const standardTiers = packages.filter((p) => p.price.trim() !== "");
   const customTier = packages.find((p) => p.price.trim() === "");
+  const featuredIndex = Math.min(1, standardTiers.length - 1);
 
   return (
-    <section id="pricing" className="bg-[var(--bg-dark-alt)] py-24">
-      <div className="mx-auto max-w-6xl px-6 sm:px-10">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_2fr]">
-          <div>
-            <p className="eyebrow">Pricing</p>
-            <h2 className="font-serif-display mt-4 text-4xl font-semibold text-[var(--text-primary)] sm:text-5xl">
-              Photography Packages
-            </h2>
-            <p className="mt-6 text-base leading-relaxed text-[var(--text-secondary)]">
-              {description}
-            </p>
-            <a href="#contact" className="btn-ghost mt-8">
-              Book now <IconArrowRight className="h-4 w-4" />
-            </a>
+    <section id="pricing" className="bg-[var(--bg-dark-alt)] py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-5 sm:px-10">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <div className="section-index justify-center">
+            <span className="num">03</span>
+            <span className="line" />
+            <span className="eyebrow">Pricing</span>
           </div>
+          <h2 className="font-serif-display mt-4 text-[clamp(2.25rem,7vw,3.75rem)] font-semibold leading-[1.02] text-[var(--text-primary)]">
+            Photography Packages
+          </h2>
+          <p className="mt-6 text-[clamp(0.95rem,2.4vw,1.05rem)] leading-relaxed text-[var(--text-secondary)]">
+            {description}
+          </p>
+        </Reveal>
 
-          <div className="grid gap-5 sm:grid-cols-2">
-            {standardTiers.map((pkg) => {
-              const Icon = TIER_ICON[pkg.name.toLowerCase()] ?? IconCamera;
-              return (
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {standardTiers.map((pkg, i) => {
+            const Icon = TIER_ICON[pkg.name.toLowerCase()] ?? IconCamera;
+            const featured = i === featuredIndex && standardTiers.length > 1;
+            return (
+              <Reveal key={pkg.id} delay={i * 100}>
                 <div
-                  key={pkg.id}
-                  className="flex flex-col rounded-lg border border-[var(--border-subtle)] p-6"
+                  className={`relative flex h-full flex-col rounded-xl p-7 transition-all duration-300 ${
+                    featured
+                      ? "border border-[var(--accent-gold)] bg-[var(--bg-dark)] shadow-[0_30px_80px_-30px_rgba(201,162,75,0.35)] sm:-translate-y-3"
+                      : "border border-[var(--border-subtle)] hover:border-[var(--accent-gold)]/60"
+                  }`}
                 >
-                  <Icon className="h-6 w-6 text-[var(--accent-gold)]" />
-                  <h3 className="font-serif-display mt-4 text-xl font-semibold text-[var(--text-primary)]">
+                  {featured ? (
+                    <span className="absolute -top-3 left-7 bg-[var(--accent-gold)] px-3 py-1 text-[0.65rem] font-bold uppercase tracking-widest text-[#0a0a0a]">
+                      Most popular
+                    </span>
+                  ) : null}
+                  <Icon className="h-7 w-7 text-[var(--accent-gold)]" />
+                  <h3 className="font-serif-display mt-5 text-2xl font-semibold text-[var(--text-primary)]">
                     {pkg.name}
                   </h3>
-                  <p className="mt-2 text-3xl font-semibold text-[var(--accent-gold)]">
+                  <p className="mt-2 text-4xl font-semibold text-[var(--accent-gold)]">
                     {pkg.price}
                   </p>
-                  <ul className="mt-4 flex-1 space-y-2 text-sm text-[var(--text-secondary)]">
-                    {pkg.features.map((feature, i) => (
-                      <li key={i} className="flex gap-2">
+                  <ul className="mt-5 flex-1 space-y-2.5 text-sm text-[var(--text-secondary)]">
+                    {pkg.features.map((feature, fi) => (
+                      <li key={fi} className="flex gap-2.5">
                         <span className="text-[var(--accent-gold)]" aria-hidden>
                           —
                         </span>
@@ -61,31 +73,37 @@ export default function Pricing({
                       </li>
                     ))}
                   </ul>
-                  <a href="#contact" className="btn-ghost mt-6 justify-center">
-                    Choose plan
+                  <a
+                    href="#contact"
+                    className={featured ? "btn-gold mt-7 justify-center" : "btn-ghost mt-7 justify-center"}
+                  >
+                    Choose plan <IconArrowRight className="h-4 w-4" />
                   </a>
                 </div>
-              );
-            })}
+              </Reveal>
+            );
+          })}
+        </div>
 
-            {customTier ? (
-              <div className="flex flex-col rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-dark)] p-6 sm:col-span-2">
+        {customTier ? (
+          <Reveal delay={standardTiers.length * 100} className="mt-6">
+            <div className="flex flex-col items-start gap-6 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-dark)] p-7 sm:flex-row sm:items-center sm:justify-between">
+              <div>
                 <h3 className="font-serif-display text-xl font-semibold text-[var(--text-primary)]">
                   {customTier.name}
                 </h3>
-                <p className="mt-2 text-lg text-[var(--accent-gold)]">Contact me</p>
-                <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-[var(--text-secondary)]">
+                <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1.5 text-sm text-[var(--text-secondary)]">
                   {customTier.features.map((feature, i) => (
                     <li key={i}>{feature}</li>
                   ))}
                 </ul>
-                <a href="#contact" className="btn-gold mt-6 w-fit">
-                  Get in touch <IconArrowRight className="h-4 w-4" />
-                </a>
               </div>
-            ) : null}
-          </div>
-        </div>
+              <a href="#contact" className="btn-gold w-full shrink-0 justify-center sm:w-fit">
+                Get in touch <IconArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          </Reveal>
+        ) : null}
       </div>
     </section>
   );

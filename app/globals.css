@@ -1,12 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --bg-dark: #0d0d0d;
-  --bg-dark-alt: #141414;
+  --bg-dark: #0a0a0a;
+  --bg-dark-alt: #121212;
   --text-primary: #f5f2ea;
-  --text-secondary: #b8b5ad;
+  --text-secondary: #a8a49a;
   --accent-gold: #c9a24b;
-  --border-subtle: rgba(255, 255, 255, 0.15);
+  --accent-gold-bright: #e8c169;
+  --border-subtle: rgba(255, 255, 255, 0.12);
 }
 
 @theme inline {
@@ -21,10 +22,32 @@
   --font-script: var(--font-script);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--bg-dark);
   color: var(--text-primary);
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent-gold);
+  color: #0a0a0a;
+}
+
+/* Film grain overlay, fixed over the whole page for a cinematic texture */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .font-serif-display {
@@ -37,11 +60,33 @@ body {
 
 .eyebrow {
   font-family: var(--font-inter), Arial, sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--accent-gold);
+}
+
+/* Numbered section label, e.g. "01 — Work" */
+.section-index {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  font-family: var(--font-playfair), Georgia, serif;
+  color: var(--accent-gold);
+}
+
+.section-index .num {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.section-index .line {
+  display: inline-block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--accent-gold);
+  opacity: 0.6;
 }
 
 .btn-ghost {
@@ -50,17 +95,22 @@ body {
   gap: 0.5rem;
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
-  padding: 0.7rem 1.5rem;
-  font-size: 0.8rem;
+  padding: 0.85rem 1.75rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition: border-color 0.25s ease, color 0.25s ease, transform 0.25s ease, background-color 0.25s ease;
 }
 
 .btn-ghost:hover {
   border-color: var(--accent-gold);
   color: var(--accent-gold);
+  transform: translateY(-2px);
+}
+
+.btn-ghost:active {
+  transform: translateY(0);
 }
 
 .btn-gold {
@@ -68,15 +118,114 @@ body {
   align-items: center;
   gap: 0.5rem;
   background: var(--accent-gold);
-  color: #0d0d0d;
-  padding: 0.8rem 1.75rem;
-  font-size: 0.8rem;
+  color: #0a0a0a;
+  padding: 0.9rem 2rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 0 0 0 rgba(201, 162, 75, 0);
 }
 
 .btn-gold:hover {
-  opacity: 0.85;
+  opacity: 0.92;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -10px rgba(201, 162, 75, 0.6);
+}
+
+.btn-gold:active {
+  transform: translateY(0);
+}
+
+/* ---------- Scroll reveal ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Cinematic hero ---------- */
+@keyframes ken-burns {
+  0% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1.18);
+  }
+}
+
+.animate-ken-burns {
+  animation: ken-burns 18s ease-out forwards;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes scroll-cue {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+.animate-scroll-cue {
+  animation: scroll-cue 2s ease-in-out infinite;
+}
+
+/* Letterbox bars for a widescreen, cinematic frame */
+.letterbox-bar {
+  position: absolute;
+  inset-inline: 0;
+  height: clamp(10px, 2.2vw, 26px);
+  background: #000;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.letterbox-top {
+  top: 0;
+}
+
+.letterbox-bottom {
+  bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-ken-burns,
+  .animate-fade-up,
+  .animate-scroll-cue {
+    animation: none;
+  }
 }

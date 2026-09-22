@@ -5,6 +5,7 @@ import Image from "next/image";
 import { photoPublicUrl } from "@/lib/supabaseClient";
 import { IconArrowRight, IconMail, IconPhone, IconPin } from "@/components/icons";
 import SocialLinks from "@/components/SocialLinks";
+import Reveal from "@/components/Reveal";
 import type { SocialLink } from "@/lib/types";
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -62,7 +63,7 @@ export default function ContactForm({
   }
 
   return (
-    <section id="contact" className="relative overflow-hidden bg-[var(--bg-dark)] py-24">
+    <section id="contact" className="relative overflow-hidden bg-[var(--bg-dark)] py-20 sm:py-28">
       {backgroundPhotoPath ? (
         <Image
           src={photoPublicUrl(backgroundPhotoPath)}
@@ -70,19 +71,23 @@ export default function ContactForm({
           fill
           loading="lazy"
           sizes="100vw"
-          className="object-cover opacity-25"
+          className="object-cover opacity-20"
         />
       ) : null}
-      <div className="absolute inset-0 bg-[var(--bg-dark)]/80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-dark)] via-[var(--bg-dark)]/90 to-[var(--bg-dark)]" />
 
-      <div className="relative mx-auto max-w-6xl px-6 sm:px-10">
+      <div className="relative mx-auto max-w-6xl px-5 sm:px-10">
         <div className="grid gap-12 lg:grid-cols-3">
-          <div>
-            <p className="eyebrow">Get in touch</p>
-            <h2 className="font-serif-display mt-4 text-4xl font-semibold text-[var(--text-primary)] sm:text-5xl">
+          <Reveal>
+            <div className="section-index">
+              <span className="num">04</span>
+              <span className="line" />
+              <span className="eyebrow">Get in touch</span>
+            </div>
+            <h2 className="font-serif-display mt-4 text-[clamp(2.25rem,7vw,3.75rem)] font-semibold leading-[1.02] text-[var(--text-primary)]">
               Let&apos;s Work Together
             </h2>
-            <p className="mt-6 text-base leading-relaxed text-[var(--text-secondary)]">
+            <p className="mt-6 text-[clamp(0.95rem,2.4vw,1.05rem)] leading-relaxed text-[var(--text-secondary)]">
               {description}
             </p>
 
@@ -109,11 +114,11 @@ export default function ContactForm({
                 </div>
               ) : null}
             </div>
-          </div>
+          </Reveal>
 
-          <div>
+          <Reveal delay={100}>
             {status === "success" ? (
-              <div className="rounded-lg border border-[var(--border-subtle)] p-8">
+              <div className="rounded-lg border border-[var(--accent-gold)]/50 bg-[var(--bg-dark-alt)] p-8">
                 <p className="text-[var(--text-primary)]">
                   Thanks for reaching out — I&apos;ll get back to you soon.
                 </p>
@@ -159,9 +164,9 @@ export default function ContactForm({
                 </button>
               </form>
             )}
-          </div>
+          </Reveal>
 
-          <div>
+          <Reveal delay={200}>
             <h3 className="font-serif-display text-2xl font-semibold text-[var(--text-primary)]">
               Follow Me
             </h3>
@@ -169,12 +174,12 @@ export default function ContactForm({
               See more of my work and behind-the-scenes moments.
             </p>
             <div className="mt-5">
-              <SocialLinks links={socialLinks} iconClassName="h-4 w-4" />
+              <SocialLinks links={socialLinks} iconClassName="h-4 w-4" className="flex-wrap" />
             </div>
             <p className="font-script mt-8 text-xl text-[var(--accent-gold)]">
               Let&apos;s create something beautiful
             </p>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

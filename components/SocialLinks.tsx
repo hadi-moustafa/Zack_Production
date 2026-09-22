@@ -38,7 +38,7 @@ export default function SocialLinks({
             target="_blank"
             rel="noopener noreferrer"
             aria-label={LABELS[link.platform] || link.platform}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border-subtle)] text-[var(--text-secondary)] transition hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)]"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-subtle)] text-[var(--text-secondary)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] hover:shadow-[0_10px_25px_-10px_rgba(201,162,75,0.6)]"
           >
             {Icon ? <Icon className={iconClassName} /> : <span className="text-xs">{link.platform}</span>}
           </a>

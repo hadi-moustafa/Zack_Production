@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { photoPublicUrl } from "@/lib/supabaseClient";
 import type { Photo } from "@/lib/types";
+import Reveal from "@/components/Reveal";
 
 const INITIAL_COUNT = 8;
 
@@ -40,13 +41,17 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
   if (photos.length === 0) return null;
 
   return (
-    <section id="gallery" className="bg-[var(--bg-dark)] py-24">
-      <div className="mx-auto max-w-6xl px-6 sm:px-10">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+    <section id="gallery" className="bg-[var(--bg-dark)] py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-5 sm:px-10">
+        <Reveal className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="eyebrow">My work</p>
-            <h2 className="font-serif-display mt-4 text-4xl font-semibold text-[var(--text-primary)] sm:text-5xl">
-              Photo Gallery
+            <div className="section-index">
+              <span className="num">01</span>
+              <span className="line" />
+              <span className="eyebrow">My work</span>
+            </div>
+            <h2 className="font-serif-display mt-4 text-[clamp(2.25rem,7vw,3.75rem)] font-semibold leading-[1.02] text-[var(--text-primary)]">
+              Featured Gallery
             </h2>
           </div>
           {visiblePhotos.length > INITIAL_COUNT ? (
@@ -57,10 +62,10 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
               {showAll ? "View less" : "View more →"}
             </button>
           ) : null}
-        </div>
+        </Reveal>
 
         {categories.length > 2 ? (
-          <div className="mt-6 flex flex-wrap gap-2">
+          <div className="mt-8 flex flex-wrap gap-2">
             {categories.map((cat) => (
               <button
                 key={cat}
@@ -80,7 +85,7 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
           </div>
         ) : null}
 
-        <div className="mt-10 grid auto-rows-[10rem] grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+        <div className="mt-10 grid auto-rows-[9rem] grid-cols-2 gap-2.5 sm:auto-rows-[10rem] sm:grid-cols-4 sm:gap-4">
           {shownPhotos.map((photo, i) => (
             <button
               key={photo.id}
@@ -93,8 +98,14 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
                 fill
                 loading="lazy"
                 sizes="(min-width: 768px) 25vw, 45vw"
-                className="object-cover transition duration-300 group-hover:scale-105"
+                className="object-cover transition duration-500 ease-out group-hover:scale-110"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              {photo.caption ? (
+                <span className="absolute bottom-2 left-2.5 right-2.5 translate-y-2 text-left text-xs font-medium text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                  {photo.caption}
+                </span>
+              ) : null}
             </button>
           ))}
         </div>
