@@ -98,9 +98,11 @@ export default function SoundProvider({ children }: { children: React.ReactNode 
   }
 
   // Global click delegation: any button or link plays the shutter sound,
-  // unless explicitly opted out with data-no-sound.
+  // unless explicitly opted out with data-no-sound. Skipped entirely on the
+  // admin dashboard, where rapid clicking through forms made it grating.
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
+      if (window.location.pathname.startsWith("/admin")) return;
       const target = e.target as HTMLElement | null;
       const el = target?.closest<HTMLElement>("button, a[href]");
       if (!el || el.closest("[data-no-sound]")) return;
