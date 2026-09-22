@@ -12,7 +12,7 @@ type SoundContextValue = {
 const SoundContext = createContext<SoundContextValue | null>(null);
 
 const SHUTTER_SRC = "/sounds/shutter.mp3";
-const STORAGE_KEY = "zp-sound-enabled";
+const STORAGE_KEY = "zp-sound-enabled-v2";
 const POOL_SIZE = 4;
 
 function createPool(src: string) {
