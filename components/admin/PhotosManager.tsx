@@ -40,6 +40,7 @@ export default function PhotosManager({
   const [imported, setImported] = useState(staticMediaImported);
   const [importing, setImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
+  const [filterCategory, setFilterCategory] = useState("All");
 
   const photoInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -50,6 +51,18 @@ export default function PhotosManager({
     photos.forEach((p) => set.add(p.category));
     return sortCategories(Array.from(set));
   }, [photos]);
+
+  // Only categories that actually have items — unlike categoryOptions above,
+  // which also suggests ones with nothing uploaded yet.
+  const filterOptions = useMemo(
+    () => ["All", ...sortCategories(Array.from(new Set(photos.map((p) => p.category))))],
+    [photos]
+  );
+
+  const filteredPhotos = useMemo(
+    () => (filterCategory === "All" ? photos : photos.filter((p) => p.category === filterCategory)),
+    [photos, filterCategory]
+  );
 
   async function handleFileSelected(file: File | undefined) {
     if (!file) return;
@@ -125,12 +138,20 @@ export default function PhotosManager({
     });
   }
 
-  async function move(index: number, direction: -1 | 1) {
-    const target = index + direction;
-    if (target < 0 || target >= photos.length) return;
+  async function move(id: string, direction: -1 | 1) {
+    // Swap with the nearest neighbor within the current filter, not just the
+    // next item in the full list, so reordering while filtered by category
+    // actually moves it relative to the items you're looking at.
+    const targetPos = filteredPhotos.findIndex((p) => p.id === id) + direction;
+    if (targetPos < 0 || targetPos >= filteredPhotos.length) return;
+    const otherId = filteredPhotos[targetPos].id;
+
+    const globalA = photos.findIndex((p) => p.id === id);
+    const globalB = photos.findIndex((p) => p.id === otherId);
+    if (globalA === -1 || globalB === -1) return;
 
     const next = [...photos];
-    [next[index], next[target]] = [next[target], next[index]];
+    [next[globalA], next[globalB]] = [next[globalB], next[globalA]];
     setPhotos(next);
 
     await fetch("/api/photos", {
@@ -247,105 +268,127 @@ export default function PhotosManager({
 
       <Card>
         <SectionHeading
-          title={`Gallery items (${photos.length})`}
+          title={`Gallery items (${filteredPhotos.length}${filterCategory === "All" ? "" : ` of ${photos.length}`})`}
           description="Use the pills to set a photo as the hero, about, or contact background. Reorder with the arrows."
         />
 
         {photos.length === 0 ? (
           <p className="text-sm text-neutral-500">No photos or videos uploaded yet.</p>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {photos.map((photo, i) => (
-              <div key={photo.id} className="rounded-lg border border-neutral-200 p-3">
-                <div className="relative aspect-square overflow-hidden rounded-md bg-neutral-100">
-                  {photo.media_type === "video" ? (
-                    <>
-                      <video
-                        src={photoPublicUrl(photo.storage_path)}
-                        className="h-full w-full object-cover"
-                        muted
-                        preload="metadata"
-                      />
-                      <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/20">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90">
-                          <IconPlay className="h-4 w-4 text-neutral-900" />
-                        </span>
-                      </div>
-                      <span className="absolute left-2 top-2 rounded bg-black/60 px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-white">
-                        Video
-                      </span>
-                    </>
-                  ) : (
-                    <Image
-                      src={photoPublicUrl(photo.storage_path)}
-                      alt={photo.caption || photo.category}
-                      fill
-                      sizes="30vw"
-                      className="object-cover"
+          <>
+            <div className="mb-5 flex flex-wrap gap-2">
+              {filterOptions.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setFilterCategory(cat)}
+                  className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
+                    filterCategory === cat
+                      ? "border-neutral-900 bg-neutral-900 text-white"
+                      : "border-neutral-300 text-neutral-600 hover:border-neutral-900"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {filteredPhotos.length === 0 ? (
+              <p className="text-sm text-neutral-500">Nothing in this category yet.</p>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredPhotos.map((photo, i) => (
+                  <div key={photo.id} className="rounded-lg border border-neutral-200 p-3">
+                    <div className="relative aspect-square overflow-hidden rounded-md bg-neutral-100">
+                      {photo.media_type === "video" ? (
+                        <>
+                          <video
+                            src={photoPublicUrl(photo.storage_path)}
+                            className="h-full w-full object-cover"
+                            muted
+                            preload="metadata"
+                          />
+                          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/20">
+                            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90">
+                              <IconPlay className="h-4 w-4 text-neutral-900" />
+                            </span>
+                          </div>
+                          <span className="absolute left-2 top-2 rounded bg-black/60 px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-white">
+                            Video
+                          </span>
+                        </>
+                      ) : (
+                        <Image
+                          src={photoPublicUrl(photo.storage_path)}
+                          alt={photo.caption || photo.category}
+                          fill
+                          sizes="30vw"
+                          className="object-cover"
+                        />
+                      )}
+                    </div>
+
+                    <CategoryPicker
+                      value={photo.category}
+                      categories={categoryOptions}
+                      onChange={(value) => updateCategory(photo.id, value)}
+                      className="mt-2 !py-1.5 text-sm"
                     />
-                  )}
-                </div>
+                    <TextInput
+                      value={photo.caption}
+                      onChange={(e) => handleEdit(photo.id, "caption", e.target.value)}
+                      onBlur={() => handleEditSave(photo.id)}
+                      className="mt-1.5 !py-1.5 text-sm"
+                      placeholder="Caption"
+                    />
 
-                <CategoryPicker
-                  value={photo.category}
-                  categories={categoryOptions}
-                  onChange={(value) => updateCategory(photo.id, value)}
-                  className="mt-2 !py-1.5 text-sm"
-                />
-                <TextInput
-                  value={photo.caption}
-                  onChange={(e) => handleEdit(photo.id, "caption", e.target.value)}
-                  onBlur={() => handleEditSave(photo.id)}
-                  className="mt-1.5 !py-1.5 text-sm"
-                  placeholder="Caption"
-                />
+                    {photo.media_type !== "video" ? (
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {(Object.keys(SLOT_LABELS) as SectionSlot[]).map((slot) => {
+                          const active = sectionPhotos[slot] === photo.storage_path;
+                          return (
+                            <button
+                              key={slot}
+                              onClick={() => assignSlot(slot, photo.storage_path)}
+                              className={`rounded-full border px-2 py-1 text-[0.7rem] transition ${
+                                active
+                                  ? "border-neutral-900 bg-neutral-900 text-white"
+                                  : "border-neutral-300 text-neutral-600 hover:border-neutral-900"
+                              }`}
+                            >
+                              {active ? "✓ " : ""}
+                              {SLOT_LABELS[slot]}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : null}
 
-                {photo.media_type !== "video" ? (
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {(Object.keys(SLOT_LABELS) as SectionSlot[]).map((slot) => {
-                      const active = sectionPhotos[slot] === photo.storage_path;
-                      return (
+                    <div className="mt-3 flex items-center justify-between">
+                      <div className="flex gap-1">
                         <button
-                          key={slot}
-                          onClick={() => assignSlot(slot, photo.storage_path)}
-                          className={`rounded-full border px-2 py-1 text-[0.7rem] transition ${
-                            active
-                              ? "border-neutral-900 bg-neutral-900 text-white"
-                              : "border-neutral-300 text-neutral-600 hover:border-neutral-900"
-                          }`}
+                          onClick={() => move(photo.id, -1)}
+                          disabled={i === 0}
+                          aria-label="Move earlier"
+                          className="rounded border border-neutral-300 px-2 py-1 text-xs disabled:opacity-30"
                         >
-                          {active ? "✓ " : ""}
-                          {SLOT_LABELS[slot]}
+                          ↑
                         </button>
-                      );
-                    })}
+                        <button
+                          onClick={() => move(photo.id, 1)}
+                          disabled={i === filteredPhotos.length - 1}
+                          aria-label="Move later"
+                          className="rounded border border-neutral-300 px-2 py-1 text-xs disabled:opacity-30"
+                        >
+                          ↓
+                        </button>
+                      </div>
+                      <DangerLink onClick={() => handleDelete(photo.id)}>Delete</DangerLink>
+                    </div>
                   </div>
-                ) : null}
-
-                <div className="mt-3 flex items-center justify-between">
-                  <div className="flex gap-1">
-                    <button
-                      onClick={() => move(i, -1)}
-                      disabled={i === 0}
-                      aria-label="Move earlier"
-                      className="rounded border border-neutral-300 px-2 py-1 text-xs disabled:opacity-30"
-                    >
-                      ↑
-                    </button>
-                    <button
-                      onClick={() => move(i, 1)}
-                      disabled={i === photos.length - 1}
-                      aria-label="Move later"
-                      className="rounded border border-neutral-300 px-2 py-1 text-xs disabled:opacity-30"
-                    >
-                      ↓
-                    </button>
-                  </div>
-                  <DangerLink onClick={() => handleDelete(photo.id)}>Delete</DangerLink>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
       </Card>
     </div>
