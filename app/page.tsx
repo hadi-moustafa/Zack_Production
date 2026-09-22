@@ -56,10 +56,6 @@ export default async function Home() {
         <Hero
           headline={content.hero_headline}
           tagline={content.hero_tagline}
-          scriptTagline={content.hero_script_tagline}
-          locationText={content.location_text}
-          capabilityWords={content.capability_words}
-          signatureCredit={content.signature_credit}
           heroPhotoPath={heroPhoto}
         />
         <About
