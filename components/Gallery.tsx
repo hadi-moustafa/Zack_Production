@@ -122,6 +122,7 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
                   src={item.src}
                   caption={item.caption}
                   className={spanClass}
+                  suspended={lightboxIndex !== null}
                   onOpen={() => setLightboxIndex(i)}
                 />
               );

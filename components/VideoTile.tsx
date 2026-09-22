@@ -7,21 +7,28 @@ export default function VideoTile({
   src,
   caption,
   className = "",
+  suspended = false,
   onOpen,
 }: {
   src: string;
   caption?: string;
   className?: string;
+  /** Pause this preview (e.g. while the lightbox is open) to avoid two videos playing/sounding at once. */
+  suspended?: boolean;
   onOpen: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
+  const suspendedRef = useRef(suspended);
+  const isIntersectingRef = useRef(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
+        isIntersectingRef.current = entry.isIntersecting;
+        if (suspendedRef.current) return;
         if (entry.isIntersecting) video.play().catch(() => {});
         else video.pause();
       },
@@ -30,6 +37,17 @@ export default function VideoTile({
     observer.observe(video);
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    suspendedRef.current = suspended;
+    const video = videoRef.current;
+    if (!video) return;
+    if (suspended) {
+      video.pause();
+    } else if (isIntersectingRef.current) {
+      video.play().catch(() => {});
+    }
+  }, [suspended]);
 
   function toggleMute(e: React.MouseEvent | React.KeyboardEvent) {
     e.stopPropagation();
