@@ -5,6 +5,7 @@ import Image from "next/image";
 import { photoPublicUrl } from "@/lib/supabaseClient";
 import { SECTION_PHOTO_KEYS } from "@/lib/content";
 import { STATIC_WORK_ITEMS } from "@/lib/staticWork";
+import { PRIMARY_CATEGORY_ORDER, sortCategories } from "@/lib/categories";
 import type { Photo } from "@/lib/types";
 import { Card, SectionHeading, TextInput, SecondaryButton, DangerLink } from "@/components/admin/ui";
 import CategoryPicker from "@/components/admin/CategoryPicker";
@@ -44,10 +45,10 @@ export default function PhotosManager({
   const videoInputRef = useRef<HTMLInputElement>(null);
 
   const categoryOptions = useMemo(() => {
-    const set = new Set<string>();
+    const set = new Set<string>(PRIMARY_CATEGORY_ORDER);
     STATIC_WORK_ITEMS.forEach((w) => set.add(w.category));
     photos.forEach((p) => set.add(p.category));
-    return Array.from(set).sort((a, b) => a.localeCompare(b));
+    return sortCategories(Array.from(set));
   }, [photos]);
 
   async function handleFileSelected(file: File | undefined) {

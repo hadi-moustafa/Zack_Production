@@ -3,8 +3,15 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { photoPublicUrl } from "@/lib/supabaseClient";
-import { IconArrowRight, IconClose, IconMail, IconPhone, IconPin } from "@/components/icons";
-import SocialLinks from "@/components/SocialLinks";
+import {
+  IconArrowRight,
+  IconClose,
+  IconMail,
+  IconPhone,
+  IconPin,
+  IconWhatsapp,
+} from "@/components/icons";
+import SocialShowcase from "@/components/SocialShowcase";
 import Reveal from "@/components/Reveal";
 import { PLAN_SELECTED_EVENT } from "@/lib/planSelection";
 import type { SocialLink } from "@/lib/types";
@@ -46,6 +53,11 @@ export default function ContactForm({
     window.addEventListener(PLAN_SELECTED_EVENT, onPlanSelected);
     return () => window.removeEventListener(PLAN_SELECTED_EVENT, onPlanSelected);
   }, []);
+
+  const quickWhatsAppUrl = buildWhatsAppUrl(
+    whatsappNumber,
+    "Hi! I'd like to know more about your photography services."
+  );
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -115,43 +127,73 @@ export default function ContactForm({
       <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-dark)] via-[var(--bg-dark)]/90 to-[var(--bg-dark)]" />
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-10">
-        <div className="grid gap-12 lg:grid-cols-3">
-          <Reveal>
-            <div className="section-index">
-              <span className="num">04</span>
-              <span className="line" />
-              <span className="eyebrow">Get in touch</span>
-            </div>
-            <h2 className="font-serif-display mt-4 text-[clamp(2.25rem,7vw,3.75rem)] font-semibold leading-[1.02] text-[var(--text-primary)]">
-              Let&apos;s Work Together
-            </h2>
-            <p className="mt-6 text-[clamp(0.95rem,2.4vw,1.05rem)] leading-relaxed text-[var(--text-secondary)]">
-              {description}
-            </p>
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <div className="section-index justify-center">
+            <span className="num">04</span>
+            <span className="line" />
+            <span className="eyebrow">Get in touch</span>
+          </div>
+          <h2 className="font-serif-display mt-4 text-[clamp(2.25rem,7vw,3.75rem)] font-semibold leading-[1.02] text-[var(--text-primary)]">
+            Let&apos;s Work Together
+          </h2>
+          <p className="mt-6 text-[clamp(0.95rem,2.4vw,1.05rem)] leading-relaxed text-[var(--text-secondary)]">
+            {description}
+          </p>
+        </Reveal>
 
-            <div className="mt-8 space-y-4">
+        <div className="mt-14 grid gap-10 lg:grid-cols-2 lg:gap-16">
+          <Reveal className="flex flex-col">
+            <div className="space-y-4">
               {phone ? (
-                <div className="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
-                  <IconPhone className="h-4 w-4 text-[var(--accent-gold)]" />
+                <a
+                  href={`tel:${phone}`}
+                  className="flex items-center gap-3 text-sm text-[var(--text-secondary)] hover:text-[var(--accent-gold)]"
+                >
+                  <IconPhone className="h-4 w-4 shrink-0 text-[var(--accent-gold)]" />
                   {phone}
-                </div>
+                </a>
               ) : null}
               {email ? (
                 <a
                   href={`mailto:${email}`}
                   className="flex items-center gap-3 text-sm text-[var(--text-secondary)] hover:text-[var(--accent-gold)]"
                 >
-                  <IconMail className="h-4 w-4 text-[var(--accent-gold)]" />
+                  <IconMail className="h-4 w-4 shrink-0 text-[var(--accent-gold)]" />
                   {email}
                 </a>
               ) : null}
               {locationText ? (
                 <div className="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
-                  <IconPin className="h-4 w-4 text-[var(--accent-gold)]" />
+                  <IconPin className="h-4 w-4 shrink-0 text-[var(--accent-gold)]" />
                   {locationText}
                 </div>
               ) : null}
             </div>
+
+            <a
+              href={quickWhatsAppUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative mt-8 flex items-center gap-4 overflow-hidden rounded-xl border border-[#25D366]/40 bg-[#25D366]/10 p-5 transition hover:border-[#25D366] hover:bg-[#25D366]/15"
+            >
+              <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#25D366] text-white">
+                <span className="absolute inset-0 animate-ping rounded-full bg-[#25D366] opacity-40" />
+                <IconWhatsapp className="relative h-6 w-6" />
+              </span>
+              <span>
+                <span className="block text-sm font-semibold text-[var(--text-primary)]">
+                  Prefer WhatsApp?
+                </span>
+                <span className="block text-xs text-[var(--text-secondary)]">
+                  Skip the form — chat with us directly, right now.
+                </span>
+              </span>
+              <IconArrowRight className="ml-auto h-4 w-4 shrink-0 text-[var(--text-secondary)] transition group-hover:translate-x-1 group-hover:text-[#25D366]" />
+            </a>
+
+            <p className="font-script mt-auto pt-10 text-xl text-[var(--accent-gold)]">
+              Let&apos;s create something beautiful
+            </p>
           </Reveal>
 
           <Reveal delay={100}>
@@ -193,37 +235,19 @@ export default function ContactForm({
                   </div>
                 ) : null}
 
-                <input
-                  name="name"
-                  type="text"
-                  required
-                  maxLength={200}
-                  placeholder="Name"
-                  className="w-full border-0 border-b border-[var(--border-subtle)] bg-transparent px-1 py-2.5 text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--accent-gold)] focus:outline-none"
-                />
-                <input
-                  name="phone"
-                  type="tel"
-                  required
-                  maxLength={40}
-                  placeholder="Phone"
-                  className="w-full border-0 border-b border-[var(--border-subtle)] bg-transparent px-1 py-2.5 text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--accent-gold)] focus:outline-none"
-                />
-                <input
-                  name="email"
-                  type="email"
-                  maxLength={320}
-                  placeholder="Email (optional)"
-                  className="w-full border-0 border-b border-[var(--border-subtle)] bg-transparent px-1 py-2.5 text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--accent-gold)] focus:outline-none"
-                />
-                <textarea
-                  name="message"
-                  required
-                  rows={4}
-                  maxLength={5000}
-                  placeholder="Message"
-                  className="w-full border-0 border-b border-[var(--border-subtle)] bg-transparent px-1 py-2.5 text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--accent-gold)] focus:outline-none"
-                />
+                <FormField name="name" type="text" required maxLength={200} placeholder="Name" />
+                <FormField name="phone" type="tel" required maxLength={40} placeholder="Phone" />
+                <FormField name="email" type="email" maxLength={320} placeholder="Email (optional)" />
+                <div className="relative">
+                  <textarea
+                    name="message"
+                    required
+                    rows={4}
+                    maxLength={5000}
+                    placeholder="Message"
+                    className="w-full border-0 border-b border-[var(--border-subtle)] bg-transparent px-1 py-2.5 text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--accent-gold)] focus:outline-none"
+                  />
+                </div>
 
                 {error ? <p className="text-sm text-red-400">{error}</p> : null}
 
@@ -234,23 +258,35 @@ export default function ContactForm({
               </form>
             )}
           </Reveal>
-
-          <Reveal delay={200}>
-            <h3 className="font-serif-display text-2xl font-semibold text-[var(--text-primary)]">
-              Follow Me
-            </h3>
-            <p className="mt-3 text-sm text-[var(--text-secondary)]">
-              See more of my work and behind-the-scenes moments.
-            </p>
-            <div className="mt-5">
-              <SocialLinks links={socialLinks} iconClassName="h-4 w-4" className="flex-wrap" />
-            </div>
-            <p className="font-script mt-8 text-xl text-[var(--accent-gold)]">
-              Let&apos;s create something beautiful
-            </p>
-          </Reveal>
         </div>
+
+        <SocialShowcase links={socialLinks} />
       </div>
     </section>
+  );
+}
+
+function FormField({
+  name,
+  type,
+  required,
+  maxLength,
+  placeholder,
+}: {
+  name: string;
+  type: string;
+  required?: boolean;
+  maxLength: number;
+  placeholder: string;
+}) {
+  return (
+    <input
+      name={name}
+      type={type}
+      required={required}
+      maxLength={maxLength}
+      placeholder={placeholder}
+      className="w-full border-0 border-b border-[var(--border-subtle)] bg-transparent px-1 py-2.5 text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--accent-gold)] focus:outline-none"
+    />
   );
 }
