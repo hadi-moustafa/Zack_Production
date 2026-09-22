@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { photoPublicUrl } from "@/lib/supabaseClient";
 import { SECTION_PHOTO_KEYS } from "@/lib/content";
+import { STATIC_WORK_ITEMS } from "@/lib/staticWork";
 import type { Photo } from "@/lib/types";
 import { Card, SectionHeading, TextInput, DangerLink } from "@/components/admin/ui";
+import CategoryPicker from "@/components/admin/CategoryPicker";
 import { IconCamera, IconVideo, IconPlay, IconUpload } from "@/components/icons";
 
 type SectionSlot = keyof typeof SECTION_PHOTO_KEYS; // "hero" | "about" | "contact"
@@ -35,6 +37,13 @@ export default function PhotosManager({
 
   const photoInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
+
+  const categoryOptions = useMemo(() => {
+    const set = new Set<string>();
+    STATIC_WORK_ITEMS.forEach((w) => set.add(w.category));
+    photos.forEach((p) => set.add(p.category));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [photos]);
 
   async function handleFileSelected(file: File | undefined) {
     if (!file) return;
@@ -91,6 +100,15 @@ export default function PhotosManager({
     setPhotos((prev) => prev.map((p) => (p.id === id ? { ...p, [field]: value } : p)));
   }
 
+  async function updateCategory(id: string, value: string) {
+    setPhotos((prev) => prev.map((p) => (p.id === id ? { ...p, category: value } : p)));
+    await fetch("/api/photos", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, category: value }),
+    });
+  }
+
   async function handleEditSave(id: string) {
     const photo = photos.find((p) => p.id === id);
     if (!photo) return;
@@ -133,16 +151,17 @@ export default function PhotosManager({
       <Card>
         <SectionHeading
           title="Add photo or video"
-          description="Fill in a category (e.g. Weddings, Food), then choose a file to upload it right away."
+          description="Pick a category (or add a new one), then choose a file to upload it right away."
         />
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="block text-sm font-medium text-neutral-700">Category</label>
-            <TextInput
+            <CategoryPicker
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              placeholder="Weddings"
+              categories={categoryOptions}
+              onChange={setCategory}
+              className="mt-1.5"
             />
           </div>
           <div>
@@ -232,12 +251,11 @@ export default function PhotosManager({
                   )}
                 </div>
 
-                <TextInput
+                <CategoryPicker
                   value={photo.category}
-                  onChange={(e) => handleEdit(photo.id, "category", e.target.value)}
-                  onBlur={() => handleEditSave(photo.id)}
+                  categories={categoryOptions}
+                  onChange={(value) => updateCategory(photo.id, value)}
                   className="mt-2 !py-1.5 text-sm"
-                  placeholder="Category"
                 />
                 <TextInput
                   value={photo.caption}
