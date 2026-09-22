@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { SocialLink } from "@/lib/types";
 import { SOCIAL_LABELS, SOCIAL_PLACEHOLDERS, withSocialDefaults } from "@/lib/social";
+import { Card, SectionHeading, Label, TextInput, PrimaryButton, SavedBadge } from "@/components/admin/ui";
 
 export default function SocialLinksManager({ initialLinks }: { initialLinks: SocialLink[] }) {
   const [links, setLinks] = useState<SocialLink[]>(withSocialDefaults(initialLinks));
@@ -26,32 +27,30 @@ export default function SocialLinksManager({ initialLinks }: { initialLinks: Soc
   }
 
   return (
-    <section>
-      <h2 className="text-lg font-semibold">Social links</h2>
-      <div className="mt-4 space-y-3">
+    <Card>
+      <SectionHeading
+        title="Social links"
+        description="Shown on the Contact section. Leave a field blank to hide that icon."
+      />
+      <div className="grid gap-4 sm:grid-cols-2">
         {links.map((link) => (
           <div key={link.platform}>
-            <label className="block text-sm font-medium text-neutral-700">
-              {SOCIAL_LABELS[link.platform] ?? link.platform}
-            </label>
-            <input
+            <Label>{SOCIAL_LABELS[link.platform] ?? link.platform}</Label>
+            <TextInput
               type="url"
               value={link.url}
               onChange={(e) => update(link.platform, e.target.value)}
               placeholder={SOCIAL_PLACEHOLDERS[link.platform] ?? "https://..."}
-              className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
             />
           </div>
         ))}
       </div>
-      <button
-        onClick={handleSave}
-        disabled={saving}
-        className="mt-4 rounded-md bg-neutral-900 px-5 py-2 text-sm text-white hover:bg-neutral-700 disabled:opacity-50"
-      >
-        {saving ? "Saving…" : "Save social links"}
-      </button>
-      {saved ? <span className="ml-3 text-sm text-green-600">Saved</span> : null}
-    </section>
+      <div className="mt-5 flex items-center gap-3">
+        <PrimaryButton onClick={handleSave} disabled={saving}>
+          {saving ? "Saving…" : "Save social links"}
+        </PrimaryButton>
+        <SavedBadge show={saved} />
+      </div>
+    </Card>
   );
 }

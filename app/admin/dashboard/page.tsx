@@ -1,12 +1,8 @@
 import { createServerSupabaseClient } from "@/lib/supabaseServer";
 import LogoutButton from "@/components/admin/LogoutButton";
-import PhotosManager from "@/components/admin/PhotosManager";
-import PricingManager from "@/components/admin/PricingManager";
-import ContentManager from "@/components/admin/ContentManager";
-import SocialLinksManager from "@/components/admin/SocialLinksManager";
-import ContactSubmissionsList from "@/components/admin/ContactSubmissionsList";
+import AdminTabs from "@/components/admin/AdminTabs";
 import type { Photo, PricingPackage, PageContent, SocialLink, ContactSubmission } from "@/lib/types";
-import { withDefaults, SECTION_PHOTO_KEYS } from "@/lib/content";
+import { withDefaults } from "@/lib/content";
 
 export default async function AdminDashboardPage() {
   const supabase = await createServerSupabaseClient();
@@ -30,26 +26,27 @@ export default async function AdminDashboardPage() {
   const submissions = (submissionsRes.data ?? []) as ContactSubmission[];
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-10 sm:px-12">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Admin dashboard</h1>
-        <LogoutButton />
-      </div>
+    <div className="min-h-full bg-neutral-100">
+      <header className="border-b border-neutral-200 bg-white">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-8">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400">Admin</p>
+            <h1 className="text-xl font-semibold text-neutral-900">Site dashboard</h1>
+          </div>
+          <LogoutButton />
+        </div>
+      </header>
 
-      <div className="mt-10 space-y-16">
-        <ContentManager initialContent={content} />
-        <PhotosManager
-          initialPhotos={photos}
-          initialSectionPhotos={{
-            hero: contentMap[SECTION_PHOTO_KEYS.hero],
-            about: contentMap[SECTION_PHOTO_KEYS.about],
-            contact: contentMap[SECTION_PHOTO_KEYS.contact],
-          }}
+      <main className="mx-auto max-w-5xl px-4 py-6 sm:px-8 sm:py-10">
+        <AdminTabs
+          photos={photos}
+          content={content}
+          contentMap={contentMap}
+          pricingPackages={pricingPackages}
+          socialLinks={socialLinks}
+          submissions={submissions}
         />
-        <PricingManager initialPackages={pricingPackages} />
-        <SocialLinksManager initialLinks={socialLinks} />
-        <ContactSubmissionsList submissions={submissions} />
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

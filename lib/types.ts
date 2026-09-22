@@ -4,6 +4,7 @@ export type Photo = {
   category: string;
   caption: string;
   sort_order: number;
+  media_type: "photo" | "video";
   created_at: string;
 };
 

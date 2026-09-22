@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import type { PricingPackage } from "@/lib/types";
+import { Card, SectionHeading, Label, TextInput, SecondaryButton, DangerLink } from "@/components/admin/ui";
+import { IconClose } from "@/components/icons";
 
 export default function PricingManager({
   initialPackages,
@@ -69,73 +71,75 @@ export default function PricingManager({
   }
 
   return (
-    <section>
-      <h2 className="text-lg font-semibold">Pricing packages</h2>
+    <Card>
+      <SectionHeading
+        title="Pricing packages"
+        description="Leave the price blank on a package (e.g. a “Custom” tier) to show it as a contact-me card instead of a priced one."
+      />
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         {packages.map((pkg) => (
-          <div key={pkg.id} className="rounded-md border border-neutral-200 p-4">
-            <input
+          <div key={pkg.id} className="rounded-lg border border-neutral-200 p-4">
+            <Label>Package name</Label>
+            <TextInput
               value={pkg.name}
               onChange={(e) => updateField(pkg.id, "name", e.target.value)}
               onBlur={() => savePackage(pkg)}
-              className="w-full rounded border border-neutral-200 px-2 py-1 text-sm font-medium"
-              placeholder="Package name"
+              placeholder="Standard"
             />
-            <input
-              value={pkg.price}
-              onChange={(e) => updateField(pkg.id, "price", e.target.value)}
-              onBlur={() => savePackage(pkg)}
-              className="mt-2 w-full rounded border border-neutral-200 px-2 py-1 text-sm"
-              placeholder="$500"
-            />
-
-            <div className="mt-3 space-y-1">
-              {pkg.features.map((feature, i) => (
-                <div key={i} className="flex gap-1">
-                  <input
-                    value={feature}
-                    onChange={(e) => updateFeature(pkg.id, i, e.target.value)}
-                    onBlur={() => savePackage(pkg)}
-                    className="w-full rounded border border-neutral-200 px-2 py-1 text-sm"
-                  />
-                  <button
-                    onClick={() => {
-                      removeFeature(pkg.id, i);
-                      savePackage({ ...pkg, features: pkg.features.filter((_, x) => x !== i) });
-                    }}
-                    className="px-2 text-xs text-red-600"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
+            <div className="mt-3">
+              <Label>Price</Label>
+              <TextInput
+                value={pkg.price}
+                onChange={(e) => updateField(pkg.id, "price", e.target.value)}
+                onBlur={() => savePackage(pkg)}
+                placeholder="$500"
+              />
             </div>
-            <button
-              onClick={() => addFeature(pkg.id)}
-              className="mt-2 text-xs text-neutral-600 hover:underline"
-            >
-              + Add item
-            </button>
 
-            <div className="mt-3 flex justify-end">
+            <div className="mt-3">
+              <Label>What&apos;s included</Label>
+              <div className="mt-1.5 space-y-2">
+                {pkg.features.map((feature, i) => (
+                  <div key={i} className="flex gap-2">
+                    <TextInput
+                      value={feature}
+                      onChange={(e) => updateFeature(pkg.id, i, e.target.value)}
+                      onBlur={() => savePackage(pkg)}
+                      className="!mt-0"
+                      placeholder="1 hour session"
+                    />
+                    <button
+                      onClick={() => {
+                        removeFeature(pkg.id, i);
+                        savePackage({ ...pkg, features: pkg.features.filter((_, x) => x !== i) });
+                      }}
+                      aria-label="Remove item"
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-neutral-300 text-neutral-500 transition hover:border-red-400 hover:text-red-600"
+                    >
+                      <IconClose className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
               <button
-                onClick={() => deletePackage(pkg.id)}
-                className="text-xs text-red-600 hover:underline"
+                onClick={() => addFeature(pkg.id)}
+                className="mt-2 text-xs font-semibold text-neutral-600 hover:text-neutral-900 hover:underline"
               >
-                Delete package
+                + Add item
               </button>
+            </div>
+
+            <div className="mt-4 flex justify-end border-t border-neutral-100 pt-3">
+              <DangerLink onClick={() => deletePackage(pkg.id)}>Delete package</DangerLink>
             </div>
           </div>
         ))}
       </div>
 
-      <button
-        onClick={addPackage}
-        className="mt-4 rounded-md border border-neutral-300 px-4 py-2 text-sm hover:border-neutral-900"
-      >
+      <SecondaryButton onClick={addPackage} className="mt-5">
         + Add package
-      </button>
-    </section>
+      </SecondaryButton>
+    </Card>
   );
 }

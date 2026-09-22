@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { photoPublicUrl } from "@/lib/supabaseClient";
 import { SECTION_PHOTO_KEYS } from "@/lib/content";
 import type { Photo } from "@/lib/types";
+import { Card, SectionHeading, TextInput, DangerLink } from "@/components/admin/ui";
+import { IconCamera, IconVideo, IconPlay, IconUpload } from "@/components/icons";
 
 type SectionSlot = keyof typeof SECTION_PHOTO_KEYS; // "hero" | "about" | "contact"
 
@@ -13,6 +15,9 @@ const SLOT_LABELS: Record<SectionSlot, string> = {
   about: "About photo",
   contact: "Contact background",
 };
+
+const IMAGE_ACCEPT = "image/jpeg,image/png,image/webp";
+const VIDEO_ACCEPT = "video/mp4,video/webm,video/quicktime";
 
 export default function PhotosManager({
   initialPhotos,
@@ -28,13 +33,11 @@ export default function PhotosManager({
   const [caption, setCaption] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  async function handleUpload(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const fileInput = form.elements.namedItem("file") as HTMLInputElement;
-    const file = fileInput.files?.[0];
-    if (!file) return;
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
+  async function handleFileSelected(file: File | undefined) {
+    if (!file) return;
     setUploading(true);
     setError(null);
 
@@ -53,20 +56,18 @@ export default function PhotosManager({
     }
 
     setPhotos((prev) => [...prev, body.photo]);
-    form.reset();
-    setCategory("");
-    setCaption("");
+    if (photoInputRef.current) photoInputRef.current.value = "";
+    if (videoInputRef.current) videoInputRef.current.value = "";
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this photo?")) return;
+    if (!confirm("Delete this item?")) return;
     const res = await fetch(`/api/photos?id=${id}`, { method: "DELETE" });
     if (!res.ok) return;
 
     setPhotos((prev) => prev.filter((p) => p.id !== id));
     const photo = photos.find((p) => p.id === id);
     if (!photo) return;
-    // Clear any section slot that was using this photo.
     const clearedSlots = (Object.keys(sectionPhotos) as SectionSlot[]).filter(
       (slot) => sectionPhotos[slot] === photo.storage_path
     );
@@ -86,7 +87,7 @@ export default function PhotosManager({
     }
   }
 
-  async function handleEdit(id: string, field: "category" | "caption", value: string) {
+  function handleEdit(id: string, field: "category" | "caption", value: string) {
     setPhotos((prev) => prev.map((p) => (p.id === id ? { ...p, [field]: value } : p)));
   }
 
@@ -118,7 +119,6 @@ export default function PhotosManager({
   }
 
   async function assignSlot(slot: SectionSlot, storagePath: string) {
-    // Toggle off if this photo is already assigned to the slot.
     const nextValue = sectionPhotos[slot] === storagePath ? "" : storagePath;
     setSectionPhotos((prev) => ({ ...prev, [slot]: nextValue }));
     await fetch("/api/content", {
@@ -129,120 +129,204 @@ export default function PhotosManager({
   }
 
   return (
-    <section>
-      <h2 className="text-lg font-semibold">Photos</h2>
-      <p className="mt-1 text-sm text-neutral-500">
-        Upload photos for the gallery, then use the buttons on each photo to also use it as the
-        hero, about, or contact section background. If a section has none assigned, it falls back
-        to the first uploaded photos in gallery order.
-      </p>
+    <div className="space-y-6">
+      <Card>
+        <SectionHeading
+          title="Add photo or video"
+          description="Fill in a category (e.g. Weddings, Food), then choose a file to upload it right away."
+        />
 
-      <form onSubmit={handleUpload} className="mt-4 flex flex-wrap items-end gap-3">
-        <div>
-          <label className="block text-sm font-medium text-neutral-700">Photo file</label>
-          <input name="file" type="file" accept="image/jpeg,image/png,image/webp" required />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-neutral-700">Category</label>
-          <input
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            placeholder="Weddings"
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-neutral-700">Caption</label>
-          <input
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm"
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={uploading}
-          className="rounded-md bg-neutral-900 px-5 py-2 text-sm text-white hover:bg-neutral-700 disabled:opacity-50"
-        >
-          {uploading ? "Uploading…" : "Upload"}
-        </button>
-      </form>
-      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
-
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {photos.map((photo, i) => (
-          <div key={photo.id} className="rounded-md border border-neutral-200 p-3">
-            <div className="relative aspect-square overflow-hidden rounded bg-neutral-100">
-              <Image
-                src={photoPublicUrl(photo.storage_path)}
-                alt={photo.caption || photo.category}
-                fill
-                sizes="30vw"
-                className="object-cover"
-              />
-            </div>
-            <input
-              value={photo.category}
-              onChange={(e) => handleEdit(photo.id, "category", e.target.value)}
-              onBlur={() => handleEditSave(photo.id)}
-              className="mt-2 w-full rounded border border-neutral-200 px-2 py-1 text-sm"
-              placeholder="Category"
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="block text-sm font-medium text-neutral-700">Category</label>
+            <TextInput
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              placeholder="Weddings"
             />
-            <input
-              value={photo.caption}
-              onChange={(e) => handleEdit(photo.id, "caption", e.target.value)}
-              onBlur={() => handleEditSave(photo.id)}
-              className="mt-1 w-full rounded border border-neutral-200 px-2 py-1 text-sm"
-              placeholder="Caption"
-            />
-
-            <div className="mt-2 flex flex-wrap gap-1">
-              {(Object.keys(SLOT_LABELS) as SectionSlot[]).map((slot) => {
-                const active = sectionPhotos[slot] === photo.storage_path;
-                return (
-                  <button
-                    key={slot}
-                    onClick={() => assignSlot(slot, photo.storage_path)}
-                    className={`rounded-full border px-2 py-1 text-[0.7rem] ${
-                      active
-                        ? "border-neutral-900 bg-neutral-900 text-white"
-                        : "border-neutral-300 text-neutral-600 hover:border-neutral-900"
-                    }`}
-                  >
-                    {active ? "✓ " : ""}
-                    {SLOT_LABELS[slot]}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="mt-2 flex items-center justify-between">
-              <div className="flex gap-1">
-                <button
-                  onClick={() => move(i, -1)}
-                  disabled={i === 0}
-                  className="rounded border border-neutral-300 px-2 py-1 text-xs disabled:opacity-30"
-                >
-                  ↑
-                </button>
-                <button
-                  onClick={() => move(i, 1)}
-                  disabled={i === photos.length - 1}
-                  className="rounded border border-neutral-300 px-2 py-1 text-xs disabled:opacity-30"
-                >
-                  ↓
-                </button>
-              </div>
-              <button
-                onClick={() => handleDelete(photo.id)}
-                className="text-xs text-red-600 hover:underline"
-              >
-                Delete
-              </button>
-            </div>
           </div>
-        ))}
-      </div>
-    </section>
+          <div>
+            <label className="block text-sm font-medium text-neutral-700">Caption (optional)</label>
+            <TextInput value={caption} onChange={(e) => setCaption(e.target.value)} placeholder="" />
+          </div>
+        </div>
+
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <UploadArea
+            icon={IconCamera}
+            label="Add Photo"
+            hint="JPEG, PNG, or WebP · up to 15MB"
+            disabled={uploading}
+            onClick={() => photoInputRef.current?.click()}
+          />
+          <UploadArea
+            icon={IconVideo}
+            label="Add Video"
+            hint="MP4, WebM, or MOV · up to 50MB"
+            disabled={uploading}
+            onClick={() => videoInputRef.current?.click()}
+          />
+          <input
+            ref={photoInputRef}
+            type="file"
+            accept={IMAGE_ACCEPT}
+            className="hidden"
+            onChange={(e) => handleFileSelected(e.target.files?.[0])}
+          />
+          <input
+            ref={videoInputRef}
+            type="file"
+            accept={VIDEO_ACCEPT}
+            className="hidden"
+            onChange={(e) => handleFileSelected(e.target.files?.[0])}
+          />
+        </div>
+
+        {uploading ? (
+          <p className="mt-3 flex items-center gap-2 text-sm text-neutral-500">
+            <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-900" />
+            Uploading…
+          </p>
+        ) : null}
+        {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
+      </Card>
+
+      <Card>
+        <SectionHeading
+          title={`Gallery items (${photos.length})`}
+          description="Use the pills to set a photo as the hero, about, or contact background. Reorder with the arrows."
+        />
+
+        {photos.length === 0 ? (
+          <p className="text-sm text-neutral-500">No photos or videos uploaded yet.</p>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {photos.map((photo, i) => (
+              <div key={photo.id} className="rounded-lg border border-neutral-200 p-3">
+                <div className="relative aspect-square overflow-hidden rounded-md bg-neutral-100">
+                  {photo.media_type === "video" ? (
+                    <>
+                      <video
+                        src={photoPublicUrl(photo.storage_path)}
+                        className="h-full w-full object-cover"
+                        muted
+                        preload="metadata"
+                      />
+                      <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/20">
+                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90">
+                          <IconPlay className="h-4 w-4 text-neutral-900" />
+                        </span>
+                      </div>
+                      <span className="absolute left-2 top-2 rounded bg-black/60 px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-white">
+                        Video
+                      </span>
+                    </>
+                  ) : (
+                    <Image
+                      src={photoPublicUrl(photo.storage_path)}
+                      alt={photo.caption || photo.category}
+                      fill
+                      sizes="30vw"
+                      className="object-cover"
+                    />
+                  )}
+                </div>
+
+                <TextInput
+                  value={photo.category}
+                  onChange={(e) => handleEdit(photo.id, "category", e.target.value)}
+                  onBlur={() => handleEditSave(photo.id)}
+                  className="mt-2 !py-1.5 text-sm"
+                  placeholder="Category"
+                />
+                <TextInput
+                  value={photo.caption}
+                  onChange={(e) => handleEdit(photo.id, "caption", e.target.value)}
+                  onBlur={() => handleEditSave(photo.id)}
+                  className="mt-1.5 !py-1.5 text-sm"
+                  placeholder="Caption"
+                />
+
+                {photo.media_type !== "video" ? (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {(Object.keys(SLOT_LABELS) as SectionSlot[]).map((slot) => {
+                      const active = sectionPhotos[slot] === photo.storage_path;
+                      return (
+                        <button
+                          key={slot}
+                          onClick={() => assignSlot(slot, photo.storage_path)}
+                          className={`rounded-full border px-2 py-1 text-[0.7rem] transition ${
+                            active
+                              ? "border-neutral-900 bg-neutral-900 text-white"
+                              : "border-neutral-300 text-neutral-600 hover:border-neutral-900"
+                          }`}
+                        >
+                          {active ? "✓ " : ""}
+                          {SLOT_LABELS[slot]}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : null}
+
+                <div className="mt-3 flex items-center justify-between">
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => move(i, -1)}
+                      disabled={i === 0}
+                      aria-label="Move earlier"
+                      className="rounded border border-neutral-300 px-2 py-1 text-xs disabled:opacity-30"
+                    >
+                      ↑
+                    </button>
+                    <button
+                      onClick={() => move(i, 1)}
+                      disabled={i === photos.length - 1}
+                      aria-label="Move later"
+                      className="rounded border border-neutral-300 px-2 py-1 text-xs disabled:opacity-30"
+                    >
+                      ↓
+                    </button>
+                  </div>
+                  <DangerLink onClick={() => handleDelete(photo.id)}>Delete</DangerLink>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </Card>
+    </div>
+  );
+}
+
+function UploadArea({
+  icon: Icon,
+  label,
+  hint,
+  disabled,
+  onClick,
+}: {
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  label: string;
+  hint: string;
+  disabled?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-6 text-center transition hover:border-neutral-900 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-sm">
+        <Icon className="h-5 w-5 text-neutral-700" />
+      </span>
+      <span className="flex items-center gap-1.5 text-sm font-semibold text-neutral-900">
+        <IconUpload className="h-3.5 w-3.5" />
+        {label}
+      </span>
+      <span className="text-xs text-neutral-500">{hint}</span>
+    </button>
   );
 }

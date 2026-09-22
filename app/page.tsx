@@ -37,13 +37,14 @@ async function getData() {
 
 export default async function Home() {
   const { photos, pricingPackages, content, socialLinks } = await getData();
+  const stillPhotos = photos.filter((p) => p.media_type !== "video");
 
   const heroPhoto =
-    content[SECTION_PHOTO_KEYS.hero] || photos[0]?.storage_path || null;
+    content[SECTION_PHOTO_KEYS.hero] || stillPhotos[0]?.storage_path || null;
   const aboutPhoto =
-    content[SECTION_PHOTO_KEYS.about] || photos[1]?.storage_path || photos[0]?.storage_path || null;
+    content[SECTION_PHOTO_KEYS.about] || stillPhotos[1]?.storage_path || stillPhotos[0]?.storage_path || null;
   const contactPhoto =
-    content[SECTION_PHOTO_KEYS.contact] || photos[2]?.storage_path || photos[0]?.storage_path || null;
+    content[SECTION_PHOTO_KEYS.contact] || stillPhotos[2]?.storage_path || stillPhotos[0]?.storage_path || null;
 
   return (
     <>
@@ -75,11 +76,7 @@ export default async function Home() {
           socialLinks={socialLinks}
           backgroundPhotoPath={contactPhoto}
         />
-        <Footer
-          photographerName={content.photographer_name}
-          tagline={content.footer_tagline}
-          socialLinks={socialLinks}
-        />
+        <Footer photographerName={content.photographer_name} tagline={content.footer_tagline} />
       </main>
     </>
   );

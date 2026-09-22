@@ -37,7 +37,7 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
   const items = useMemo<GalleryItem[]>(() => {
     const fromDb: GalleryItem[] = photos.map((p) => ({
       id: p.id,
-      kind: "photo",
+      kind: p.media_type === "video" ? "video" : "photo",
       category: p.category,
       src: photoPublicUrl(p.storage_path),
       caption: p.caption,

@@ -91,6 +91,32 @@ export function IconYoutube(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function IconVideo(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" {...props}>
+      <rect x="3" y="6" width="13" height="12" rx="1.5" strokeLinejoin="round" />
+      <path d="m16.5 10.5 4-2.5v8l-4-2.5Z" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function IconPlay(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M8 5.5v13l11-6.5-11-6.5Z" />
+    </svg>
+  );
+}
+
+export function IconUpload(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" {...props}>
+      <path d="M12 15V4M12 4 8 8M12 4l4 4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function IconSpeakerOn(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" {...props}>

@@ -11,15 +11,19 @@ create extension if not exists "pgcrypto";
 -- Tables
 -- ---------------------------------------------------------------------------
 
--- Photos in the portfolio/gallery
+-- Photos (and videos) in the portfolio/gallery
 create table if not exists public.photos (
   id uuid primary key default gen_random_uuid(),
   storage_path text not null,
   category text not null default 'Uncategorized',
   caption text not null default '',
   sort_order integer not null default 0,
+  media_type text not null default 'photo', -- 'photo' | 'video'
   created_at timestamptz not null default now()
 );
+
+-- Adds the column for projects created before video support existed.
+alter table public.photos add column if not exists media_type text not null default 'photo';
 
 -- Pricing packages shown in the Pricing section
 create table if not exists public.pricing_packages (

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { PageContent } from "@/lib/types";
 import { CONTENT_FIELDS, CONTENT_DEFAULTS } from "@/lib/content";
+import { Card, SectionHeading, Label, TextInput, TextArea, PrimaryButton, SavedBadge } from "@/components/admin/ui";
 
 const GROUPS = Array.from(new Set(CONTENT_FIELDS.map((f) => f.group)));
 
@@ -26,51 +27,43 @@ export default function ContentManager({ initialContent }: { initialContent: Pag
   }
 
   return (
-    <section>
-      <h2 className="text-lg font-semibold">Page text</h2>
-      <div className="mt-4 space-y-8">
-        {GROUPS.map((group) => (
-          <div key={group}>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
-              {group}
-            </h3>
-            <div className="mt-3 space-y-4">
-              {CONTENT_FIELDS.filter((f) => f.group === group).map((field) => (
-                <div key={field.key}>
-                  <label className="block text-sm font-medium text-neutral-700">
-                    {field.label}
-                  </label>
-                  {field.multiline ? (
-                    <textarea
-                      rows={5}
-                      value={values[field.key] ?? ""}
-                      placeholder={field.placeholder}
-                      onChange={(e) => setValues((v) => ({ ...v, [field.key]: e.target.value }))}
-                      className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      value={values[field.key] ?? ""}
-                      placeholder={field.placeholder}
-                      onChange={(e) => setValues((v) => ({ ...v, [field.key]: e.target.value }))}
-                      className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 focus:border-neutral-900 focus:outline-none"
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
+    <div className="space-y-6">
+      {GROUPS.map((group) => (
+        <Card key={group}>
+          <SectionHeading title={group} />
+          <div className="space-y-4">
+            {CONTENT_FIELDS.filter((f) => f.group === group).map((field) => (
+              <div key={field.key}>
+                <Label htmlFor={field.key}>{field.label}</Label>
+                {field.multiline ? (
+                  <TextArea
+                    id={field.key}
+                    rows={4}
+                    value={values[field.key] ?? ""}
+                    placeholder={field.placeholder}
+                    onChange={(e) => setValues((v) => ({ ...v, [field.key]: e.target.value }))}
+                  />
+                ) : (
+                  <TextInput
+                    id={field.key}
+                    type="text"
+                    value={values[field.key] ?? ""}
+                    placeholder={field.placeholder}
+                    onChange={(e) => setValues((v) => ({ ...v, [field.key]: e.target.value }))}
+                  />
+                )}
+              </div>
+            ))}
           </div>
-        ))}
+        </Card>
+      ))}
+
+      <div className="sticky bottom-4 z-10 flex items-center gap-3 rounded-xl border border-neutral-200 bg-white/95 p-3 shadow-lg backdrop-blur sm:static sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none sm:backdrop-blur-none">
+        <PrimaryButton onClick={handleSave} disabled={saving}>
+          {saving ? "Saving…" : "Save text"}
+        </PrimaryButton>
+        <SavedBadge show={saved} />
       </div>
-      <button
-        onClick={handleSave}
-        disabled={saving}
-        className="mt-6 rounded-md bg-neutral-900 px-5 py-2 text-sm text-white hover:bg-neutral-700 disabled:opacity-50"
-      >
-        {saving ? "Saving…" : "Save text"}
-      </button>
-      {saved ? <span className="ml-3 text-sm text-green-600">Saved</span> : null}
-    </section>
+    </div>
   );
 }

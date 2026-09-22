@@ -1,15 +1,11 @@
 import Link from "next/link";
-import SocialLinks from "@/components/SocialLinks";
-import type { SocialLink } from "@/lib/types";
 
 export default function Footer({
   photographerName,
   tagline,
-  socialLinks,
 }: {
   photographerName: string;
   tagline: string;
-  socialLinks: SocialLink[];
 }) {
   return (
     <footer className="border-t border-[var(--border-subtle)] bg-[var(--bg-dark)] py-8">
@@ -20,12 +16,15 @@ export default function Footer({
             {tagline} · © {new Date().getFullYear()}
           </p>
         ) : null}
-        <div className="flex items-center gap-5">
-          <SocialLinks links={socialLinks} />
-          <Link
-            href="/admin/dashboard"
-            className="text-xs text-[var(--text-secondary)] transition hover:text-[var(--accent-gold)]"
-          >
+        <div className="flex flex-col items-center gap-1 text-xs text-[var(--text-secondary)] sm:items-end">
+          <p>
+            Made with <span aria-hidden>♥</span> by SE HM
+            <span className="mx-2 text-[var(--border-subtle)]">·</span>
+            <a href="tel:+96181277281" className="transition hover:text-[var(--accent-gold)]">
+              +961 81 277281
+            </a>
+          </p>
+          <Link href="/admin/dashboard" className="transition hover:text-[var(--accent-gold)]">
             Admin
           </Link>
         </div>
