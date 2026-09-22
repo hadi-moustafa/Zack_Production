@@ -155,8 +155,8 @@ export default function Gallery({
         </Reveal>
 
         {selectedCategory === null ? (
-          <div className="mt-10 flex snap-x gap-4 overflow-x-auto pb-4 sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
-            <Reveal className="shrink-0 snap-start sm:shrink sm:snap-align-none">
+          <div className="mt-10 flex flex-col gap-4 sm:grid sm:grid-cols-3 lg:grid-cols-4">
+            <Reveal>
               <CategoryCard
                 label="Showreel"
                 sublabel="A taste of everything"
@@ -165,7 +165,7 @@ export default function Gallery({
               />
             </Reveal>
             {categories.map((cat, i) => (
-              <Reveal key={cat} delay={(i + 1) * 60} className="shrink-0 snap-start sm:shrink sm:snap-align-none">
+              <Reveal key={cat} delay={(i + 1) * 60}>
                 <CategoryCard
                   label={cat}
                   sublabel={`${items.filter((it) => it.category === cat).length} pieces`}
@@ -177,7 +177,7 @@ export default function Gallery({
           </div>
         ) : (
           <>
-            <div className="mt-10 grid auto-rows-[9rem] grid-cols-2 gap-2.5 sm:auto-rows-[10rem] sm:grid-cols-4 sm:gap-4">
+            <div className="mt-10 grid auto-rows-[13rem] grid-cols-1 gap-2.5 sm:auto-rows-[10rem] sm:grid-cols-4 sm:gap-4">
               {shownItems.map((item, i) => {
                 const spanClass = SPAN_PATTERN[i % SPAN_PATTERN.length];
                 if (item.kind === "video") {
