@@ -27,6 +27,12 @@ export const CONTENT_FIELDS: ContentField[] = [
 
   { key: "contact_description", label: "Contact section description", group: "Contact & Footer", multiline: true, placeholder: "Have a project in mind? Reach out and let's talk." },
   { key: "contact_phone", label: "Contact phone", group: "Contact & Footer", placeholder: "+1 234 567 8900" },
+  {
+    key: "whatsapp_number",
+    label: "WhatsApp number (receives contact form messages)",
+    group: "Contact & Footer",
+    placeholder: "+961 71 413 009",
+  },
   { key: "footer_email", label: "Contact email", group: "Contact & Footer", placeholder: "you@example.com" },
   { key: "footer_tagline", label: "Footer tagline", group: "Contact & Footer", placeholder: "Capturing real moments, one frame at a time." },
 ];

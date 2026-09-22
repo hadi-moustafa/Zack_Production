@@ -54,6 +54,7 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
 
   const categories = useMemo(() => {
     const set = new Set(items.map((p) => p.category));
+    set.delete("Featured");
     return ["All", ...Array.from(set)];
   }, [items]);
 
@@ -241,10 +242,10 @@ function LightboxVideo({ src }: { src: string }) {
     e.stopPropagation();
     const video = videoRef.current;
     if (!video) return;
-    const next = !muted;
-    video.muted = !next;
-    if (next) video.play().catch(() => {});
-    setMuted(!next);
+    const nextMuted = !muted;
+    video.muted = nextMuted;
+    if (!nextMuted) video.play().catch(() => {});
+    setMuted(nextMuted);
   }
 
   return (

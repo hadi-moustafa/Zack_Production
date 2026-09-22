@@ -72,6 +72,7 @@ export default async function Home() {
           description={content.contact_description}
           phone={content.contact_phone}
           email={content.footer_email}
+          whatsappNumber={content.whatsapp_number}
           locationText={content.location_text}
           socialLinks={socialLinks}
           backgroundPhotoPath={contactPhoto}

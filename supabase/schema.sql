@@ -47,15 +47,20 @@ create table if not exists public.social_links (
   url text not null default ''
 );
 
--- Messages submitted through the public contact form
+-- Messages submitted through the public contact form. Phone is required and
+-- email is optional at the application layer (not enforced here, so this
+-- migration is safe to run even with pre-existing rows).
 create table if not exists public.contact_submissions (
   id uuid primary key default gen_random_uuid(),
   name text not null,
-  email text not null,
+  email text,
   phone text,
   message text not null,
   created_at timestamptz not null default now()
 );
+
+-- Relaxes email for projects created before it became optional.
+alter table public.contact_submissions alter column email drop not null;
 
 -- ---------------------------------------------------------------------------
 -- Seed default content rows so the site has something to render immediately

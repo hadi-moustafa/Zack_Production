@@ -21,18 +21,22 @@ export async function POST(request: Request) {
   if (typeof name !== "string" || name.trim().length === 0 || name.length > 200) {
     return NextResponse.json({ error: "Please provide your name." }, { status: 400 });
   }
-  if (typeof email !== "string" || !EMAIL_RE.test(email) || email.length > 320) {
+  if (typeof phone !== "string" || phone.trim().length === 0 || phone.length > 40) {
+    return NextResponse.json({ error: "Please provide your phone number." }, { status: 400 });
+  }
+  if (typeof email === "string" && email.trim().length > 0 && !EMAIL_RE.test(email)) {
     return NextResponse.json({ error: "Please provide a valid email." }, { status: 400 });
   }
   if (typeof message !== "string" || message.trim().length === 0 || message.length > 5000) {
     return NextResponse.json({ error: "Please provide a message." }, { status: 400 });
   }
-  const cleanPhone =
-    typeof phone === "string" && phone.trim().length > 0 ? phone.slice(0, 40) : null;
+  const cleanEmail =
+    typeof email === "string" && email.trim().length > 0 ? email.trim().slice(0, 320) : null;
+  const cleanPhone = phone.trim().slice(0, 40);
 
   const { error } = await supabasePublic.from("contact_submissions").insert({
     name: name.trim().slice(0, 200),
-    email: email.trim().slice(0, 320),
+    email: cleanEmail,
     phone: cleanPhone,
     message: message.trim().slice(0, 5000),
   });
@@ -51,9 +55,9 @@ export async function POST(request: Request) {
       await resend.emails.send({
         from: "Website Contact Form <onboarding@resend.dev>",
         to: notifyEmail,
-        replyTo: email,
+        ...(cleanEmail ? { replyTo: cleanEmail } : {}),
         subject: `New contact form message from ${name}`,
-        text: `Name: ${name}\nEmail: ${email}\nPhone: ${cleanPhone ?? "-"}\n\n${message}`,
+        text: `Name: ${name}\nEmail: ${cleanEmail ?? "-"}\nPhone: ${cleanPhone}\n\n${message}`,
       });
     } catch (err) {
       console.error("Failed to send contact notification email", err);

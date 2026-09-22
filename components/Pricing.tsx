@@ -1,6 +1,9 @@
+"use client";
+
 import type { PricingPackage } from "@/lib/types";
 import { IconArrowRight, IconCamera, IconStar } from "@/components/icons";
 import Reveal from "@/components/Reveal";
+import { selectPlan } from "@/lib/planSelection";
 
 const TIER_ICON: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
   basic: IconCamera,
@@ -75,6 +78,7 @@ export default function Pricing({
                   </ul>
                   <a
                     href="#contact"
+                    onClick={() => selectPlan(pkg.name)}
                     className={featured ? "btn-gold mt-7 justify-center" : "btn-ghost mt-7 justify-center"}
                   >
                     Choose plan <IconArrowRight className="h-4 w-4" />
@@ -98,7 +102,11 @@ export default function Pricing({
                   ))}
                 </ul>
               </div>
-              <a href="#contact" className="btn-gold w-full shrink-0 justify-center sm:w-fit">
+              <a
+                href="#contact"
+                onClick={() => selectPlan(customTier.name)}
+                className="btn-gold w-full shrink-0 justify-center sm:w-fit"
+              >
                 Get in touch <IconArrowRight className="h-4 w-4" />
               </a>
             </div>

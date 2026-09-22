@@ -35,10 +35,10 @@ export default function VideoTile({
     e.stopPropagation();
     const video = videoRef.current;
     if (!video) return;
-    const next = !muted;
-    video.muted = !next;
-    if (next) video.play().catch(() => {});
-    setMuted(!next);
+    const nextMuted = !muted;
+    video.muted = nextMuted;
+    if (!nextMuted) video.play().catch(() => {});
+    setMuted(nextMuted);
   }
 
   return (
