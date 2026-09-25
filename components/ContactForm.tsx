@@ -13,7 +13,7 @@ import {
 } from "@/components/icons";
 import SocialShowcase from "@/components/SocialShowcase";
 import Reveal from "@/components/Reveal";
-import { Squiggle } from "@/components/Ornaments";
+import { Flourish } from "@/components/Ornaments";
 import { PLAN_SELECTED_EVENT } from "@/lib/planSelection";
 import type { SocialLink } from "@/lib/types";
 
@@ -130,14 +130,14 @@ export default function ContactForm({
       <div className="relative mx-auto max-w-6xl px-5 sm:px-10">
         <Reveal className="mx-auto max-w-2xl text-center">
           <div className="section-index justify-center">
-            <span className="num">04</span>
+            <span className="num">IV</span>
             <span className="line" />
             <span className="eyebrow">Get in touch</span>
           </div>
-          <h2 className="font-serif-display mt-4 text-[clamp(2.25rem,7vw,3.75rem)] font-semibold leading-[1.02] text-[var(--text-primary)]">
+          <h2 className="font-serif-display mt-4 text-[clamp(2.5rem,9vw,4.25rem)] font-medium leading-[1] text-[var(--text-primary)]">
             Let&apos;s Work Together
           </h2>
-          <Squiggle center />
+          <Flourish center />
           <p className="mt-6 text-[clamp(0.95rem,2.4vw,1.05rem)] leading-relaxed text-[var(--text-secondary)]">
             {description}
           </p>

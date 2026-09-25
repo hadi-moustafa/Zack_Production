@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Fraunces, Instrument_Sans, DM_Mono, Caveat } from "next/font/google";
+import { Cormorant_Garamond, Instrument_Sans, DM_Mono, Herr_Von_Muellerhoff } from "next/font/google";
 import SoundProvider from "@/components/sound/SoundProvider";
 import "./globals.css";
 
-const fraunces = Fraunces({
+const cormorant = Cormorant_Garamond({
   variable: "--font-display",
   subsets: ["latin"],
-  axes: ["SOFT", "WONK"],
+  weight: ["300", "400", "500", "600"],
   style: ["normal", "italic"],
 });
 
@@ -21,9 +21,10 @@ const dmMono = DM_Mono({
   weight: ["400", "500"],
 });
 
-const caveat = Caveat({
+const signature = Herr_Von_Muellerhoff({
   variable: "--font-script",
   subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -35,7 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${instrument.variable} ${dmMono.variable} ${caveat.variable} h-full antialiased`}
+      className={`${cormorant.variable} ${instrument.variable} ${dmMono.variable} ${signature.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--bg-dark)] text-[var(--text-primary)]">
         <SoundProvider>{children}</SoundProvider>

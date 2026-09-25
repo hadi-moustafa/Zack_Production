@@ -53,13 +53,13 @@ body::before {
 
 .font-serif-display {
   font-family: var(--font-display), Georgia, serif;
-  font-variation-settings: "SOFT" 60, "WONK" 1;
-  letter-spacing: -0.015em;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 .font-script {
   font-family: var(--font-script), cursive;
-  font-size: 1.2em;
+  font-size: 1.45em;
   line-height: 1;
 }
 
@@ -82,8 +82,10 @@ body::before {
 }
 
 .section-index .num {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.35rem;
+  font-weight: 500;
 }
 
 .section-index .line {
@@ -254,21 +256,26 @@ body::after {
   background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(60, 35, 10, 0.28) 100%);
 }
 
-/* Viewfinder corner brackets */
+/* Viewfinder corner brackets — mobile first, kept clear of the fixed nav */
 .vf-corner {
   position: absolute;
-  width: clamp(22px, 4vw, 40px);
-  height: clamp(22px, 4vw, 40px);
-  border-color: rgba(245, 242, 234, 0.75);
-  border-style: solid;
-  border-width: 0;
+  width: 18px;
+  height: 18px;
+  border: 0 solid rgba(232, 193, 105, 0.7);
   z-index: 15;
   pointer-events: none;
 }
-.vf-tl { top: clamp(28px, 6vw, 64px); left: clamp(16px, 4vw, 48px); border-top-width: 2px; border-left-width: 2px; }
-.vf-tr { top: clamp(28px, 6vw, 64px); right: clamp(16px, 4vw, 48px); border-top-width: 2px; border-right-width: 2px; }
-.vf-bl { bottom: clamp(28px, 6vw, 64px); left: clamp(16px, 4vw, 48px); border-bottom-width: 2px; border-left-width: 2px; }
-.vf-br { bottom: clamp(28px, 6vw, 64px); right: clamp(16px, 4vw, 48px); border-bottom-width: 2px; border-right-width: 2px; }
+.vf-tl { top: 92px; left: 18px; border-top-width: 1px; border-left-width: 1px; }
+.vf-tr { top: 92px; right: 18px; border-top-width: 1px; border-right-width: 1px; }
+.vf-bl { bottom: 34px; left: 18px; border-bottom-width: 1px; border-left-width: 1px; }
+.vf-br { bottom: 34px; right: 18px; border-bottom-width: 1px; border-right-width: 1px; }
+@media (min-width: 640px) {
+  .vf-corner { width: 34px; height: 34px; }
+  .vf-tl, .vf-tr { top: 116px; }
+  .vf-bl, .vf-br { bottom: 56px; }
+  .vf-tl, .vf-bl { left: 40px; }
+  .vf-tr, .vf-br { right: 40px; }
+}
 
 @keyframes rec-blink {
   0%, 60% { opacity: 1; }
@@ -276,34 +283,35 @@ body::after {
 }
 .rec-dot { animation: rec-blink 1.6s steps(1) infinite; }
 
-/* Masking tape holding a print to the page */
+/* Gold photo corners holding a matted print */
 .tape {
   position: absolute;
-  width: 88px;
-  height: 26px;
-  background: rgba(232, 214, 170, 0.55);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-  clip-path: polygon(0 8%, 4% 0, 8% 10%, 12% 0, 100% 3%, 96% 50%, 100% 92%, 90% 100%, 84% 92%, 0 100%, 4% 50%);
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, #e8c169, #a67f2e);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
+.tape-tl { top: 4px; left: 4px; clip-path: polygon(0 0, 100% 0, 0 100%); }
+.tape-br { bottom: 4px; right: 4px; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
 
-/* A print pinned up: white border, slight tilt, real shadow */
 .print {
   background: #efe9db;
-  padding: 12px 12px 44px;
-  box-shadow: 0 25px 60px -20px rgba(0, 0, 0, 0.85), 0 2px 0 rgba(255, 255, 255, 0.05) inset;
-  transform: rotate(-2deg);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 14px 14px 56px;
+  outline: 1px solid rgba(201, 162, 75, 0.55);
+  outline-offset: 10px;
+  box-shadow: 0 30px 70px -25px rgba(0, 0, 0, 0.9);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.print:hover { transform: rotate(0deg) scale(1.01); }
+.print:hover { transform: translateY(-4px); }
 
 /* Hand-inked stamp */
 .stamp {
   font-family: var(--font-mono), monospace;
   border: 2px solid var(--accent-gold);
   color: var(--accent-gold);
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
-  transform: rotate(-4deg);
+  padding: 0.25rem 0.7rem;
+  border-radius: 2px;
+  transform: rotate(0deg);
   letter-spacing: 0.15em;
   text-transform: uppercase;
   font-size: 0.65rem;
@@ -325,10 +333,9 @@ body::after {
 .ornament-divider::after {
   content: "";
   flex: 1;
-  height: 6px;
-  background:
-    radial-gradient(circle at 3px 3px, currentColor 1.2px, transparent 1.6px) 0 0 / 12px 6px repeat-x;
-  opacity: 0.45;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor);
+  opacity: 0.5;
 }
 
 .ink-draw path {
@@ -341,3 +348,26 @@ body::after {
   .ink-draw path { animation: none; stroke-dashoffset: 0; }
   .rec-dot { animation: none; }
 }
+
+.ornament-divider::after { transform: scaleX(-1); }
+
+/* Editorial drop cap on the bio */
+.drop-cap::first-letter {
+  font-family: var(--font-display), Georgia, serif;
+  float: left;
+  font-size: 4.2em;
+  line-height: 0.8;
+  padding: 0.08em 0.12em 0 0;
+  color: var(--accent-gold);
+  font-weight: 500;
+}
+
+/* Gold hairline frame around the hero, inside the letterbox */
+.hero-frame {
+  position: absolute;
+  inset: 84px 12px 28px;
+  border: 1px solid rgba(201, 162, 75, 0.22);
+  z-index: 14;
+  pointer-events: none;
+}
+@media (min-width: 640px) { .hero-frame { inset: 108px 32px 48px; } }

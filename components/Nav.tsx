@@ -41,7 +41,7 @@ export default function Nav({
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-10 sm:py-5">
         <a href="#home" className="leading-none">
-          <span className="font-script block text-3xl text-[var(--accent-gold)] sm:text-4xl">{name}</span>
+          <span className="font-script block text-4xl text-[var(--accent-gold)] sm:text-5xl">{name}</span>
           <span className="eyebrow mt-0.5 block text-[0.6rem]">{subtitle}</span>
         </a>
 

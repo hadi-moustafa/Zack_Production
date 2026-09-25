@@ -2,7 +2,7 @@ import Image from "next/image";
 import { photoPublicUrl } from "@/lib/supabaseClient";
 import { IconCamera, IconPin, IconStar } from "@/components/icons";
 import Reveal from "@/components/Reveal";
-import { Squiggle } from "@/components/Ornaments";
+import { Flourish } from "@/components/Ornaments";
 
 export default function About({
   bio,
@@ -26,10 +26,10 @@ export default function About({
   return (
     <section id="about" className="relative overflow-hidden bg-[var(--bg-dark-alt)] py-20 sm:py-28">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:gap-12 sm:px-10 lg:grid-cols-2 lg:items-center">
-        <Reveal className="relative px-3 py-6">
+        <Reveal className="relative px-4 py-8">
           <div className="print relative mx-auto w-full max-w-md">
-            <span className="tape -top-4 left-6 -rotate-6" />
-            <span className="tape -top-3 right-4 rotate-[8deg]" />
+            <span className="tape tape-tl" />
+            <span className="tape tape-br" />
             <div className="relative aspect-[4/5] w-full overflow-hidden bg-neutral-900">
               {photoPath ? (
                 <Image
@@ -43,7 +43,7 @@ export default function About({
               ) : null}
             </div>
             {photoCaption ? (
-              <p className="font-script absolute inset-x-0 bottom-2 text-center text-2xl text-[#2a2620]">
+              <p className="font-script absolute inset-x-0 bottom-3 text-center text-3xl text-[#2a2620]">
                 {photoCaption}
               </p>
             ) : null}
@@ -52,15 +52,15 @@ export default function About({
 
         <Reveal delay={120}>
           <div className="section-index">
-            <span className="num">02</span>
+            <span className="num">II</span>
             <span className="line" />
             <span className="eyebrow">Who I am</span>
           </div>
-          <h2 className="font-serif-display mt-4 text-[clamp(2.25rem,7vw,3.75rem)] font-semibold leading-[1.02] text-[var(--text-primary)]">
+          <h2 className="font-serif-display mt-4 text-[clamp(2.5rem,9vw,4.25rem)] font-medium leading-[1] text-[var(--text-primary)]">
             Hi, I&apos;m {photographerName}
           </h2>
-          <Squiggle />
-          <p className="mt-6 whitespace-pre-line text-[clamp(0.95rem,2.4vw,1.05rem)] leading-relaxed text-[var(--text-secondary)]">
+          <Flourish />
+          <p className="drop-cap mt-6 whitespace-pre-line text-[clamp(0.95rem,2.4vw,1.05rem)] leading-relaxed text-[var(--text-secondary)]">
             {bio}
           </p>
 

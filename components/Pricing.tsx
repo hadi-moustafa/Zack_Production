@@ -3,7 +3,7 @@
 import type { PricingPackage } from "@/lib/types";
 import { IconArrowRight, IconCamera, IconStar } from "@/components/icons";
 import Reveal from "@/components/Reveal";
-import { Squiggle } from "@/components/Ornaments";
+import { Flourish } from "@/components/Ornaments";
 import { selectPlan } from "@/lib/planSelection";
 
 const TIER_ICON: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
@@ -30,14 +30,14 @@ export default function Pricing({
       <div className="mx-auto max-w-6xl px-5 sm:px-10">
         <Reveal className="mx-auto max-w-2xl text-center">
           <div className="section-index justify-center">
-            <span className="num">03</span>
+            <span className="num">III</span>
             <span className="line" />
             <span className="eyebrow">Pricing</span>
           </div>
-          <h2 className="font-serif-display mt-4 text-[clamp(2.25rem,7vw,3.75rem)] font-semibold leading-[1.02] text-[var(--text-primary)]">
+          <h2 className="font-serif-display mt-4 text-[clamp(2.5rem,9vw,4.25rem)] font-medium leading-[1] text-[var(--text-primary)]">
             Photography Packages
           </h2>
-          <Squiggle center />
+          <Flourish center />
           <p className="mt-6 text-[clamp(0.95rem,2.4vw,1.05rem)] leading-relaxed text-[var(--text-secondary)]">
             {description}
           </p>
@@ -65,7 +65,7 @@ export default function Pricing({
                   <h3 className="font-serif-display mt-5 text-2xl font-semibold text-[var(--text-primary)]">
                     {pkg.name}
                   </h3>
-                  <p className="mt-2 text-4xl font-semibold text-[var(--accent-gold)]">
+                  <p className="font-serif-display mt-2 text-5xl font-light text-[var(--accent-gold)]">
                     {pkg.price}
                   </p>
                   <ul className="mt-5 flex-1 space-y-2.5 text-sm text-[var(--text-secondary)]">

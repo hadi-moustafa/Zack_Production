@@ -50,21 +50,22 @@ export default function Hero({
       ) : null}
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/25" />
 
+      <div className="hero-frame" />
       <span className="vf-corner vf-tl" />
       <span className="vf-corner vf-tr" />
       <span className="vf-corner vf-bl" />
       <span className="vf-corner vf-br" />
-      <p className="eyebrow absolute right-[clamp(16px,4vw,48px)] top-[clamp(76px,11vw,120px)] z-20 hidden items-center gap-2 !text-[var(--text-primary)]/80 sm:flex">
+      <p className="eyebrow absolute right-[56px] top-[124px] z-20 hidden items-center gap-2 !text-[var(--text-primary)]/80 sm:flex">
         <span className="rec-dot inline-block h-2 w-2 rounded-full bg-red-600" /> REC · ISO 400 · f/1.8
       </p>
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-16 sm:px-10 sm:pb-20">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-20 sm:px-16 sm:pb-24">
         <div className="max-w-xl">
           <p className="eyebrow animate-fade-up" style={{ animationDelay: "0.1s" }}>
             Capturing
           </p>
           <h1
-            className="font-serif-display animate-fade-up mt-4 text-[clamp(2.5rem,10vw,6.5rem)] font-semibold leading-[0.98] text-[var(--text-primary)]"
+            className="font-serif-display animate-fade-up mt-4 text-[clamp(3rem,13vw,7.5rem)] font-light italic leading-[0.94] text-[var(--text-primary)]"
             style={{ animationDelay: "0.25s" }}
           >
             {headline}
@@ -79,7 +80,7 @@ export default function Hero({
             <a href="#gallery" className="btn-ghost">
               View my work <IconArrowRight className="h-4 w-4" />
             </a>
-            <span className="font-script ml-3 hidden -rotate-3 items-center gap-1 text-2xl text-[var(--accent-gold-bright)] sm:inline-flex">
+            <span className="font-script ml-4 hidden items-center gap-1 text-3xl text-[var(--accent-gold-bright)] sm:inline-flex">
               <ScribbleArrow className="h-8 w-10 -scale-x-100 rotate-[200deg]" /> go on, have a look
             </span>
           </div>

@@ -10,7 +10,7 @@ export default function Footer({
   return (
     <footer className="border-t border-[var(--border-subtle)] bg-[var(--bg-dark)] py-8">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-6 text-center sm:flex-row sm:justify-between sm:px-10 sm:text-left">
-        <span className="font-script text-3xl text-[var(--accent-gold)]">{photographerName}</span>
+        <span className="font-script text-4xl text-[var(--accent-gold)]">{photographerName}</span>
         {tagline ? (
           <p className="text-xs text-[var(--text-secondary)]">
             {tagline} · © {new Date().getFullYear()}

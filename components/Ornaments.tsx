@@ -1,19 +1,17 @@
 /** Small hand-drawn SVG flourishes. Deliberately a little imperfect. */
 
-export function Squiggle({ className = "", center = false }: { className?: string; center?: boolean }) {
+export function Flourish({ className = "", center = false }: { className?: string; center?: boolean }) {
   return (
     <svg
-      viewBox="0 0 220 14"
+      viewBox="0 0 160 12"
       fill="none"
       aria-hidden
-      className={`ink-draw mt-3 h-3.5 w-40 text-[var(--accent-gold)] ${center ? "mx-auto" : ""} ${className}`}
+      className={`mt-4 h-3 w-32 text-[var(--accent-gold)] ${center ? "mx-auto" : ""} ${className}`}
     >
-      <path
-        d="M2 8c14-8 22 6 38 0s22-7 38-1 24 6 40-1 22-6 38 0 22 5 38-1 22-2 26 0"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
+      <path d="M0 6H62M98 6H160" stroke="currentColor" strokeWidth="0.8" opacity="0.7" />
+      <path d="M80 1L85 6L80 11L75 6Z" fill="currentColor" />
+      <circle cx="68" cy="6" r="1.2" fill="currentColor" />
+      <circle cx="92" cy="6" r="1.2" fill="currentColor" />
     </svg>
   );
 }
