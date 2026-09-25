@@ -6,6 +6,7 @@ import About from "@/components/About";
 import Gallery from "@/components/Gallery";
 import Pricing from "@/components/Pricing";
 import ContactForm from "@/components/ContactForm";
+import { OrnamentDivider } from "@/components/Ornaments";
 import Footer from "@/components/Footer";
 import type { Photo, PricingPackage, PageContent, SocialLink } from "@/lib/types";
 
@@ -66,8 +67,10 @@ export default async function Home() {
           photographerName={content.photographer_name}
           locationText={content.location_text}
         />
+        <OrnamentDivider />
         <Gallery photos={photos} includeStaticWork={content.static_media_imported !== "1"} />
         <Pricing packages={pricingPackages} description={content.pricing_description} />
+        <OrnamentDivider />
         <ContactForm
           description={content.contact_description}
           phone={content.contact_phone}

@@ -7,6 +7,7 @@ import { STATIC_WORK_ITEMS } from "@/lib/staticWork";
 import { sortCategories } from "@/lib/categories";
 import type { Photo } from "@/lib/types";
 import Reveal from "@/components/Reveal";
+import { Squiggle } from "@/components/Ornaments";
 import VideoTile from "@/components/VideoTile";
 import { IconSpeakerOff, IconSpeakerOn } from "@/components/icons";
 
@@ -142,6 +143,7 @@ export default function Gallery({
             <h2 className="font-serif-display mt-4 text-[clamp(2.25rem,7vw,3.75rem)] font-semibold leading-[1.02] text-[var(--text-primary)]">
               {heading}
             </h2>
+            <Squiggle />
           </div>
 
           {selectedCategory !== null ? (

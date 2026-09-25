@@ -1,23 +1,29 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Great_Vibes } from "next/font/google";
+import { Fraunces, Instrument_Sans, DM_Mono, Caveat } from "next/font/google";
 import SoundProvider from "@/components/sound/SoundProvider";
 import "./globals.css";
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+const fraunces = Fraunces({
+  variable: "--font-display",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  axes: ["SOFT", "WONK"],
+  style: ["normal", "italic"],
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const instrument = Instrument_Sans({
+  variable: "--font-body",
   subsets: ["latin"],
 });
 
-const greatVibes = Great_Vibes({
+const dmMono = DM_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
+
+const caveat = Caveat({
   variable: "--font-script",
   subsets: ["latin"],
-  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -29,7 +35,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${inter.variable} ${greatVibes.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${instrument.variable} ${dmMono.variable} ${caveat.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--bg-dark)] text-[var(--text-primary)]">
         <SoundProvider>{children}</SoundProvider>

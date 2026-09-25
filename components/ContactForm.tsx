@@ -13,6 +13,7 @@ import {
 } from "@/components/icons";
 import SocialShowcase from "@/components/SocialShowcase";
 import Reveal from "@/components/Reveal";
+import { Squiggle } from "@/components/Ornaments";
 import { PLAN_SELECTED_EVENT } from "@/lib/planSelection";
 import type { SocialLink } from "@/lib/types";
 
@@ -136,6 +137,7 @@ export default function ContactForm({
           <h2 className="font-serif-display mt-4 text-[clamp(2.25rem,7vw,3.75rem)] font-semibold leading-[1.02] text-[var(--text-primary)]">
             Let&apos;s Work Together
           </h2>
+          <Squiggle center />
           <p className="mt-6 text-[clamp(0.95rem,2.4vw,1.05rem)] leading-relaxed text-[var(--text-secondary)]">
             {description}
           </p>

@@ -17,8 +17,9 @@
   --color-text-secondary: var(--text-secondary);
   --color-accent-gold: var(--accent-gold);
   --color-border-subtle: var(--border-subtle);
-  --font-serif: var(--font-playfair);
-  --font-sans: var(--font-inter);
+  --font-serif: var(--font-display);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
   --font-script: var(--font-script);
 }
 
@@ -29,7 +30,7 @@ html {
 body {
   background: var(--bg-dark);
   color: var(--text-primary);
-  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
 }
 
@@ -51,18 +52,22 @@ body::before {
 }
 
 .font-serif-display {
-  font-family: var(--font-playfair), Georgia, serif;
+  font-family: var(--font-display), Georgia, serif;
+  font-variation-settings: "SOFT" 60, "WONK" 1;
+  letter-spacing: -0.015em;
 }
 
 .font-script {
   font-family: var(--font-script), cursive;
+  font-size: 1.2em;
+  line-height: 1;
 }
 
 .eyebrow {
-  font-family: var(--font-inter), Arial, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent-gold);
 }
@@ -72,7 +77,7 @@ body::before {
   display: inline-flex;
   align-items: baseline;
   gap: 0.65rem;
-  font-family: var(--font-playfair), Georgia, serif;
+  font-family: var(--font-mono), monospace;
   color: var(--accent-gold);
 }
 
@@ -228,4 +233,111 @@ body::before {
   .animate-scroll-cue {
     animation: none;
   }
+}
+
+/* ---------- Hand-made details ---------- */
+
+/* Sprocket holes punched into the letterbox bars, like a strip of 35mm film */
+.letterbox-bar {
+  background:
+    radial-gradient(ellipse 5px 3px at 50% 50%, #1b1a17 60%, transparent 62%) 0 0 / 22px 100% repeat-x,
+    #000;
+}
+
+/* Warm paper-tinted vignette so the black never feels flat */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 59;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(60, 35, 10, 0.28) 100%);
+}
+
+/* Viewfinder corner brackets */
+.vf-corner {
+  position: absolute;
+  width: clamp(22px, 4vw, 40px);
+  height: clamp(22px, 4vw, 40px);
+  border-color: rgba(245, 242, 234, 0.75);
+  border-style: solid;
+  border-width: 0;
+  z-index: 15;
+  pointer-events: none;
+}
+.vf-tl { top: clamp(28px, 6vw, 64px); left: clamp(16px, 4vw, 48px); border-top-width: 2px; border-left-width: 2px; }
+.vf-tr { top: clamp(28px, 6vw, 64px); right: clamp(16px, 4vw, 48px); border-top-width: 2px; border-right-width: 2px; }
+.vf-bl { bottom: clamp(28px, 6vw, 64px); left: clamp(16px, 4vw, 48px); border-bottom-width: 2px; border-left-width: 2px; }
+.vf-br { bottom: clamp(28px, 6vw, 64px); right: clamp(16px, 4vw, 48px); border-bottom-width: 2px; border-right-width: 2px; }
+
+@keyframes rec-blink {
+  0%, 60% { opacity: 1; }
+  61%, 100% { opacity: 0.15; }
+}
+.rec-dot { animation: rec-blink 1.6s steps(1) infinite; }
+
+/* Masking tape holding a print to the page */
+.tape {
+  position: absolute;
+  width: 88px;
+  height: 26px;
+  background: rgba(232, 214, 170, 0.55);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  clip-path: polygon(0 8%, 4% 0, 8% 10%, 12% 0, 100% 3%, 96% 50%, 100% 92%, 90% 100%, 84% 92%, 0 100%, 4% 50%);
+}
+
+/* A print pinned up: white border, slight tilt, real shadow */
+.print {
+  background: #efe9db;
+  padding: 12px 12px 44px;
+  box-shadow: 0 25px 60px -20px rgba(0, 0, 0, 0.85), 0 2px 0 rgba(255, 255, 255, 0.05) inset;
+  transform: rotate(-2deg);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.print:hover { transform: rotate(0deg) scale(1.01); }
+
+/* Hand-inked stamp */
+.stamp {
+  font-family: var(--font-mono), monospace;
+  border: 2px solid var(--accent-gold);
+  color: var(--accent-gold);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  transform: rotate(-4deg);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  font-weight: 500;
+  background: var(--bg-dark);
+  box-shadow: 0 0 0 2px var(--bg-dark), 0 0 0 3px rgba(201, 162, 75, 0.4);
+}
+
+/* Section ornament divider */
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1.5rem;
+  color: var(--accent-gold);
+  background: var(--bg-dark);
+}
+.ornament-divider::before,
+.ornament-divider::after {
+  content: "";
+  flex: 1;
+  height: 6px;
+  background:
+    radial-gradient(circle at 3px 3px, currentColor 1.2px, transparent 1.6px) 0 0 / 12px 6px repeat-x;
+  opacity: 0.45;
+}
+
+.ink-draw path {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: ink 1.4s 0.3s ease-out forwards;
+}
+@keyframes ink { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .ink-draw path { animation: none; stroke-dashoffset: 0; }
+  .rec-dot { animation: none; }
 }

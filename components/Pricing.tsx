@@ -3,6 +3,7 @@
 import type { PricingPackage } from "@/lib/types";
 import { IconArrowRight, IconCamera, IconStar } from "@/components/icons";
 import Reveal from "@/components/Reveal";
+import { Squiggle } from "@/components/Ornaments";
 import { selectPlan } from "@/lib/planSelection";
 
 const TIER_ICON: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
@@ -36,6 +37,7 @@ export default function Pricing({
           <h2 className="font-serif-display mt-4 text-[clamp(2.25rem,7vw,3.75rem)] font-semibold leading-[1.02] text-[var(--text-primary)]">
             Photography Packages
           </h2>
+          <Squiggle center />
           <p className="mt-6 text-[clamp(0.95rem,2.4vw,1.05rem)] leading-relaxed text-[var(--text-secondary)]">
             {description}
           </p>
@@ -55,8 +57,8 @@ export default function Pricing({
                   }`}
                 >
                   {featured ? (
-                    <span className="absolute -top-3 left-7 bg-[var(--accent-gold)] px-3 py-1 text-[0.65rem] font-bold uppercase tracking-widest text-[#0a0a0a]">
-                      Most popular
+                    <span className="stamp absolute -top-3 right-6">
+                      Client favourite
                     </span>
                   ) : null}
                   <Icon className="h-7 w-7 text-[var(--accent-gold)]" />
