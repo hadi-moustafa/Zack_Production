@@ -1,0 +1,38 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+        NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}
+    image: zack-production-site:latest
+    container_name: zack-production
+    restart: unless-stopped
+    # Only reachable from the server itself (for the keep-alive cron).
+    # The public goes through Caddy on ports 80/443.
+    ports:
+      - "127.0.0.1:3000:3000"
+    env_file:
+      - .env
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: zack-caddy
+    restart: unless-stopped
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      # "z" relabels the file for SELinux (Fedora/RHEL); harmless on Ubuntu/Debian
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro,z
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -6,6 +6,9 @@ const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
 
 const nextConfig: NextConfig = {
   agentRules: false,
+  // Emit a self-contained server in .next/standalone so the Docker image
+  // doesn't need the full node_modules folder.
+  output: "standalone",
   images: {
     remotePatterns: [
       ...(supabaseHostname

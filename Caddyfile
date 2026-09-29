@@ -1,0 +1,6 @@
+# Caddy sits in front of the Next.js container and handles HTTPS.
+# It requests and renews the SSL certificate for $DOMAIN automatically.
+{$DOMAIN:localhost} {
+	encode zstd gzip
+	reverse_proxy web:3000
+}
