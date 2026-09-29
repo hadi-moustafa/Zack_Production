@@ -46,6 +46,7 @@ export default function Gallery({
   const [curtainClosed, setCurtainClosed] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const items = useMemo<GalleryItem[]>(() => {
     const fromDb: GalleryItem[] = photos.map((p) => ({
@@ -105,6 +106,15 @@ export default function Gallery({
   const shownItems =
     selectedCategory === SHOWREEL_KEY ? visibleItems : showAll ? visibleItems : visibleItems.slice(0, INITIAL_COUNT);
 
+  // Swapping the tall category list for a shorter grid would otherwise leave
+  // the viewport past the gallery (e.g. in Pricing on mobile), so jump back to
+  // the section top while the curtain hides the change.
+  function scrollToSectionTop() {
+    const section = sectionRef.current;
+    if (!section || section.getBoundingClientRect().top >= 0) return;
+    window.scrollTo({ top: section.getBoundingClientRect().top + window.scrollY, behavior: "instant" });
+  }
+
   function openCategory(cat: string) {
     if (cat === selectedCategory) return;
     setLightboxIndex(null);
@@ -113,6 +123,7 @@ export default function Gallery({
       setSelectedCategory(cat);
       setShowAll(false);
       setCurtainClosed(false);
+      scrollToSectionTop();
     }, CURTAIN_MS);
   }
 
@@ -122,6 +133,7 @@ export default function Gallery({
     setTimeout(() => {
       setSelectedCategory(null);
       setCurtainClosed(false);
+      scrollToSectionTop();
     }, CURTAIN_MS);
   }
 
@@ -131,7 +143,7 @@ export default function Gallery({
     selectedCategory === null ? "Choose a Story" : selectedCategory === SHOWREEL_KEY ? "The Showreel" : selectedCategory;
 
   return (
-    <section id="gallery" className="relative overflow-hidden bg-[var(--bg-dark)] py-20 sm:py-28">
+    <section ref={sectionRef} id="gallery" className="relative overflow-hidden bg-[var(--bg-dark)] py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-10">
         <Reveal className="flex flex-wrap items-end justify-between gap-4">
           <div>
