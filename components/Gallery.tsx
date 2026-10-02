@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { photoPublicUrl, workAlt } from "@/lib/media";
-import { STATIC_WORK_ITEMS } from "@/lib/staticWork";
 import { sortCategories } from "@/lib/categories";
 import type { Photo } from "@/lib/types";
 import Reveal from "@/components/Reveal";
@@ -34,39 +33,24 @@ const SPAN_PATTERN = [
   "row-span-2",
 ];
 
-export default function Gallery({
-  photos,
-  includeStaticWork = true,
-}: {
-  photos: Photo[];
-  /** Set to false once the built-in media has been imported into the DB, to avoid showing it twice. */
-  includeStaticWork?: boolean;
-}) {
+export default function Gallery({ photos }: { photos: Photo[] }) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [curtainClosed, setCurtainClosed] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
-  const items = useMemo<GalleryItem[]>(() => {
-    const fromDb: GalleryItem[] = photos.map((p) => ({
-      id: p.id,
-      kind: p.media_type === "video" ? "video" : "photo",
-      category: p.category,
-      src: photoPublicUrl(p.storage_path),
-      caption: p.caption,
-    }));
-    const fromStatic: GalleryItem[] = includeStaticWork
-      ? STATIC_WORK_ITEMS.map((w) => ({
-          id: w.id,
-          kind: w.kind,
-          category: w.category,
-          src: w.src,
-          caption: w.caption,
-        }))
-      : [];
-    return [...fromDb, ...fromStatic];
-  }, [photos, includeStaticWork]);
+  const items = useMemo<GalleryItem[]>(
+    () =>
+      photos.map((p) => ({
+        id: p.id,
+        kind: p.media_type === "video" ? "video" : "photo",
+        category: p.category,
+        src: photoPublicUrl(p.storage_path),
+        caption: p.caption,
+      })),
+    [photos]
+  );
 
   const categories = useMemo(() => {
     const set = new Set(items.map((p) => p.category));

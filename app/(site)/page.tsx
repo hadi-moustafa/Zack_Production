@@ -58,7 +58,7 @@ export default async function Home() {
         photographerName={content.photographer_name}
       />
       <OrnamentDivider />
-      <Gallery photos={photos} includeStaticWork={content.static_media_imported !== "1"} />
+      <Gallery photos={photos} />
       <Pricing packages={pricingPackages} description={content.pricing_description} />
       <OrnamentDivider />
       <ContactForm
