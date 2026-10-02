@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabasePublic } from "@/lib/supabasePublic";
+import { refreshInstagramTokenIfStale } from "@/lib/instagram";
 
 // GET /api/cron/keep-alive — pinged daily by Vercel Cron (see vercel.json) so
 // Supabase sees regular API activity and never auto-pauses the free-tier
@@ -15,6 +16,10 @@ export async function GET(request: Request) {
   }
 
   const { error } = await supabasePublic.from("page_content").select("key").limit(1);
+
+  // Piggyback on the daily ping to keep the Instagram token from expiring
+  // even if nobody visits the site for weeks.
+  await refreshInstagramTokenIfStale().catch(() => {});
 
   if (error) {
     return NextResponse.json({ ok: false, error: error.message }, { status: 500 });

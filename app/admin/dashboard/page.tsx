@@ -3,17 +3,19 @@ import LogoutButton from "@/components/admin/LogoutButton";
 import AdminTabs from "@/components/admin/AdminTabs";
 import type { Photo, PricingPackage, PageContent, SocialLink, ContactSubmission } from "@/lib/types";
 import { withDefaults } from "@/lib/content";
+import type { InstagramStatus } from "@/components/admin/InstagramConnect";
 
 export default async function AdminDashboardPage() {
   const supabase = await createServerSupabaseClient();
 
-  const [{ data: userData }, photosRes, pricingRes, contentRes, socialRes, submissionsRes] = await Promise.all([
+  const [{ data: userData }, photosRes, pricingRes, contentRes, socialRes, submissionsRes, instagramRes] = await Promise.all([
     supabase.auth.getUser(),
     supabase.from("photos").select("*").order("sort_order", { ascending: true }),
     supabase.from("pricing_packages").select("*").order("sort_order", { ascending: true }),
     supabase.from("page_content").select("*"),
     supabase.from("social_links").select("*"),
     supabase.from("contact_submissions").select("*").order("created_at", { ascending: false }),
+    supabase.from("instagram_account").select("username, refreshed_at").eq("id", 1).maybeSingle(),
   ]);
 
   const photos = (photosRes.data ?? []) as Photo[];
@@ -25,6 +27,9 @@ export default async function AdminDashboardPage() {
   const contentMap = withDefaults(Object.fromEntries(content.map((c) => [c.key, c.value])));
   const socialLinks = (socialRes.data ?? []) as SocialLink[];
   const submissions = (submissionsRes.data ?? []) as ContactSubmission[];
+  const instagramStatus: InstagramStatus = instagramRes.data
+    ? { username: instagramRes.data.username, refreshedAt: instagramRes.data.refreshed_at }
+    : null;
 
   return (
     <div className="min-h-full bg-neutral-100">
@@ -45,6 +50,7 @@ export default async function AdminDashboardPage() {
           contentMap={contentMap}
           pricingPackages={pricingPackages}
           socialLinks={socialLinks}
+          instagramStatus={instagramStatus}
           submissions={submissions}
           userEmail={userData.user?.email ?? ""}
         />

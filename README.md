@@ -29,6 +29,7 @@ cp .env.local.example .env.local
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase → Project Settings → API → Publishable (anon) key |
 | `RESEND_API_KEY` | [resend.com](https://resend.com) → API Keys. Contact-form emails are skipped (message is still saved) if this is unset. |
 | `CONTACT_NOTIFICATION_EMAIL` | The photographer's email address that should receive contact-form notifications. |
+| `SUPABASE_SECRET_KEY` | Supabase → Project Settings → API Keys → Secret key. Server-only; needed for the latest-Instagram-reel feature. |
 
 These same variables need to be added in **Vercel → Project Settings → Environment
 Variables** for the deployed site.
@@ -60,6 +61,23 @@ git push -u origin development
    deployments, so you can test admin changes before merging to `main`.
 3. Add the environment variables from step 2 in the Vercel project settings.
 4. Deploy. Vercel will build and host the site on every push automatically from then on.
+
+## Latest Instagram reel
+
+The Follow Along section can show the newest video from your Instagram account as a
+playable reel card, linking to the reel and to your profile.
+
+1. The Instagram account must be a **Business** or **Creator** account.
+2. At [developers.facebook.com](https://developers.facebook.com/apps) create an app, add the
+   **Instagram** product, choose **API setup with Instagram login**, add the account under
+   *Generate access tokens*, and generate a token. That token is long-lived (60 days).
+3. Set `SUPABASE_SECRET_KEY` (see step 2) and re-run `supabase/schema.sql` so the private
+   `instagram_account` table exists.
+4. In the admin dashboard → **Social Links** → *Latest Instagram reel*, paste the token.
+
+The site renews the token on its own (weekly, via page visits and the daily cron), so it
+won't expire as long as the site stays deployed. If Instagram isn't connected, the section
+just shows the social tiles as before.
 
 ## Project structure
 

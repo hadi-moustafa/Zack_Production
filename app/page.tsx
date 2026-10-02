@@ -1,6 +1,7 @@
 import { supabasePublic } from "@/lib/supabasePublic";
 import { withDefaults, SECTION_PHOTO_KEYS } from "@/lib/content";
 import { brandLogoSrc } from "@/lib/publicAsset";
+import { getLatestInstagramReel } from "@/lib/instagram";
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -14,7 +15,7 @@ import type { Photo, PricingPackage, PageContent, SocialLink } from "@/lib/types
 export const revalidate = 60;
 
 async function getData() {
-  const [photosRes, pricingRes, contentRes, socialRes] = await Promise.all([
+  const [photosRes, pricingRes, contentRes, socialRes, instagramReel] = await Promise.all([
     supabasePublic.from("photos").select("*").order("sort_order", { ascending: true }),
     supabasePublic
       .from("pricing_packages")
@@ -22,6 +23,7 @@ async function getData() {
       .order("sort_order", { ascending: true }),
     supabasePublic.from("page_content").select("*"),
     supabasePublic.from("social_links").select("*"),
+    getLatestInstagramReel(),
   ]);
 
   const photos = (photosRes.data ?? []) as Photo[];
@@ -34,11 +36,11 @@ async function getData() {
   );
   const socialLinks = (socialRes.data ?? []) as SocialLink[];
 
-  return { photos, pricingPackages, content, socialLinks };
+  return { photos, pricingPackages, content, socialLinks, instagramReel };
 }
 
 export default async function Home() {
-  const { photos, pricingPackages, content, socialLinks } = await getData();
+  const { photos, pricingPackages, content, socialLinks, instagramReel } = await getData();
   const stillPhotos = photos.filter((p) => p.media_type !== "video");
 
   const heroPhoto =
@@ -82,6 +84,7 @@ export default async function Home() {
           whatsappNumber={content.whatsapp_number}
           locationText={content.location_text}
           socialLinks={socialLinks}
+          instagramReel={instagramReel}
           backgroundPhotoPath={contactPhoto}
         />
         <Footer

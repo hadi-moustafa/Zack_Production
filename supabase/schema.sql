@@ -184,3 +184,22 @@ create policy "Admin update photo files" on storage.objects
 drop policy if exists "Admin delete photo files" on storage.objects;
 create policy "Admin delete photo files" on storage.objects
   for delete using (bucket_id = 'photos' and auth.role() = 'authenticated');
+
+-- ---------------------------------------------------------------------------
+-- Instagram API token for the "latest reel" spot in the Follow Along section.
+-- It's a secret, so there is deliberately no public read policy: the public
+-- site reads it server-side with SUPABASE_SECRET_KEY, and the admin manages
+-- it from the dashboard. Single row (id = 1).
+-- ---------------------------------------------------------------------------
+create table if not exists public.instagram_account (
+  id int primary key default 1 check (id = 1),
+  access_token text not null,
+  username text not null default '',
+  refreshed_at timestamptz not null default now()
+);
+
+alter table public.instagram_account enable row level security;
+
+drop policy if exists "Admin manage instagram" on public.instagram_account;
+create policy "Admin manage instagram" on public.instagram_account
+  for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');

@@ -5,6 +5,7 @@ import ContentManager from "@/components/admin/ContentManager";
 import PhotosManager from "@/components/admin/PhotosManager";
 import PricingManager from "@/components/admin/PricingManager";
 import SocialLinksManager from "@/components/admin/SocialLinksManager";
+import InstagramConnect, { type InstagramStatus } from "@/components/admin/InstagramConnect";
 import ContactSubmissionsList from "@/components/admin/ContactSubmissionsList";
 import AccountSettings from "@/components/admin/AccountSettings";
 import { SECTION_PHOTO_KEYS } from "@/lib/content";
@@ -18,6 +19,7 @@ export default function AdminTabs({
   contentMap,
   pricingPackages,
   socialLinks,
+  instagramStatus,
   submissions,
   userEmail,
 }: {
@@ -26,6 +28,7 @@ export default function AdminTabs({
   contentMap: Record<string, string>;
   pricingPackages: PricingPackage[];
   socialLinks: SocialLink[];
+  instagramStatus: InstagramStatus;
   submissions: ContactSubmission[];
   userEmail: string;
 }) {
@@ -81,7 +84,12 @@ export default function AdminTabs({
         ) : null}
         {tab === "content" ? <ContentManager initialContent={content} /> : null}
         {tab === "pricing" ? <PricingManager initialPackages={pricingPackages} /> : null}
-        {tab === "social" ? <SocialLinksManager initialLinks={socialLinks} /> : null}
+        {tab === "social" ? (
+          <div className="space-y-6">
+            <SocialLinksManager initialLinks={socialLinks} />
+            <InstagramConnect initialStatus={instagramStatus} />
+          </div>
+        ) : null}
         {tab === "messages" ? <ContactSubmissionsList submissions={submissions} /> : null}
         {tab === "account" ? <AccountSettings userEmail={userEmail} /> : null}
       </div>

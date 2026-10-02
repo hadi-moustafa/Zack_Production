@@ -16,6 +16,7 @@ import Reveal from "@/components/Reveal";
 import { Flourish } from "@/components/Ornaments";
 import { PLAN_SELECTED_EVENT } from "@/lib/planSelection";
 import type { SocialLink } from "@/lib/types";
+import type { InstagramReel } from "@/lib/instagram";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -31,6 +32,7 @@ export default function ContactForm({
   whatsappNumber,
   locationText,
   socialLinks,
+  instagramReel,
   backgroundPhotoPath,
 }: {
   description: string;
@@ -39,6 +41,7 @@ export default function ContactForm({
   whatsappNumber: string;
   locationText: string;
   socialLinks: SocialLink[];
+  instagramReel: InstagramReel | null;
   backgroundPhotoPath: string | null;
 }) {
   const [status, setStatus] = useState<Status>("idle");
@@ -262,7 +265,7 @@ export default function ContactForm({
           </Reveal>
         </div>
 
-        <SocialShowcase links={socialLinks} />
+        <SocialShowcase links={socialLinks} reel={instagramReel} />
       </div>
     </section>
   );
