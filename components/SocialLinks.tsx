@@ -29,9 +29,8 @@ const BRAND: Record<
   },
   tiktok: {
     Icon: IconTiktok,
-    bg: "bg-[#010101] ring-1 ring-white/15",
-    // TikTok's signature cyan/red offset.
-    icon: "h-[1.15rem] w-[1.15rem] [filter:drop-shadow(-1.2px_-1.2px_0_#25F4EE)_drop-shadow(1.2px_1.2px_0_#FE2C55)]",
+    bg: "bg-[#010101] ring-1 ring-white/20",
+    icon: "h-[1.15rem] w-[1.15rem]",
     glow: "hover:shadow-[0_10px_24px_-8px_rgba(37,244,238,0.55)]",
   },
   whatsapp: {
