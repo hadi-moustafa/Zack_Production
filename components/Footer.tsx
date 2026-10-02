@@ -86,9 +86,14 @@ export default function Footer({ logo, data }: { logo: React.ReactNode; data: Si
         </p>
         <p className="flex flex-wrap items-center gap-x-3">
           <span>
-            Website by {site.credit.name} ·{" "}
-            <a href={telUrl(site.credit.phone)} className="inline-flex min-h-11 items-center transition hover:text-[var(--accent-gold-bright)]">
-              {site.credit.phone}
+            Website by{" "}
+            <a
+              href={site.credit.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center underline-offset-4 transition hover:text-[var(--accent-gold-bright)] hover:underline"
+            >
+              {site.credit.name}
             </a>
           </span>
           <Link

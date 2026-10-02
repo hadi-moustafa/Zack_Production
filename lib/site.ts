@@ -23,8 +23,8 @@ export const site = {
     background: "#0a0a0a",
   },
   credit: {
-    name: "SE HM",
-    phone: "+961 81 277281",
+    name: "se.hadi",
+    url: "https://www.instagram.com/se.hadimoustafa/",
   },
   /** Date the privacy policy text was last changed. */
   privacyUpdated: "2026-10-02",

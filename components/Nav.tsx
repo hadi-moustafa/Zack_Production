@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import SocialLinks from "@/components/SocialLinks";
 import SoundToggle from "@/components/sound/SoundToggle";
-import { IconMenu, IconClose, IconArrowRight } from "@/components/icons";
+import { IconMenu, IconClose } from "@/components/icons";
 import { SECTIONS } from "@/lib/site";
 import type { SocialLink } from "@/lib/types";
 
@@ -50,11 +50,8 @@ export default function Nav({ logo, socialLinks }: { logo: React.ReactNode; soci
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <SocialLinks links={socialLinks} className="hidden xl:flex" />
+          <SocialLinks links={socialLinks} />
           <SoundToggle />
-          <Link href="/#contact" className="btn-gold !px-5">
-            Book a shoot <IconArrowRight className="h-4 w-4" />
-          </Link>
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
@@ -88,9 +85,6 @@ export default function Nav({ logo, socialLinks }: { logo: React.ReactNode; soci
             {s.label}
           </Link>
         ))}
-        <Link href="/#contact" onClick={() => setOpen(false)} className="btn-gold mt-6 w-full justify-center">
-          Book a shoot <IconArrowRight className="h-4 w-4" />
-        </Link>
         <SocialLinks links={socialLinks} className="mt-6" />
       </nav>
     </header>
