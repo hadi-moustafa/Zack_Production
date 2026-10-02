@@ -3,17 +3,27 @@ import Link from "next/link";
 export default function Footer({
   photographerName,
   tagline,
+  logoSrc,
 }: {
   photographerName: string;
   tagline: string;
+  logoSrc: string | null;
 }) {
   return (
     <footer className="border-t border-[var(--border-subtle)] bg-[var(--bg-dark)] py-8">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-6 text-center sm:flex-row sm:justify-between sm:px-10 sm:text-left">
-        <span className="font-script text-4xl text-[var(--accent-gold)]">{photographerName}</span>
+        {logoSrc ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={logoSrc} alt={photographerName} className="h-14 w-auto" />
+        ) : (
+          <span className="font-serif-display text-3xl font-semibold tracking-wide text-[var(--accent-gold-bright)]">
+            {photographerName}
+          </span>
+        )}
         {tagline ? (
-          <p className="text-xs text-[var(--text-secondary)]">
-            {tagline} · © {new Date().getFullYear()}
+          <p className="text-sm text-[var(--text-secondary)]">
+            <span className="font-script text-lg text-[var(--text-primary)]">{tagline}</span>
+            <span className="mx-2">·</span>© {new Date().getFullYear()}
           </p>
         ) : null}
         <div className="flex flex-col items-center gap-1 text-xs text-[var(--text-secondary)] sm:items-end">

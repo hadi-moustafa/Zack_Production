@@ -53,7 +53,7 @@ export default function SocialShowcase({ links }: { links: SocialLink[] }) {
   return (
     <div className="mt-16 border-t border-[var(--border-subtle)] pt-14 sm:mt-20 sm:pt-16">
       <div className="text-center">
-        <p className="font-script text-2xl text-[var(--accent-gold)]">Stay in the frame</p>
+        <p className="font-script text-2xl text-[var(--accent-gold-bright)]">Stay in the frame</p>
         <h3 className="font-serif-display mt-2 text-[clamp(1.75rem,5vw,2.75rem)] font-semibold text-[var(--text-primary)]">
           Follow Along
         </h3>

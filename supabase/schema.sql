@@ -83,7 +83,7 @@ insert into public.page_content (key, value) values
   ('about_photo_path', ''),
   ('contact_photo_path', ''),
   ('footer_email', 'contact@example.com'),
-  ('footer_tagline', 'Capturing real moments, one frame at a time.')
+  ('footer_tagline', 'We Entertain People.')
 on conflict (key) do nothing;
 
 insert into public.social_links (platform, url) values

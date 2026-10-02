@@ -193,7 +193,7 @@ export default function ContactForm({
               <IconArrowRight className="ml-auto h-4 w-4 shrink-0 text-[var(--text-secondary)] transition group-hover:translate-x-1 group-hover:text-[#25D366]" />
             </a>
 
-            <p className="font-script mt-auto pt-10 text-xl text-[var(--accent-gold)]">
+            <p className="font-script mt-auto pt-10 text-2xl text-[var(--accent-gold-bright)]">
               Let&apos;s create something beautiful
             </p>
           </Reveal>

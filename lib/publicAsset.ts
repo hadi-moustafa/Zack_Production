@@ -10,3 +10,9 @@ export function publicFileExists(relPath: string): boolean {
     return false;
   }
 }
+
+// The brand logo, dropped into /public as logo.svg, logo.png or logo.webp.
+export function brandLogoSrc(): string | null {
+  const file = ["logo.svg", "logo.png", "logo.webp"].find(publicFileExists);
+  return file ? `/${file}` : null;
+}

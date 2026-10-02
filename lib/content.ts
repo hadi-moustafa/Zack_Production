@@ -34,7 +34,7 @@ export const CONTENT_FIELDS: ContentField[] = [
     placeholder: "+961 71 413 009",
   },
   { key: "footer_email", label: "Contact email", group: "Contact & Footer", placeholder: "you@example.com" },
-  { key: "footer_tagline", label: "Footer tagline", group: "Contact & Footer", placeholder: "Capturing real moments, one frame at a time." },
+  { key: "footer_tagline", label: "Footer tagline", group: "Contact & Footer", placeholder: "We Entertain People." },
 ];
 
 // Which uploaded photo (by storage_path) backs each section's background image.

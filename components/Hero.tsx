@@ -65,7 +65,7 @@ export default function Hero({
             Capturing
           </p>
           <h1
-            className="font-serif-display animate-fade-up mt-4 text-[clamp(3rem,13vw,7.5rem)] font-light italic leading-[0.94] text-[var(--text-primary)]"
+            className="font-serif-display animate-fade-up mt-4 text-[clamp(3rem,13vw,7.5rem)] font-medium italic leading-[0.94] text-[var(--text-primary)]"
             style={{ animationDelay: "0.25s" }}
           >
             {headline}
@@ -80,8 +80,8 @@ export default function Hero({
             <a href="#gallery" className="btn-ghost">
               View my work <IconArrowRight className="h-4 w-4" />
             </a>
-            <span className="font-script ml-4 hidden items-center gap-1 text-3xl text-[var(--accent-gold-bright)] sm:inline-flex">
-              <ScribbleArrow className="h-8 w-10 -scale-x-100 rotate-[200deg]" /> go on, have a look
+            <span className="font-script ml-4 hidden items-center gap-2 text-2xl text-[var(--accent-gold-bright)] [text-shadow:0_2px_12px_rgba(0,0,0,0.8)] sm:inline-flex">
+              <ScribbleArrow className="h-8 w-10 -scale-x-100 rotate-[200deg]" /> Go on, have a look
             </span>
           </div>
         </div>

@@ -43,7 +43,7 @@ export default function About({
               ) : null}
             </div>
             {photoCaption ? (
-              <p className="font-script absolute inset-x-0 bottom-3 text-center text-3xl text-[#2a2620]">
+              <p className="font-script absolute inset-x-0 bottom-3 text-center text-2xl text-[#2a2620]">
                 {photoCaption}
               </p>
             ) : null}

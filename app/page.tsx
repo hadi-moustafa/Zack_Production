@@ -1,5 +1,6 @@
 import { supabasePublic } from "@/lib/supabasePublic";
 import { withDefaults, SECTION_PHOTO_KEYS } from "@/lib/content";
+import { brandLogoSrc } from "@/lib/publicAsset";
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -47,9 +48,12 @@ export default async function Home() {
   const contactPhoto =
     content[SECTION_PHOTO_KEYS.contact] || stillPhotos[2]?.storage_path || stillPhotos[0]?.storage_path || null;
 
+  const logoSrc = brandLogoSrc();
+
   return (
     <>
       <Nav
+        logoSrc={logoSrc}
         name={content.photographer_name}
         subtitle={content.brand_subtitle}
         socialLinks={socialLinks}
@@ -80,7 +84,11 @@ export default async function Home() {
           socialLinks={socialLinks}
           backgroundPhotoPath={contactPhoto}
         />
-        <Footer photographerName={content.photographer_name} tagline={content.footer_tagline} />
+        <Footer
+          photographerName={content.photographer_name}
+          tagline={content.footer_tagline}
+          logoSrc={logoSrc}
+        />
       </main>
     </>
   );
