@@ -3,6 +3,8 @@ import { requireAdmin } from "@/lib/requireAdmin";
 
 type PackageInput = {
   id?: string;
+  section?: string;
+  group_name?: string;
   name?: string;
   price?: string;
   features?: string[];
@@ -11,6 +13,8 @@ type PackageInput = {
 
 function sanitize(input: PackageInput) {
   return {
+    section: input.section === "singles" ? "singles" : "packages",
+    group_name: String(input.group_name ?? "").trim().slice(0, 100),
     name: String(input.name ?? "").slice(0, 100),
     price: String(input.price ?? "").slice(0, 50),
     features: Array.isArray(input.features)

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { photoPublicUrl } from "@/lib/media";
@@ -8,7 +8,7 @@ import { IconArrowRight, IconClose, IconMail, IconPhone, IconPin, IconWhatsapp }
 import SocialShowcase from "@/components/SocialShowcase";
 import Reveal from "@/components/Reveal";
 import { Flourish } from "@/components/Ornaments";
-import { PLAN_SELECTED_EVENT } from "@/lib/planSelection";
+import { planSelection, usePlanSelection, describeSelection } from "@/lib/planSelection";
 import { locationLabel, responsePromise } from "@/lib/site";
 import { LAST_WHATSAPP_URL_KEY, telUrl, whatsappUrl } from "@/lib/contact";
 import type { ContactDetails } from "@/lib/siteData";
@@ -31,16 +31,8 @@ export default function ContactForm({
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-
-  useEffect(() => {
-    const onPlanSelected = (e: Event) => {
-      const detail = (e as CustomEvent<string>).detail;
-      if (typeof detail === "string") setSelectedPlan(detail);
-    };
-    window.addEventListener(PLAN_SELECTED_EVENT, onPlanSelected);
-    return () => window.removeEventListener(PLAN_SELECTED_EVENT, onPlanSelected);
-  }, []);
+  const selected = usePlanSelection();
+  const selectionText = describeSelection(selected);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -66,7 +58,7 @@ export default function ContactForm({
         `New inquiry from ${name}`,
         `Phone: ${customerPhone}`,
         customerEmail ? `Email: ${customerEmail}` : null,
-        selectedPlan ? `Package: ${selectedPlan}` : null,
+        selectionText ? `\nInterested in:\n${selectionText}` : null,
         "",
         message,
       ].filter((l): l is string => l !== null);
@@ -88,7 +80,7 @@ export default function ContactForm({
         name,
         email: customerEmail || undefined,
         phone: customerPhone,
-        message: selectedPlan ? `Package: ${selectedPlan}\n\n${message}` : message,
+        message: selectionText ? `Interested in:\n${selectionText}\n\n${message}` : message,
       }),
     }).catch(() => {});
 
@@ -183,17 +175,36 @@ export default function ContactForm({
 
           <Reveal delay={100}>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {selectedPlan ? (
-                <div className="flex items-center justify-between gap-3 rounded-md border border-[var(--accent-gold)]/40 bg-[var(--accent-gold)]/10 py-1 pl-4 pr-1 text-[var(--accent-gold-bright)]">
-                  <span>Package: {selectedPlan}</span>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedPlan(null)}
-                    aria-label="Clear selected package"
-                    className="flex h-11 w-11 items-center justify-center text-[var(--accent-gold)] hover:text-[var(--accent-gold-bright)]"
-                  >
-                    <IconClose className="h-4 w-4" />
-                  </button>
+              {selected.length > 0 ? (
+                <div className="rounded-lg border border-[var(--accent-gold)]/40 bg-[var(--accent-gold)]/[0.07] p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="field-label">Your selection</p>
+                    <a href="#pricing" className="inline-flex min-h-11 items-center text-[0.95rem] text-[var(--accent-gold-bright)] underline-offset-4 hover:underline">
+                      Edit
+                    </a>
+                  </div>
+                  <ul className="mt-1 space-y-1">
+                    {selected.map((item) => (
+                      <li key={item.id} className="flex items-center gap-2">
+                        <span className="flex-1 text-[var(--text-primary)]">
+                          {item.name}
+                          <span className="text-[var(--text-secondary)]">
+                            {" "}
+                            · {item.group}
+                            {item.price ? ` · ${item.price}` : ""}
+                          </span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => planSelection.remove(item.id)}
+                          aria-label={`Remove ${item.name}`}
+                          className="flex h-11 w-11 shrink-0 items-center justify-center text-[var(--text-secondary)] hover:text-[var(--accent-gold-bright)]"
+                        >
+                          <IconClose className="h-4 w-4" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               ) : null}
 

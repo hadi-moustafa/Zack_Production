@@ -64,6 +64,15 @@ git push -u origin development
 3. Add the environment variables from step 2 in the Vercel project settings.
 4. Deploy. Vercel will build and host the site on every push automatically from then on.
 
+## Price list
+
+Pricing has two parts, **Packages** and **Singles**, each made of groups (e.g. "Wedding
+Packages", "Special Requests"), all editable in Admin → Pricing. Items with "what's included"
+lines show as cards; the rest show as a tappable price list. Visitors can pick several items,
+and their picks are added to the booking form and the WhatsApp message. Projects created before
+October 2026 need [`supabase/pricing-2026-10.sql`](./supabase/pricing-2026-10.sql) run once in
+the SQL Editor; until then the old starter prices stay hidden.
+
 ## Latest Instagram reel
 
 The Follow Along section can show the newest video from your Instagram account as a

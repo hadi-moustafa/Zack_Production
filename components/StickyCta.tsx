@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IconArrowRight, IconWhatsapp } from "@/components/icons";
 import { whatsappUrl } from "@/lib/contact";
+import { usePlanSelection } from "@/lib/planSelection";
 
 // Bottom booking bar for phones and tablets. On the home page it appears once
 // the hero (and its own CTA) has scrolled away, and steps aside whenever the
@@ -14,6 +15,7 @@ export default function StickyCta({ whatsappDigits }: { whatsappDigits: string |
   const isHome = pathname === "/";
   const [pastHero, setPastHero] = useState(false);
   const [contactInView, setContactInView] = useState(false);
+  const selectedCount = usePlanSelection().length;
 
   useEffect(() => {
     if (!isHome) return;
@@ -45,7 +47,8 @@ export default function StickyCta({ whatsappDigits }: { whatsappDigits: string |
     >
       <div className="mx-auto flex max-w-xl items-center gap-3">
         <Link href="/#contact" tabIndex={visible ? 0 : -1} className="btn-gold min-h-12 flex-1 justify-center">
-          Book a shoot <IconArrowRight className="h-4 w-4" />
+          {selectedCount > 0 ? `Continue · ${selectedCount} selected` : "Book a shoot"}{" "}
+          <IconArrowRight className="h-4 w-4" />
         </Link>
         {whatsappDigits ? (
           <a

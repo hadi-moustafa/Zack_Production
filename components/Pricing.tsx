@@ -1,29 +1,46 @@
 "use client";
 
+import Link from "next/link";
 import type { PricingPackage } from "@/lib/types";
-import { IconArrowRight, IconCamera, IconStar } from "@/components/icons";
+import { IconArrowRight } from "@/components/icons";
 import Reveal from "@/components/Reveal";
 import { Flourish } from "@/components/Ornaments";
-import { selectPlan } from "@/lib/planSelection";
+import { groupPricing, priceLabel, type PricingGroup } from "@/lib/pricing";
+import { planSelection, usePlanSelection, type SelectedItem } from "@/lib/planSelection";
 
-const TIER_ICON: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
-  basic: IconCamera,
-  standard: IconStar,
-  premium: IconStar,
+// Metallic swatch per wedding tier; anything else falls back to gold.
+const TIER_SWATCH: Record<string, string> = {
+  bronze: "linear-gradient(135deg, #e0a872, #8a5a2b)",
+  silver: "linear-gradient(135deg, #f2f2f4, #8d8f97)",
+  gold: "linear-gradient(135deg, #f6d98b, #a67f2e)",
+  platinum: "linear-gradient(135deg, #ffffff, #b9c3cc)",
 };
+
+function toSelected(item: PricingPackage, group: PricingGroup): SelectedItem {
+  return {
+    id: item.id,
+    name: item.name,
+    group: group.name,
+    price: item.price.trim(),
+    // Only one tier of a card-style package group makes sense at a time.
+    exclusive: group.layout === "cards",
+  };
+}
 
 export default function Pricing({
   packages,
   description,
+  paymentNote,
 }: {
   packages: PricingPackage[];
   description: string;
+  paymentNote: string;
 }) {
-  if (packages.length === 0) return null;
+  const selected = usePlanSelection();
+  const { packages: packageGroups, singles: singleGroups } = groupPricing(packages);
+  if (packageGroups.length === 0 && singleGroups.length === 0) return null;
 
-  const standardTiers = packages.filter((p) => p.price.trim() !== "");
-  const customTier = packages.find((p) => p.price.trim() === "");
-  const featuredIndex = Math.min(1, standardTiers.length - 1);
+  const isSelected = (id: string) => selected.some((s) => s.id === id);
 
   return (
     <section id="pricing" className="bg-[var(--bg-dark-alt)] py-20 sm:py-28">
@@ -35,86 +52,208 @@ export default function Pricing({
             <span className="eyebrow">Pricing</span>
           </div>
           <h2 className="font-serif-display mt-4 text-[clamp(2.5rem,9vw,4.25rem)] font-medium leading-[1] text-[var(--text-primary)]">
-            Photography Packages
+            Packages &amp; Prices
           </h2>
           <Flourish center />
-          <p className="mt-6 text-[1.05rem] leading-relaxed text-[var(--text-secondary)] sm:text-[1.1rem]">
-            {description}
-          </p>
+          {description ? (
+            <p className="mt-6 text-[1.05rem] leading-relaxed text-[var(--text-secondary)] sm:text-[1.1rem]">
+              {description}
+            </p>
+          ) : null}
+          {packageGroups.length > 0 && singleGroups.length > 0 ? (
+            <nav aria-label="Pricing parts" className="mt-8 flex justify-center gap-3">
+              <a href="#pricing-packages" className="btn-ghost !rounded-full !px-6">
+                Packages
+              </a>
+              <a href="#pricing-singles" className="btn-ghost !rounded-full !px-6">
+                Singles
+              </a>
+            </nav>
+          ) : null}
         </Reveal>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {standardTiers.map((pkg, i) => {
-            const Icon = TIER_ICON[pkg.name.toLowerCase()] ?? IconCamera;
-            const featured = i === featuredIndex && standardTiers.length > 1;
-            return (
-              <Reveal key={pkg.id} delay={i * 100}>
-                <div
-                  className={`relative flex h-full flex-col rounded-xl p-7 transition-all duration-300 ${
-                    featured
-                      ? "border border-[var(--accent-gold)] bg-[var(--bg-dark)] shadow-[0_30px_80px_-30px_rgba(201,162,75,0.35)] sm:-translate-y-3"
-                      : "border border-[var(--border-subtle)] hover:border-[var(--accent-gold)]/60"
-                  }`}
-                >
-                  {featured ? (
-                    <span className="stamp absolute -top-3 right-6">
-                      Client favourite
-                    </span>
-                  ) : null}
-                  <Icon aria-hidden className="h-7 w-7 text-[var(--accent-gold)]" />
-                  <h3 className="font-serif-display mt-5 text-2xl font-semibold text-[var(--text-primary)]">
-                    {pkg.name}
-                  </h3>
-                  <p className="font-serif-display mt-2 text-5xl font-light text-[var(--accent-gold)]">
-                    {pkg.price}
-                  </p>
-                  <ul className="mt-5 flex-1 space-y-2.5 text-[var(--text-secondary)]">
-                    {pkg.features.map((feature, fi) => (
-                      <li key={fi} className="flex gap-2.5">
-                        <span className="text-[var(--accent-gold)]" aria-hidden>
-                          —
-                        </span>
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <a
-                    href="#contact"
-                    onClick={() => selectPlan(pkg.name)}
-                    className={featured ? "btn-gold mt-7 justify-center" : "btn-ghost mt-7 justify-center"}
-                  >
-                    Choose {pkg.name} <IconArrowRight className="h-4 w-4" />
-                  </a>
-                </div>
-              </Reveal>
-            );
-          })}
-        </div>
+        {packageGroups.length > 0 ? (
+          <Part id="pricing-packages" numeral="1" title="Packages" intro="Complete coverage, planned with you from start to finish.">
+            {packageGroups.map((group) =>
+              group.layout === "cards" ? (
+                <CardGroup key={group.name} group={group} isSelected={isSelected} />
+              ) : (
+                <ListGroup key={group.name} group={group} isSelected={isSelected} />
+              )
+            )}
+          </Part>
+        ) : null}
 
-        {customTier ? (
-          <Reveal delay={standardTiers.length * 100} className="mt-6">
-            <div className="flex flex-col items-start gap-6 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-dark)] p-7 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h3 className="font-serif-display text-xl font-semibold text-[var(--text-primary)]">
-                  {customTier.name}
-                </h3>
-                <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1.5 text-[var(--text-secondary)]">
-                  {customTier.features.map((feature, i) => (
-                    <li key={i}>{feature}</li>
-                  ))}
-                </ul>
-              </div>
-              <a
-                href="#contact"
-                onClick={() => selectPlan(customTier.name)}
-                className="btn-gold w-full shrink-0 justify-center sm:w-fit"
-              >
-                Get in touch <IconArrowRight className="h-4 w-4" />
-              </a>
+        {singleGroups.length > 0 ? (
+          <Part id="pricing-singles" numeral="2" title="Singles" intro="Book one service on its own, or add extras to a package. Tap to add.">
+            {/* Balanced columns so groups of different lengths don't leave gaps. */}
+            <div className="gap-6 lg:columns-2">
+              {singleGroups.map((group) => (
+                <div key={group.name} className="mb-6 break-inside-avoid">
+                  {group.layout === "cards" ? (
+                    <CardGroup group={group} isSelected={isSelected} />
+                  ) : (
+                    <ListGroup group={group} isSelected={isSelected} />
+                  )}
+                </div>
+              ))}
             </div>
-          </Reveal>
+          </Part>
+        ) : null}
+
+        {selected.length > 0 ? (
+          <div className="mt-4 flex flex-col gap-3 rounded-xl border border-[var(--accent-gold)]/50 bg-[var(--bg-dark)] p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center justify-between gap-3 sm:justify-start">
+              <p className="text-[var(--text-primary)]">
+                <span className="font-semibold">{selected.length} selected</span>
+                <span className="text-[var(--text-secondary)]"> · in your booking request</span>
+              </p>
+              <button
+                type="button"
+                onClick={planSelection.clear}
+                className="inline-flex min-h-11 items-center px-2 text-[var(--text-secondary)] underline underline-offset-4 hover:text-[var(--text-primary)]"
+              >
+                Clear
+              </button>
+            </div>
+            <Link href="/#contact" className="btn-gold justify-center whitespace-nowrap">
+              Continue to booking <IconArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        ) : null}
+
+        {paymentNote ? (
+          <div className="mt-10 border-t border-[var(--border-subtle)] pt-6 text-center">
+            <p className="eyebrow">Payment</p>
+            <p className="mx-auto mt-2 max-w-xl whitespace-pre-line text-[0.95rem] leading-relaxed text-[var(--text-secondary)]">
+              {paymentNote}
+            </p>
+          </div>
         ) : null}
       </div>
     </section>
+  );
+}
+
+function Part({
+  id,
+  numeral,
+  title,
+  intro,
+  children,
+}: {
+  id: string;
+  numeral: string;
+  title: string;
+  intro: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div id={id} className="mt-16 scroll-mt-24 sm:mt-20">
+      <div className="flex items-baseline gap-4 border-b border-[var(--border-subtle)] pb-4">
+        <span aria-hidden className="font-serif-display text-4xl italic text-[var(--accent-gold)]">
+          {numeral}
+        </span>
+        <div>
+          <h3 className="font-serif-display text-[clamp(2rem,7vw,2.75rem)] font-medium leading-none text-[var(--text-primary)]">
+            {title}
+          </h3>
+          <p className="mt-2 text-[var(--text-secondary)]">{intro}</p>
+        </div>
+      </div>
+      <div className="mt-8 space-y-10">{children}</div>
+    </div>
+  );
+}
+
+function CardGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id: string) => boolean }) {
+  return (
+    <div>
+      <h4 className="eyebrow">{group.name}</h4>
+      <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {group.items.map((item) => {
+          const chosen = isSelected(item.id);
+          const swatch = TIER_SWATCH[item.name.trim().toLowerCase()] ?? TIER_SWATCH.gold;
+          return (
+            <li
+              key={item.id}
+              className={`flex flex-col rounded-xl border bg-[var(--bg-dark)] p-6 transition-colors ${
+                chosen ? "border-[var(--accent-gold-bright)] shadow-[0_20px_50px_-25px_rgba(201,162,75,0.5)]" : "border-[var(--border-subtle)]"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span aria-hidden className="h-4 w-4 shrink-0 rounded-full" style={{ background: swatch }} />
+                <p className="font-serif-display text-[1.75rem] font-semibold leading-none text-[var(--text-primary)]">
+                  {item.name}
+                </p>
+              </div>
+              <p className="mt-2 font-serif-display text-xl italic text-[var(--accent-gold-bright)]">
+                {priceLabel(item.price, "cards")}
+              </p>
+              <ul className="mt-5 flex-1 space-y-2.5 border-t border-[var(--border-subtle)] pt-5 text-[var(--text-secondary)]">
+                {item.features.map((feature, i) => (
+                  <li key={i} className="flex gap-2.5">
+                    <span aria-hidden className="mt-[0.7em] h-px w-2.5 shrink-0 bg-[var(--accent-gold)]" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/#contact"
+                aria-label={chosen ? `${item.name} selected, continue to booking` : `Choose the ${item.name} package`}
+                onClick={() => planSelection.select(toSelected(item, group))}
+                className={`${chosen ? "btn-gold" : "btn-ghost"} mt-6 w-full justify-center !px-4`}
+              >
+                {chosen ? "Selected ✓" : "Choose"}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function ListGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id: string) => boolean }) {
+  return (
+    <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-dark)] px-5 pb-2 pt-5 sm:px-6">
+      <h4 className="eyebrow">{group.name}</h4>
+      <ul className="mt-2">
+        {group.items.map((item) => {
+          const chosen = isSelected(item.id);
+          return (
+            <li key={item.id} className="border-b border-[var(--border-subtle)] last:border-b-0">
+              <button
+                type="button"
+                aria-pressed={chosen}
+                onClick={() => planSelection.toggle(toSelected(item, group))}
+                className="group flex min-h-14 w-full items-center gap-3 py-3 text-left"
+              >
+                <span
+                  aria-hidden
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-sm leading-none transition ${
+                    chosen
+                      ? "border-[var(--accent-gold-bright)] bg-[var(--accent-gold-bright)] text-[#0a0a0a]"
+                      : "border-white/30 text-[var(--text-secondary)] group-hover:border-[var(--accent-gold)]"
+                  }`}
+                >
+                  {chosen ? "✓" : "+"}
+                </span>
+                <span className={`flex-1 ${chosen ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
+                  {item.name}
+                </span>
+                <span
+                  className={`shrink-0 tabular-nums ${
+                    item.price.trim() ? "font-semibold text-[var(--accent-gold-bright)]" : "text-[0.9rem] italic text-[var(--text-secondary)]"
+                  }`}
+                >
+                  {priceLabel(item.price, "list")}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }

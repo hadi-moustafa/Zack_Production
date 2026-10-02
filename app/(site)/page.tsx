@@ -59,7 +59,11 @@ export default async function Home() {
       />
       <OrnamentDivider />
       <Gallery photos={photos} />
-      <Pricing packages={pricingPackages} description={content.pricing_description} />
+      <Pricing
+        packages={pricingPackages}
+        description={content.pricing_description}
+        paymentNote={content.pricing_payment_note}
+      />
       <OrnamentDivider />
       <ContactForm
         description={content.contact_description}

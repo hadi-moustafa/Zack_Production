@@ -8,10 +8,18 @@ export type Photo = {
   created_at: string;
 };
 
+export type PricingSection = "packages" | "singles";
+
 export type PricingPackage = {
   id: string;
+  /** Which half of the pricing section it sits in. */
+  section: PricingSection;
+  /** Heading it's grouped under, e.g. "Wedding Packages". */
+  group_name: string;
   name: string;
+  /** Display price, e.g. "$150". Blank means "price on request". */
   price: string;
+  /** What's included; items with any are shown as cards, others as list rows. */
   features: string[];
   sort_order: number;
   created_at: string;
