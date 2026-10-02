@@ -29,6 +29,8 @@ cp .env.local.example .env.local
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase → Project Settings → API → Publishable (anon) key |
 | `RESEND_API_KEY` | [resend.com](https://resend.com) → API Keys. Contact-form emails are skipped (message is still saved) if this is unset. |
 | `CONTACT_NOTIFICATION_EMAIL` | The photographer's email address that should receive contact-form notifications. |
+| `NEXT_PUBLIC_SITE_URL` | Optional. Canonical origin used for canonical tags, the sitemap and share images. Defaults to `https://www.zackproduction.com`. |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Optional. Google Analytics 4 ID (`G-…`). Analytics loads only when set, and the privacy policy lists it automatically. |
 | `SUPABASE_SECRET_KEY` | Supabase → Project Settings → API Keys → Secret key. Server-only; needed for the latest-Instagram-reel feature. |
 
 These same variables need to be added in **Vercel → Project Settings → Environment
@@ -78,6 +80,14 @@ playable reel card, linking to the reel and to your profile.
 The site renews the token on its own (weekly, via page visits and the daily cron), so it
 won't expire as long as the site stays deployed. If Instagram isn't connected, the section
 just shows the social tiles as before.
+
+## SEO & site standards
+
+The rules every change must follow live in [`CLAUDE.md`](./CLAUDE.md). In short:
+static constants are in `lib/site.ts`, admin-editable details are read through
+`getSiteData()` (`lib/siteData.ts`), and structured data is built in `lib/structuredData.ts`.
+The site serves `/sitemap.xml`, `/robots.txt` and `/llms.txt`, plus a privacy policy, a
+noindex `/thank-you` page (where the contact form lands) and a custom 404.
 
 ## Project structure
 

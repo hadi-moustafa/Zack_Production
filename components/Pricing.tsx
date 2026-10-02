@@ -38,7 +38,7 @@ export default function Pricing({
             Photography Packages
           </h2>
           <Flourish center />
-          <p className="mt-6 text-[clamp(0.95rem,2.4vw,1.05rem)] leading-relaxed text-[var(--text-secondary)]">
+          <p className="mt-6 text-[1.05rem] leading-relaxed text-[var(--text-secondary)] sm:text-[1.1rem]">
             {description}
           </p>
         </Reveal>
@@ -61,14 +61,14 @@ export default function Pricing({
                       Client favourite
                     </span>
                   ) : null}
-                  <Icon className="h-7 w-7 text-[var(--accent-gold)]" />
+                  <Icon aria-hidden className="h-7 w-7 text-[var(--accent-gold)]" />
                   <h3 className="font-serif-display mt-5 text-2xl font-semibold text-[var(--text-primary)]">
                     {pkg.name}
                   </h3>
                   <p className="font-serif-display mt-2 text-5xl font-light text-[var(--accent-gold)]">
                     {pkg.price}
                   </p>
-                  <ul className="mt-5 flex-1 space-y-2.5 text-sm text-[var(--text-secondary)]">
+                  <ul className="mt-5 flex-1 space-y-2.5 text-[var(--text-secondary)]">
                     {pkg.features.map((feature, fi) => (
                       <li key={fi} className="flex gap-2.5">
                         <span className="text-[var(--accent-gold)]" aria-hidden>
@@ -83,7 +83,7 @@ export default function Pricing({
                     onClick={() => selectPlan(pkg.name)}
                     className={featured ? "btn-gold mt-7 justify-center" : "btn-ghost mt-7 justify-center"}
                   >
-                    Choose plan <IconArrowRight className="h-4 w-4" />
+                    Choose {pkg.name} <IconArrowRight className="h-4 w-4" />
                   </a>
                 </div>
               </Reveal>
@@ -98,7 +98,7 @@ export default function Pricing({
                 <h3 className="font-serif-display text-xl font-semibold text-[var(--text-primary)]">
                   {customTier.name}
                 </h3>
-                <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1.5 text-sm text-[var(--text-secondary)]">
+                <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1.5 text-[var(--text-secondary)]">
                   {customTier.features.map((feature, i) => (
                     <li key={i}>{feature}</li>
                   ))}

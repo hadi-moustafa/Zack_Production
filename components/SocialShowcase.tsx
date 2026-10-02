@@ -69,7 +69,7 @@ export default function SocialShowcase({
         <h3 className="font-serif-display mt-2 text-[clamp(1.75rem,5vw,2.75rem)] font-semibold text-[var(--text-primary)]">
           Follow Along
         </h3>
-        <p className="mx-auto mt-3 max-w-md text-sm text-[var(--text-secondary)]">
+        <p className="mx-auto mt-3 max-w-md text-[var(--text-secondary)]">
           Behind-the-scenes moments, new shoots, and reels drop here first.
         </p>
       </div>
@@ -89,9 +89,9 @@ export default function SocialShowcase({
                 href={reel.permalink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-[0_15px_35px_-12px_rgba(238,42,123,0.7)]"
+                className="inline-flex min-h-12 items-center gap-2 rounded-full bg-gradient-to-r from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-[0_15px_35px_-12px_rgba(238,42,123,0.7)]"
               >
-                <IconInstagram className="h-4 w-4" /> Watch the reel
+                <IconInstagram aria-hidden className="h-4 w-4" /> Watch the reel
               </a>
               {instagramUrl ? (
                 <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost !rounded-full !py-3 !text-sm !normal-case !tracking-normal">
@@ -124,7 +124,7 @@ function Tiles({ links, className }: { links: SocialLink[]; className: string })
           >
             <span className="flex h-11 w-11 items-center justify-center">
               {Icon ? (
-                <Icon className="h-8 w-8 transition-transform duration-300 group-hover:scale-110" />
+                <Icon aria-hidden className="h-8 w-8 transition-transform duration-300 group-hover:scale-110" />
               ) : (
                 <span className="text-xs">{link.platform}</span>
               )}

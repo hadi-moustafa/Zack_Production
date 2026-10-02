@@ -24,11 +24,13 @@ export default function HeroVideo({
   return (
     <video
       ref={videoRef}
+      aria-label="Zack Production showreel"
       className="absolute inset-0 h-full w-full object-cover"
       autoPlay
       muted
       loop
       playsInline
+      preload="metadata"
       poster={poster}
     >
       {webmSrc ? <source src={webmSrc} type="video/webm" /> : null}

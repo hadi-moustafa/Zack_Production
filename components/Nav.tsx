@@ -1,30 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import SocialLinks from "@/components/SocialLinks";
 import SoundToggle from "@/components/sound/SoundToggle";
-import { IconMenu, IconClose } from "@/components/icons";
+import { IconMenu, IconClose, IconArrowRight } from "@/components/icons";
+import { SECTIONS } from "@/lib/site";
 import type { SocialLink } from "@/lib/types";
 
-const LINKS = [
-  { href: "#home", label: "Home" },
-  { href: "#about", label: "Who I Am" },
-  { href: "#gallery", label: "Work" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#contact", label: "Contact" },
-];
-
-export default function Nav({
-  logoSrc,
-  name,
-  subtitle,
-  socialLinks,
-}: {
-  logoSrc: string | null;
-  name: string;
-  subtitle: string;
-  socialLinks: SocialLink[];
-}) {
+export default function Nav({ logo, socialLinks }: { logo: React.ReactNode; socialLinks: SocialLink[] }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -35,51 +19,53 @@ export default function Nav({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ${
-        scrolled || open ? "bg-[var(--bg-dark)]/85 backdrop-blur-md border-b border-[var(--border-subtle)]" : "bg-transparent"
+        scrolled || open ? "border-b border-[var(--border-subtle)] bg-[var(--bg-dark)]/90 backdrop-blur-md" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-10 sm:py-5">
-        <a href="#home" className="leading-none" aria-label={`${name} ${subtitle}`}>
-          {logoSrc ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={logoSrc} alt={`${name} ${subtitle}`} className="h-12 w-auto sm:h-16" />
-          ) : (
-            <>
-              <span className="font-serif-display block text-3xl font-semibold tracking-wide text-[var(--accent-gold-bright)] sm:text-4xl">
-                {name}
-              </span>
-              <span className="eyebrow mt-1 block text-[0.6rem] !tracking-[0.42em]">{subtitle}</span>
-            </>
-          )}
-        </a>
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-10 sm:py-5">
+        <Link href="/" aria-label="Zack Production — home" className="shrink-0 leading-none">
+          {logo}
+        </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex">
-          {LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="relative text-sm font-medium tracking-wide text-[var(--text-primary)] transition hover:text-[var(--accent-gold)] after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-[var(--accent-gold)] after:transition-all after:duration-300 hover:after:w-full"
+        <nav aria-label="Main" className="hidden items-center gap-7 lg:flex">
+          {SECTIONS.map((s) => (
+            <Link
+              key={s.id}
+              href={`/#${s.id}`}
+              className="relative flex min-h-11 items-center text-[0.95rem] font-medium tracking-wide text-[var(--text-primary)] transition hover:text-[var(--accent-gold-bright)] after:absolute after:bottom-2 after:left-0 after:h-px after:w-0 after:bg-[var(--accent-gold)] after:transition-all after:duration-300 hover:after:w-full"
             >
-              {link.label}
-            </a>
+              {s.label}
+            </Link>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-4 lg:flex">
-          <SocialLinks links={socialLinks.filter((l) => l.platform !== "twitter")} />
+        <div className="hidden items-center gap-3 lg:flex">
+          <SocialLinks links={socialLinks} className="hidden xl:flex" />
           <SoundToggle />
+          <Link href="/#contact" className="btn-gold !px-5">
+            Book a shoot <IconArrowRight className="h-4 w-4" />
+          </Link>
         </div>
 
-        <div className="flex items-center gap-3 lg:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
           <SoundToggle />
           <button
             onClick={() => setOpen((v) => !v)}
-            aria-label="Toggle menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
             data-no-sound
-            className="text-[var(--text-primary)]"
+            className="flex h-11 w-11 items-center justify-center text-[var(--text-primary)]"
           >
             {open ? <IconClose className="h-6 w-6" /> : <IconMenu className="h-6 w-6" />}
           </button>
@@ -87,24 +73,25 @@ export default function Nav({
       </div>
 
       <nav
-        className={`flex flex-col gap-1 overflow-hidden bg-[var(--bg-dark)]/95 px-5 backdrop-blur-md transition-[max-height,opacity,padding] duration-300 lg:hidden ${
-          open ? "max-h-96 py-2 pb-6 opacity-100" : "max-h-0 py-0 opacity-0"
-        }`}
+        id="mobile-menu"
+        aria-label="Mobile"
+        hidden={!open}
+        className="max-h-[calc(100svh-5rem)] overflow-y-auto bg-[var(--bg-dark)]/95 px-4 pb-6 backdrop-blur-md sm:px-10 lg:hidden"
       >
-        {LINKS.map((link, i) => (
-          <a
-            key={link.href}
-            href={link.href}
+        {SECTIONS.map((s) => (
+          <Link
+            key={s.id}
+            href={`/#${s.id}`}
             onClick={() => setOpen(false)}
-            className="border-b border-[var(--border-subtle)] py-3 text-base font-medium tracking-wide text-[var(--text-primary)] hover:text-[var(--accent-gold)]"
-            style={{ transitionDelay: `${i * 30}ms` }}
+            className="flex min-h-12 items-center border-b border-[var(--border-subtle)] text-lg font-medium text-[var(--text-primary)] hover:text-[var(--accent-gold-bright)]"
           >
-            {link.label}
-          </a>
+            {s.label}
+          </Link>
         ))}
-        <div className="pt-4">
-          <SocialLinks links={socialLinks.filter((l) => l.platform !== "twitter")} />
-        </div>
+        <Link href="/#contact" onClick={() => setOpen(false)} className="btn-gold mt-6 w-full justify-center">
+          Book a shoot <IconArrowRight className="h-4 w-4" />
+        </Link>
+        <SocialLinks links={socialLinks} className="mt-6" />
       </nav>
     </header>
   );

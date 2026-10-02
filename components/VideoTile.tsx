@@ -6,12 +6,15 @@ import { IconSpeakerOff, IconSpeakerOn } from "@/components/icons";
 export default function VideoTile({
   src,
   caption,
+  label,
   className = "",
   suspended = false,
   onOpen,
 }: {
   src: string;
   caption?: string;
+  /** Accessible name, e.g. "Wedding film by Zack Production". */
+  label: string;
   className?: string;
   /** Pause this preview (e.g. while the lightbox is open) to avoid two videos playing/sounding at once. */
   suspended?: boolean;
@@ -63,6 +66,7 @@ export default function VideoTile({
     <div
       role="button"
       tabIndex={0}
+      aria-label={`Play full screen: ${label}`}
       onClick={onOpen}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -74,6 +78,7 @@ export default function VideoTile({
     >
       <video
         ref={videoRef}
+        aria-hidden
         src={src}
         className="absolute inset-0 h-full w-full object-cover transition duration-500 ease-out group-hover:scale-110"
         muted={muted}
@@ -84,7 +89,7 @@ export default function VideoTile({
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
       {caption ? (
-        <span className="absolute bottom-2 left-2.5 max-w-[65%] text-left text-xs font-medium text-white">
+        <span aria-hidden className="absolute bottom-3 left-3 max-w-[65%] text-left text-sm font-medium text-white">
           {caption}
         </span>
       ) : null}
@@ -95,7 +100,7 @@ export default function VideoTile({
         onClick={toggleMute}
         aria-label={muted ? "Unmute video" : "Mute video"}
         aria-pressed={!muted}
-        className="absolute bottom-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-black/50 text-white backdrop-blur-sm transition hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)]"
+        className="absolute bottom-1.5 right-1.5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-black/50 text-white backdrop-blur-sm transition hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)]"
       >
         {muted ? <IconSpeakerOff className="h-4 w-4" /> : <IconSpeakerOn className="h-4 w-4" />}
       </button>

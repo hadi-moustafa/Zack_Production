@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { photoPublicUrl } from "@/lib/supabaseClient";
+import { photoPublicUrl, workAlt } from "@/lib/media";
 import { STATIC_WORK_ITEMS } from "@/lib/staticWork";
 import { sortCategories } from "@/lib/categories";
 import type { Photo } from "@/lib/types";
@@ -161,7 +161,7 @@ export default function Gallery({
           {selectedCategory !== null ? (
             <button
               onClick={backToCategories}
-              className="text-sm font-semibold uppercase tracking-widest text-[var(--accent-gold)] hover:opacity-80"
+              className="inline-flex min-h-11 items-center text-sm font-semibold uppercase tracking-widest text-[var(--accent-gold-bright)] hover:opacity-80"
             >
               ← All categories
             </button>
@@ -182,7 +182,7 @@ export default function Gallery({
               <Reveal key={cat} delay={(i + 1) * 60}>
                 <CategoryCard
                   label={cat}
-                  sublabel={`${items.filter((it) => it.category === cat).length} pieces`}
+                  sublabel={pieces(items.filter((it) => it.category === cat).length)}
                   cover={coverByCategory.get(cat)}
                   onClick={() => openCategory(cat)}
                 />
@@ -200,6 +200,7 @@ export default function Gallery({
                       key={item.id}
                       src={item.src}
                       caption={item.caption}
+                      label={workAlt(item.category, "video", item.caption)}
                       className={spanClass}
                       suspended={lightboxIndex !== null}
                       onOpen={() => setLightboxIndex(i)}
@@ -210,21 +211,24 @@ export default function Gallery({
                   <button
                     key={item.id}
                     onClick={() => setLightboxIndex(i)}
+                    aria-label={`Enlarge: ${workAlt(item.category, "photo", item.caption)}`}
                     className={`group relative overflow-hidden rounded-md bg-neutral-900 ${spanClass}`}
                   >
                     <Image
                       src={item.src}
-                      alt={item.caption || item.category}
+                      alt={workAlt(item.category, "photo", item.caption)}
                       fill
                       loading="lazy"
                       sizes="(min-width: 768px) 25vw, 45vw"
                       className="object-cover transition duration-500 ease-out group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     {item.caption ? (
-                      <span className="absolute bottom-2 left-2.5 right-2.5 translate-y-2 text-left text-xs font-medium text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                        {item.caption}
-                      </span>
+                      <>
+                        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/0 to-black/0" />
+                        <span aria-hidden className="absolute bottom-2.5 left-3 right-3 text-left text-sm font-medium text-white">
+                          {item.caption}
+                        </span>
+                      </>
                     ) : null}
                   </button>
                 );
@@ -235,7 +239,7 @@ export default function Gallery({
               <div className="mt-8 text-center">
                 <button
                   onClick={() => setShowAll((v) => !v)}
-                  className="text-sm font-semibold uppercase tracking-widest text-[var(--accent-gold)] hover:opacity-80"
+                  className="inline-flex min-h-11 items-center text-sm font-semibold uppercase tracking-widest text-[var(--accent-gold-bright)] hover:opacity-80"
                 >
                   {showAll ? "View less" : "View more →"}
                 </button>
@@ -259,9 +263,13 @@ export default function Gallery({
   );
 }
 
+function pieces(n: number) {
+  return `${n} ${n === 1 ? "piece" : "pieces"}`;
+}
+
 function CurtainOverlay({ active }: { active: boolean }) {
   return (
-    <div className="pointer-events-none absolute inset-0 z-30 flex">
+    <div aria-hidden className="pointer-events-none absolute inset-0 z-30 flex">
       <div
         className={`h-full w-1/2 bg-[var(--bg-dark)] transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] ${
           active ? "translate-x-0" : "-translate-x-full"
@@ -279,10 +287,10 @@ function CurtainOverlay({ active }: { active: boolean }) {
 function MediaThumb({ item }: { item: GalleryItem }) {
   if (item.kind === "video") {
     return (
-      <video src={item.src} muted playsInline preload="metadata" className="h-full w-full object-cover" />
+      <video aria-hidden src={item.src} muted playsInline preload="metadata" className="h-full w-full object-cover" />
     );
   }
-  return <Image src={item.src} alt="" fill sizes="320px" className="object-cover" />;
+  return <Image src={item.src} alt="" aria-hidden fill sizes="(min-width: 640px) 25vw, 224px" className="object-cover" />;
 }
 
 function CategoryCard({
@@ -330,7 +338,7 @@ function CategoryCard({
         <p className="font-serif-display text-xl font-semibold text-white transition group-hover:text-[var(--accent-gold)]">
           {label}
         </p>
-        <p className="mt-1 text-xs uppercase tracking-widest text-white/60">{sublabel}</p>
+        <p className="mt-1 text-[0.8rem] uppercase tracking-widest text-white/80">{sublabel}</p>
       </div>
     </button>
   );
@@ -348,34 +356,50 @@ function Lightbox({
   onNavigate: (i: number) => void;
 }) {
   const item = items[index];
+  const closeRef = useRef<HTMLButtonElement>(null);
 
-  const goPrev = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onNavigate((index - 1 + items.length) % items.length);
-  };
-  const goNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onNavigate((index + 1) % items.length);
-  };
+  const prev = () => onNavigate((index - 1 + items.length) % items.length);
+  const next = () => onNavigate((index + 1) % items.length);
+
+  useEffect(() => {
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft" && items.length > 1) prev();
+      else if (e.key === "ArrowRight" && items.length > 1) next();
+    };
+    window.addEventListener("keydown", onKey);
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = overflow;
+    };
+  });
+
+  const control =
+    "absolute z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/40 text-3xl leading-none text-white/85 transition hover:bg-black/70 hover:text-white";
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={workAlt(item.category, item.kind, item.caption)}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
       onClick={onClose}
     >
-      <button
-        onClick={onClose}
-        aria-label="Close"
-        className="absolute right-4 top-4 text-3xl leading-none text-white/80 hover:text-white"
-      >
+      <button ref={closeRef} onClick={onClose} aria-label="Close" className={`${control} right-3 top-3`}>
         &times;
       </button>
 
       {items.length > 1 ? (
         <button
-          onClick={goPrev}
+          onClick={(e) => {
+            e.stopPropagation();
+            prev();
+          }}
           aria-label="Previous"
-          className="absolute left-2 text-4xl text-white/70 hover:text-white sm:left-6"
+          className={`${control} left-2 sm:left-6`}
         >
           &#8249;
         </button>
@@ -385,22 +409,25 @@ function Lightbox({
         {item.kind === "video" ? (
           <LightboxVideo key={item.id} src={item.src} />
         ) : (
-          <Image src={item.src} alt={item.caption || item.category} fill sizes="90vw" className="object-contain" />
+          <Image src={item.src} alt={workAlt(item.category, "photo", item.caption)} fill sizes="90vw" className="object-contain" />
         )}
       </div>
 
       {items.length > 1 ? (
         <button
-          onClick={goNext}
+          onClick={(e) => {
+            e.stopPropagation();
+            next();
+          }}
           aria-label="Next"
-          className="absolute right-2 text-4xl text-white/70 hover:text-white sm:right-6"
+          className={`${control} right-2 sm:right-6`}
         >
           &#8250;
         </button>
       ) : null}
 
       {item.caption ? (
-        <p className="absolute bottom-6 left-0 right-0 text-center text-sm text-white/80">{item.caption}</p>
+        <p className="absolute bottom-6 left-0 right-0 px-6 text-center text-white/85">{item.caption}</p>
       ) : null}
     </div>
   );
@@ -437,7 +464,7 @@ function LightboxVideo({ src }: { src: string }) {
         onClick={toggleMute}
         aria-label={muted ? "Unmute video" : "Mute video"}
         aria-pressed={!muted}
-        className="absolute bottom-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/50 text-white backdrop-blur-sm transition hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)]"
+        className="absolute bottom-4 right-4 z-10 flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/50 text-white backdrop-blur-sm transition hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)]"
       >
         {muted ? <IconSpeakerOff className="h-4 w-4" /> : <IconSpeakerOn className="h-4 w-4" />}
       </button>

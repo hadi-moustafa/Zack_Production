@@ -37,6 +37,7 @@ export default function InstagramReelCard({ reel }: { reel: InstagramReel }) {
       <div className="relative aspect-[9/16] overflow-hidden rounded-[1.8rem] bg-black">
         <video
           ref={videoRef}
+          aria-hidden
           src={reel.videoUrl}
           poster={reel.posterUrl ?? undefined}
           muted
@@ -63,7 +64,7 @@ export default function InstagramReelCard({ reel }: { reel: InstagramReel }) {
           onClick={toggleMute}
           data-no-sound
           aria-label={muted ? "Unmute reel" : "Mute reel"}
-          className="absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition hover:bg-black/75"
+          className="absolute right-2 top-2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition hover:bg-black/75"
         >
           {muted ? <IconSpeakerOff className="h-4 w-4" /> : <IconSpeakerOn className="h-4 w-4" />}
         </button>
@@ -71,7 +72,7 @@ export default function InstagramReelCard({ reel }: { reel: InstagramReel }) {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-center gap-2 p-4 text-white">
           <IconInstagram className="h-5 w-5 shrink-0" />
           <span className="truncate text-sm font-semibold">{reel.username ? `@${reel.username}` : "Instagram"}</span>
-          <span className="ml-auto shrink-0 text-xs font-medium text-white/80">Watch ↗</span>
+          <span className="ml-auto shrink-0 text-sm font-medium text-white/85">Watch ↗</span>
         </div>
       </div>
     </div>

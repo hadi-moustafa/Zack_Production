@@ -2,5 +2,7 @@
 # It requests and renews the SSL certificate for $DOMAIN automatically.
 {$DOMAIN:localhost} {
 	encode zstd gzip
+	# Don't advertise the server software.
+	header -Server
 	reverse_proxy web:3000
 }

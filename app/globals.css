@@ -1,6 +1,14 @@
 @import "tailwindcss";
 
+/* Palette — dark theme only. Contrast ratios are against --bg-dark (#0a0a0a);
+   WCAG AA needs 4.5:1 for small text.
+     --text-primary        #f5f2ea  18.1:1  headings, body on dark
+     --text-secondary      #a8a49a   7.9:1  secondary body copy
+     --accent-gold         #c9a24b   8.1:1  icons, hairlines, large accents
+     --accent-gold-bright  #e8c169  11.3:1  small gold text (labels, links)
+   The one light surface (.print, #efe9db) only ever carries #2a2620 (12.6:1). */
 :root {
+  color-scheme: dark;
   --bg-dark: #0a0a0a;
   --bg-dark-alt: #121212;
   --text-primary: #f5f2ea;
@@ -38,7 +46,9 @@ body {
   color: #0a0a0a;
 }
 
-/* Film grain overlay, fixed over the whole page for a cinematic texture */
+/* Film grain overlay, fixed over the whole page for a cinematic texture.
+   Full-screen blend layers are costly to composite, so desktop only. */
+@media (min-width: 1024px) and (pointer: fine) {
 body::before {
   content: "";
   position: fixed;
@@ -48,6 +58,21 @@ body::before {
   opacity: 0.045;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Warm paper-tinted vignette so the black never feels flat */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 59;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(60, 35, 10, 0.28) 100%);
+}
+
+.animate-ken-burns {
+  animation: ken-burns 18s ease-out forwards;
+}
 }
 
 .font-serif-display {
@@ -66,7 +91,7 @@ body::before {
 
 .eyebrow {
   font-family: var(--font-mono), monospace;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -97,14 +122,56 @@ body::before {
   opacity: 0.6;
 }
 
+/* Contact form fields: visible labels, 16px text (no iOS zoom), 48px tall */
+.field-label {
+  display: block;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-gold-bright);
+}
+
+.field-input {
+  display: block;
+  width: 100%;
+  min-height: 3rem;
+  margin-top: 0.35rem;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+  background: transparent;
+  padding: 0.6rem 0.25rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+  transition: border-color 0.2s ease;
+}
+
+.field-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.field-input:focus {
+  outline: none;
+  border-bottom-color: var(--accent-gold-bright);
+  box-shadow: 0 1px 0 0 var(--accent-gold-bright);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-gold-bright);
+  outline-offset: 3px;
+}
+
 .btn-ghost {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
+  min-height: 3rem;
   padding: 0.85rem 1.75rem;
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -127,8 +194,9 @@ body::before {
   gap: 0.5rem;
   background: var(--accent-gold);
   color: #0a0a0a;
+  min-height: 3rem;
   padding: 0.9rem 2rem;
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -167,10 +235,6 @@ body::before {
   100% {
     transform: scale(1.18);
   }
-}
-
-.animate-ken-burns {
-  animation: ken-burns 18s ease-out forwards;
 }
 
 @keyframes fade-up {
@@ -245,16 +309,6 @@ body::before {
   background:
     radial-gradient(ellipse 5px 3px at 50% 50%, #1b1a17 60%, transparent 62%) 0 0 / 22px 100% repeat-x,
     #000;
-}
-
-/* Warm paper-tinted vignette so the black never feels flat */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 59;
-  pointer-events: none;
-  background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(60, 35, 10, 0.28) 100%);
 }
 
 /* Viewfinder corner brackets — mobile first, kept clear of the fixed nav */
@@ -372,3 +426,39 @@ body::after {
   pointer-events: none;
 }
 @media (min-width: 640px) { .hero-frame { inset: 108px 32px 48px; } }
+
+/* Long-form text pages (privacy policy) */
+.prose-zp {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+.prose-zp > * + * { margin-top: 1.1em; }
+.prose-zp h2 {
+  margin-top: 2.4em;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text-primary);
+}
+.prose-zp strong { color: var(--text-primary); font-weight: 600; }
+.prose-zp ul { list-style: none; padding: 0; }
+.prose-zp li { position: relative; padding-left: 1.4rem; }
+.prose-zp li + li { margin-top: 0.75em; }
+.prose-zp li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.75em;
+  width: 0.55rem;
+  height: 1px;
+  background: var(--accent-gold);
+}
+.prose-zp a {
+  color: var(--accent-gold-bright);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.prose-zp a:hover { color: var(--text-primary); }
