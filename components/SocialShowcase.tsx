@@ -1,7 +1,7 @@
 import type { SocialLink } from "@/lib/types";
 import type { InstagramReel } from "@/lib/instagram";
 import InstagramReelCard from "@/components/InstagramReelCard";
-import { SOCIAL_LABELS, SOCIAL_PLATFORMS } from "@/lib/social";
+import { SOCIAL_LABELS, SOCIAL_PLATFORMS, socialHandle } from "@/lib/social";
 import {
   IconInstagram,
   IconFacebook,
@@ -18,27 +18,6 @@ const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
   whatsapp: IconWhatsapp,
   youtube: IconYoutube,
   twitter: IconTwitter,
-};
-
-// Brand-true colors on purpose here — this is the one place on the site
-// meant to pop with each platform's own identity rather than the gold/dark
-// editorial palette.
-const BRAND_BG: Record<string, string> = {
-  instagram: "bg-gradient-to-br from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]",
-  facebook: "bg-[#1877F2]",
-  tiktok: "bg-gradient-to-br from-[#25F4EE] via-[#0a0a0a] to-[#FE2C55]",
-  whatsapp: "bg-[#25D366]",
-  youtube: "bg-[#FF0000]",
-  twitter: "bg-neutral-900",
-};
-
-const BRAND_GLOW: Record<string, string> = {
-  instagram: "hover:shadow-[0_20px_45px_-15px_rgba(238,42,123,0.65)]",
-  facebook: "hover:shadow-[0_20px_45px_-15px_rgba(24,119,242,0.65)]",
-  tiktok: "hover:shadow-[0_20px_45px_-15px_rgba(37,244,238,0.5)]",
-  whatsapp: "hover:shadow-[0_20px_45px_-15px_rgba(37,211,102,0.65)]",
-  youtube: "hover:shadow-[0_20px_45px_-15px_rgba(255,0,0,0.6)]",
-  twitter: "hover:shadow-[0_20px_45px_-15px_rgba(255,255,255,0.25)]",
 };
 
 export default function SocialShowcase({
@@ -99,42 +78,51 @@ export default function SocialShowcase({
                 </a>
               ) : null}
             </div>
-            {active.length > 0 ? <Tiles links={active} className="mt-8 grid-cols-2 sm:grid-cols-3" /> : null}
+            {active.length > 0 ? <SocialButtons links={active} className="mt-8 md:justify-start" /> : null}
           </div>
         </div>
       ) : (
-        <Tiles links={active} className="mx-auto mt-9 max-w-2xl grid-cols-2 sm:grid-cols-3 md:grid-cols-4" />
+        <SocialButtons links={active} className="mx-auto mt-10 max-w-3xl" />
       )}
     </div>
   );
 }
 
-function Tiles({ links, className }: { links: SocialLink[]; className: string }) {
+// Understated, uniform buttons: dark glass, thin border, gold icon ring.
+// Centered and wrapping; full-width stacked on the smallest phones.
+function SocialButtons({ links, className = "" }: { links: SocialLink[]; className?: string }) {
   return (
-    <div className={`grid gap-4 ${className}`}>
+    <ul className={`flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap ${className}`}>
       {links.map((link) => {
         const Icon = ICONS[link.platform];
+        const label = SOCIAL_LABELS[link.platform] ?? link.platform;
+        const handle = socialHandle(link.platform, link.url);
         return (
-          <a
-            key={link.platform}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`group flex flex-col items-center gap-3 rounded-2xl p-5 text-white transition-all duration-300 hover:-translate-y-1.5 ${BRAND_BG[link.platform] ?? "bg-neutral-800"} ${BRAND_GLOW[link.platform] ?? ""}`}
-          >
-            <span className="flex h-11 w-11 items-center justify-center">
-              {Icon ? (
-                <Icon aria-hidden className="h-8 w-8 transition-transform duration-300 group-hover:scale-110" />
-              ) : (
-                <span className="text-xs">{link.platform}</span>
-              )}
-            </span>
-            <span className="text-sm font-semibold tracking-wide">
-              {SOCIAL_LABELS[link.platform] ?? link.platform}
-            </span>
-          </a>
+          <li key={link.platform}>
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Zack Production on ${label}${handle ? ` (${handle})` : ""}`}
+              className="group flex min-h-16 items-center gap-4 rounded-2xl border border-[var(--border-subtle)] bg-white/[0.03] py-3 pl-3 pr-5 transition duration-300 hover:-translate-y-0.5 hover:border-[var(--accent-gold)]/70 hover:bg-white/[0.05] sm:min-w-[13.5rem]"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--accent-gold)]/45 text-[var(--accent-gold-bright)] transition group-hover:border-[var(--accent-gold-bright)] group-hover:bg-[var(--accent-gold)]/10">
+                {Icon ? <Icon aria-hidden className="h-5 w-5" /> : null}
+              </span>
+              <span className="flex-1 text-left">
+                <span className="block font-semibold text-[var(--text-primary)]">{label}</span>
+                <span className="block text-[0.9rem] text-[var(--text-secondary)]">{handle ?? "Follow us"}</span>
+              </span>
+              <span
+                aria-hidden
+                className="text-[var(--text-secondary)] transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--accent-gold-bright)]"
+              >
+                ↗
+              </span>
+            </a>
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 }

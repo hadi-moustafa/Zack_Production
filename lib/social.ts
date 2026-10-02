@@ -29,3 +29,15 @@ export function withSocialDefaults(links: SocialLink[]): SocialLink[] {
   const byPlatform = new Map(links.map((l) => [l.platform, l.url]));
   return SOCIAL_PLATFORMS.map((platform) => ({ platform, url: byPlatform.get(platform) ?? "" }));
 }
+
+/** "@handle" from a profile URL where the platform puts one in the path, else null. */
+export function socialHandle(platform: string, url: string): string | null {
+  try {
+    const first = new URL(url).pathname.split("/").filter(Boolean)[0];
+    if (!first || ["share", "profile.php", "channel", "c", "user"].includes(first)) return null;
+    if (platform === "whatsapp") return null;
+    return `@${first.replace(/^@/, "")}`;
+  } catch {
+    return null;
+  }
+}

@@ -16,6 +16,9 @@ const TIER_SWATCH: Record<string, string> = {
   platinum: "linear-gradient(135deg, #ffffff, #b9c3cc)",
 };
 
+// Fill the row evenly whatever the number of tiers (3 tiers → 3 columns).
+const CARD_COLUMNS: Record<number, string> = { 3: "lg:grid-cols-3", 4: "lg:grid-cols-4" };
+
 function toSelected(item: PricingPackage, group: PricingGroup): SelectedItem {
   return {
     id: item.id,
@@ -170,7 +173,7 @@ function CardGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id
   return (
     <div>
       <h4 className="eyebrow">{group.name}</h4>
-      <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <ul className={`mt-4 grid gap-4 sm:grid-cols-2 ${CARD_COLUMNS[Math.min(group.items.length, 4)] ?? ""}`}>
         {group.items.map((item) => {
           const chosen = isSelected(item.id);
           const swatch = TIER_SWATCH[item.name.trim().toLowerCase()] ?? TIER_SWATCH.gold;

@@ -217,8 +217,6 @@ begin
     delete from public.pricing_packages;
 
     insert into public.pricing_packages (section, group_name, name, price, features, sort_order) values
-      ('packages', 'Wedding Packages', 'Bronze', '',
-        '["One photographer", "One videographer", "Movie editing"]'::jsonb, 10),
       ('packages', 'Wedding Packages', 'Silver', '',
         '["One photographer", "Two videographers (run-in)", "Movie editing + trailer"]'::jsonb, 20),
       ('packages', 'Wedding Packages', 'Gold', '',
