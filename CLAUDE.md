@@ -44,7 +44,9 @@ These standards are mandatory for every change.
 - The contact form hands off to WhatsApp, saves the lead, then redirects to /thank-you.
 
 ## Conversion
-- A CTA above the fold, a sticky mobile CTA, and the response-time promise ("within 24 hours").
+- A sticky mobile CTA and the response-time promise ("within 24 hours"). The hero's only
+  button is "View my work": the owner asked (2026-10-02) for no "Book a shoot" button in the
+  hero or the nav, so don't add one back there.
 
 ## Content integrity
 - No placeholders, ever. Reviews, testimonials and photos must be real, and their components

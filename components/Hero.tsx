@@ -76,11 +76,8 @@ export default function Hero({ headline, tagline }: { headline: string; tagline:
             className="animate-fade-up mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center xl:w-max xl:flex-nowrap"
             style={{ animationDelay: "0.55s" }}
           >
-            <a href="#contact" className="btn-gold justify-center">
-              Book a shoot <IconArrowRight className="h-4 w-4" />
-            </a>
             <a href="#gallery" className="btn-ghost justify-center bg-black/20 backdrop-blur-sm">
-              View my work
+              View my work <IconArrowRight className="h-4 w-4" />
             </a>
             <span
               aria-hidden
