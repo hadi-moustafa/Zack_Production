@@ -69,7 +69,7 @@ git push -u origin development
 - **On the site**, Selected Work opens on **Highlights**: a tile per category (cover, name,
   counts) and a curated selection: your ★ items, or a balanced pick from each category until you
   star some. Opening a category shows its title, description and a **Films | Photos** switch.
-  A sticky bar keeps the categories in reach while scrolling, every view has a shareable link
+  "← All categories" leads back to the tiles, every view has a shareable link
   (`/?work=weddings&view=photos`), and the viewer supports swipe, arrows, keys and a counter.
 - **Admin → Photos / Films:** drop many files at once (per-file progress), drag to reorder,
   ★ to feature, tick several to move/star/delete. Tap a tile to edit it: category, caption,

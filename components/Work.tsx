@@ -11,8 +11,8 @@ import { IconArrowRight, IconPlay, IconSpeakerOff, IconSpeakerOn } from "@/compo
 
 // Work is an index you step into, never one endless feed:
 //   Highlights (default) → category tiles + a curated selection
-//   A category           → its own header and a Films | Photos switch
-// A sticky bar always shows where you are and lets you jump elsewhere.
+//   A category           → its own header, a Films | Photos switch, and a
+//                          way back to all categories
 
 const HIGHLIGHTS = "highlights";
 const PHOTO_PAGE = 16;
@@ -138,10 +138,10 @@ export default function Work({ photos, categories }: { photos: Photo[]; categori
     setActive(slug);
     setView(v);
     syncUrl(slug, g ? v : undefined);
-    // Bring the start of the new content into view, just under the sticky bar.
+    // Bring the start of the new content into view, just under the nav.
     const top = contentRef.current?.getBoundingClientRect().top ?? 0;
     if (top < 0 || top > window.innerHeight * 0.6) {
-      window.scrollTo({ top: window.scrollY + top - 150, behavior: "smooth" });
+      window.scrollTo({ top: window.scrollY + top - 112, behavior: "smooth" });
     }
   }
 
@@ -177,27 +177,7 @@ export default function Work({ photos, categories }: { photos: Photo[]; categori
         </Reveal>
       </div>
 
-      {/* Sticky "you are here" bar */}
-      <div className="sticky top-20 z-30 mt-10 border-y border-[var(--border-subtle)] bg-[var(--bg-dark)]/90 backdrop-blur-md sm:top-[104px]">
-        <div
-          role="group"
-          aria-label="Choose a category"
-          className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-5 py-3 [scrollbar-width:none] sm:px-10 [&::-webkit-scrollbar]:hidden"
-        >
-          <BarChip label="Highlights" pressed={active === HIGHLIGHTS} onClick={() => go(HIGHLIGHTS)} star />
-          {groups.map((g) => (
-            <BarChip
-              key={g.category.id}
-              label={g.category.name}
-              count={g.films.length + g.photos.length}
-              pressed={active === g.category.slug}
-              onClick={() => go(g.category.slug)}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div ref={contentRef} className="mx-auto max-w-6xl scroll-mt-40 px-5 pt-10 sm:px-10">
+      <div ref={contentRef} className="mx-auto mt-10 max-w-6xl scroll-mt-28 px-5 sm:px-10">
         {group ? (
           <CategoryView
             key={group.category.id}
@@ -221,41 +201,6 @@ export default function Work({ photos, categories }: { photos: Photo[]; categori
         />
       ) : null}
     </section>
-  );
-}
-
-function BarChip({
-  label,
-  count,
-  pressed,
-  onClick,
-  star = false,
-}: {
-  label: string;
-  count?: number;
-  pressed: boolean;
-  onClick: () => void;
-  star?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={pressed}
-      onClick={onClick}
-      className={`flex min-h-11 shrink-0 items-center gap-2 rounded-full border px-4 text-[0.95rem] font-medium transition ${
-        pressed
-          ? "border-[var(--accent-gold-bright)] bg-[var(--accent-gold)] text-[#0a0a0a]"
-          : "border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent-gold)]"
-      }`}
-    >
-      {star ? <span aria-hidden>★</span> : null}
-      {label}
-      {count !== undefined ? (
-        <span className={`text-[0.8rem] tabular-nums ${pressed ? "text-[#0a0a0a]/70" : "text-[var(--text-secondary)]"}`}>
-          {count}
-        </span>
-      ) : null}
-    </button>
   );
 }
 
