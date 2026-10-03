@@ -299,14 +299,8 @@ function CategoryView({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={onBack}
-        className="inline-flex min-h-11 items-center gap-2 text-[0.95rem] text-[var(--text-secondary)] transition hover:text-[var(--accent-gold-bright)]"
-      >
-        <span aria-hidden>←</span> All categories
-      </button>
-      <div className="mt-2 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+      <BackButton onClick={onBack} />
+      <div className="mt-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
         <div>
           <h3 className="font-serif-display text-[clamp(2.25rem,8vw,3.5rem)] font-medium italic leading-none text-[var(--text-primary)]">
             {group.category.name}
@@ -349,8 +343,24 @@ function CategoryView({
           noun={view === "films" ? "film" : "photo"}
           onMore={() => (view === "films" ? setFilmLimit((n) => n + FILM_PAGE) : setPhotoLimit((n) => n + PHOTO_PAGE))}
         />
+        <div className="mt-12 flex justify-center border-t border-[var(--border-subtle)] pt-8">
+          <BackButton onClick={onBack} />
+        </div>
       </div>
     </>
+  );
+}
+
+function BackButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="group inline-flex min-h-12 items-center gap-2.5 rounded-full border border-[var(--accent-gold-bright)]/70 bg-[var(--accent-gold)]/10 px-5 text-[0.95rem] font-semibold text-[var(--accent-gold-bright)] transition hover:bg-[var(--accent-gold)] hover:text-[#0a0a0a]"
+    >
+      <IconArrowRight aria-hidden className="h-4 w-4 rotate-180 transition group-hover:-translate-x-1" />
+      All categories
+    </button>
   );
 }
 
