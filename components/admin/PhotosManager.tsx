@@ -2,11 +2,12 @@
 
 import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { photoPublicUrl } from "@/lib/supabaseClient";
+import { createClient, photoPublicUrl, PHOTOS_BUCKET } from "@/lib/supabaseClient";
+import { captureVideoFrame, shrinkImageForUpload } from "@/lib/mediaClient";
 import { SECTION_PHOTO_KEYS } from "@/lib/content";
 import { PRIMARY_CATEGORY_ORDER, sortCategories } from "@/lib/categories";
 import type { Photo } from "@/lib/types";
-import { Card, SectionHeading, TextInput, DangerLink } from "@/components/admin/ui";
+import { Card, SectionHeading, TextInput, DangerLink, SecondaryButton } from "@/components/admin/ui";
 import CategoryPicker from "@/components/admin/CategoryPicker";
 import { IconCamera, IconVideo, IconPlay, IconUpload } from "@/components/icons";
 
@@ -20,6 +21,9 @@ const SLOT_LABELS: Record<SectionSlot, string> = {
 
 const IMAGE_ACCEPT = "image/jpeg,image/png,image/webp";
 const VIDEO_ACCEPT = "video/mp4,video/webm,video/quicktime";
+
+const MAX_VIDEO_BYTES = 50 * 1024 * 1024; // Supabase free plan's per-file limit
+const CACHE_FOR_A_YEAR = "31536000"; // files are UUID-named and never overwritten
 
 export default function PhotosManager({
   initialPhotos,
@@ -57,28 +61,134 @@ export default function PhotosManager({
     [photos, filterCategory]
   );
 
+  // Videos go straight from the browser to Storage (they're too big for a
+  // serverless request), together with a still frame used as their preview.
+  async function uploadVideo(file: File) {
+    if (file.size > MAX_VIDEO_BYTES) throw new Error("Video is too large (max 50MB).");
+    const id = crypto.randomUUID();
+    const ext = file.type === "video/webm" ? "webm" : file.type === "video/quicktime" ? "mov" : "mp4";
+    const storagePath = `${id}.${ext}`;
+    const posterPath = `${id}.poster.jpg`;
+    const storage = createClient().storage.from(PHOTOS_BUCKET);
+
+    const poster = await captureVideoFrame(file).catch(() => null);
+    const { error: videoError } = await storage.upload(storagePath, file, {
+      contentType: file.type,
+      cacheControl: CACHE_FOR_A_YEAR,
+    });
+    if (videoError) throw new Error(videoError.message);
+    const posterOk = poster
+      ? !(await storage.upload(posterPath, poster, { contentType: "image/jpeg", cacheControl: CACHE_FOR_A_YEAR })).error
+      : false;
+
+    const res = await fetch("/api/photos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        storage_path: storagePath,
+        poster_path: posterOk ? posterPath : null,
+        category: category || "Uncategorized",
+        caption,
+      }),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.error || "Upload failed.");
+    return body.photo as Photo;
+  }
+
+  async function uploadPhoto(file: File) {
+    const formData = new FormData();
+    formData.append("file", await shrinkImageForUpload(file));
+    formData.append("category", category || "Uncategorized");
+    formData.append("caption", caption);
+    const res = await fetch("/api/photos", { method: "POST", body: formData });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.error || "Upload failed.");
+    return body.photo as Photo;
+  }
+
   async function handleFileSelected(file: File | undefined) {
     if (!file) return;
     setUploading(true);
     setError(null);
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("category", category || "Uncategorized");
-    formData.append("caption", caption);
-
-    const res = await fetch("/api/photos", { method: "POST", body: formData });
-    const body = await res.json();
-    setUploading(false);
-
-    if (!res.ok) {
-      setError(body.error || "Upload failed.");
-      return;
+    try {
+      const photo = file.type.startsWith("video/") ? await uploadVideo(file) : await uploadPhoto(file);
+      setPhotos((prev) => [...prev, photo]);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Upload failed.");
+    } finally {
+      setUploading(false);
+      if (photoInputRef.current) photoInputRef.current.value = "";
+      if (videoInputRef.current) videoInputRef.current.value = "";
     }
+  }
 
-    setPhotos((prev) => [...prev, body.photo]);
-    if (photoInputRef.current) photoInputRef.current.value = "";
-    if (videoInputRef.current) videoInputRef.current.value = "";
+  // One-time clean-up for photos stored uncompressed by the old importer.
+  const photosToOptimize = photos.filter((p) => p.media_type !== "video" && !p.storage_path.endsWith(".webp"));
+  const [optimizeProgress, setOptimizeProgress] = useState<string | null>(null);
+
+  async function optimizePhotos() {
+    setError(null);
+    let saved = 0;
+    for (const [i, photo] of photosToOptimize.entries()) {
+      setOptimizeProgress(`Optimising… ${i + 1} of ${photosToOptimize.length}`);
+      const res = await fetch("/api/photos/optimize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: photo.id }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(body.error || "Couldn't optimise a photo.");
+        break;
+      }
+      saved += body.savedBytes ?? 0;
+      setPhotos((prev) => prev.map((p) => (p.id === photo.id ? body.photo : p)));
+      setSectionPhotos((prev) => {
+        const next = { ...prev };
+        (Object.keys(next) as SectionSlot[]).forEach((slot) => {
+          if (next[slot] === photo.storage_path) next[slot] = body.photo.storage_path;
+        });
+        return next;
+      });
+    }
+    setOptimizeProgress(saved > 0 ? `Done, saved ${(saved / 1e6).toFixed(1)} MB` : null);
+  }
+
+  // One-time backfill for videos uploaded before previews existed.
+  const videosWithoutPoster = photos.filter((p) => p.media_type === "video" && !p.poster_path);
+  const [posterProgress, setPosterProgress] = useState<string | null>(null);
+
+  async function createMissingPosters() {
+    setError(null);
+    const storage = createClient().storage.from(PHOTOS_BUCKET);
+    let done = 0;
+    for (const video of videosWithoutPoster) {
+      setPosterProgress(`Creating previews… ${done + 1} of ${videosWithoutPoster.length}`);
+      try {
+        const blob = await captureVideoFrame(photoPublicUrl(video.storage_path));
+        const posterPath = `${video.storage_path.replace(/\.\w+$/, "")}.poster.jpg`;
+        const { error: upErr } = await storage.upload(posterPath, blob, {
+          contentType: "image/jpeg",
+          cacheControl: CACHE_FOR_A_YEAR,
+          upsert: true,
+        });
+        if (upErr) throw new Error(upErr.message);
+        const res = await fetch("/api/photos", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: video.id, poster_path: posterPath }),
+        });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(body.error || "Couldn't save the preview.");
+        setPhotos((prev) => prev.map((p) => (p.id === video.id ? { ...p, poster_path: posterPath } : p)));
+        done += 1;
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Couldn't create a preview.");
+        break;
+      }
+    }
+    setPosterProgress(null);
   }
 
   async function handleDelete(id: string) {
@@ -230,6 +340,34 @@ export default function PhotosManager({
         {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
       </Card>
 
+      {photosToOptimize.length > 0 || optimizeProgress ? (
+        <Card>
+          <SectionHeading
+            title={
+              photosToOptimize.length > 0
+                ? `${photosToOptimize.length} photo${photosToOptimize.length === 1 ? " is" : "s are"} stored uncompressed`
+                : "Photos optimised"
+            }
+            description="These were added before automatic compression. Optimising shrinks each one (same quality on screen) so the gallery loads faster and uses less of the free storage and bandwidth."
+          />
+          <SecondaryButton onClick={optimizePhotos} disabled={photosToOptimize.length === 0 || (optimizeProgress?.startsWith("Optimising") ?? false)}>
+            {optimizeProgress ?? "Optimise photos"}
+          </SecondaryButton>
+        </Card>
+      ) : null}
+
+      {videosWithoutPoster.length > 0 ? (
+        <Card>
+          <SectionHeading
+            title={`${videosWithoutPoster.length} video${videosWithoutPoster.length === 1 ? "" : "s"} without a preview image`}
+            description="Videos now show a still preview in the gallery and only download when a visitor taps play. Create previews for these older videos once (takes a few seconds each)."
+          />
+          <SecondaryButton onClick={createMissingPosters} disabled={posterProgress !== null}>
+            {posterProgress ?? "Create previews"}
+          </SecondaryButton>
+        </Card>
+      ) : null}
+
       <Card>
         <SectionHeading
           title={`Gallery items (${filteredPhotos.length}${filterCategory === "All" ? "" : ` of ${photos.length}`})`}
@@ -265,12 +403,22 @@ export default function PhotosManager({
                     <div className="relative aspect-square overflow-hidden rounded-md bg-neutral-100">
                       {photo.media_type === "video" ? (
                         <>
-                          <video
-                            src={photoPublicUrl(photo.storage_path)}
-                            className="h-full w-full object-cover"
-                            muted
-                            preload="metadata"
-                          />
+                          {photo.poster_path ? (
+                            <Image
+                              src={photoPublicUrl(photo.poster_path)}
+                              alt=""
+                              fill
+                              sizes="(min-width: 1024px) 33vw, 50vw"
+                              className="object-cover"
+                            />
+                          ) : (
+                            <video
+                              src={photoPublicUrl(photo.storage_path)}
+                              className="h-full w-full object-cover"
+                              muted
+                              preload="metadata"
+                            />
+                          )}
                           <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/20">
                             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90">
                               <IconPlay className="h-4 w-4 text-neutral-900" />

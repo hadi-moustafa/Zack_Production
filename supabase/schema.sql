@@ -254,3 +254,7 @@ begin
       ('singles', 'Additional Services', 'Catering', '', '[]'::jsonb, 480);
   end if;
 end $$;
+
+-- ---------------------------------------------------------------------------
+-- Video preview images (see supabase/video-posters-2026-10.sql)
+alter table public.photos add column if not exists poster_path text;

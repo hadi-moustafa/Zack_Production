@@ -20,6 +20,8 @@ type GalleryItem = {
   kind: "photo" | "video";
   category: string;
   src: string;
+  /** Still frame for videos, when one has been generated. */
+  poster?: string;
   caption?: string;
 };
 
@@ -47,6 +49,7 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
         kind: p.media_type === "video" ? "video" : "photo",
         category: p.category,
         src: photoPublicUrl(p.storage_path),
+        poster: p.poster_path ? photoPublicUrl(p.poster_path) : undefined,
         caption: p.caption,
       })),
     [photos]
@@ -183,10 +186,10 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
                     <VideoTile
                       key={item.id}
                       src={item.src}
+                      poster={item.poster}
                       caption={item.caption}
                       label={workAlt(item.category, "video", item.caption)}
                       className={spanClass}
-                      suspended={lightboxIndex !== null}
                       onOpen={() => setLightboxIndex(i)}
                     />
                   );
@@ -269,12 +272,13 @@ function CurtainOverlay({ active }: { active: boolean }) {
 }
 
 function MediaThumb({ item }: { item: GalleryItem }) {
-  if (item.kind === "video") {
+  const still = item.kind === "video" ? item.poster : item.src;
+  if (!still) {
     return (
-      <video aria-hidden src={item.src} muted playsInline preload="metadata" className="h-full w-full object-cover" />
+      <video aria-hidden src={`${item.src}#t=0.5`} muted playsInline preload="metadata" className="h-full w-full object-cover" />
     );
   }
-  return <Image src={item.src} alt="" aria-hidden fill sizes="(min-width: 640px) 25vw, 224px" className="object-cover" />;
+  return <Image src={still} alt="" aria-hidden fill sizes="(min-width: 640px) 25vw, 224px" className="object-cover" />;
 }
 
 function CategoryCard({
@@ -391,7 +395,7 @@ function Lightbox({
 
       <div className="relative h-[80vh] w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
         {item.kind === "video" ? (
-          <LightboxVideo key={item.id} src={item.src} />
+          <LightboxVideo key={item.id} src={item.src} poster={item.poster} />
         ) : (
           <Image src={item.src} alt={workAlt(item.category, "photo", item.caption)} fill sizes="90vw" className="object-contain" />
         )}
@@ -417,7 +421,7 @@ function Lightbox({
   );
 }
 
-function LightboxVideo({ src }: { src: string }) {
+function LightboxVideo({ src, poster }: { src: string; poster?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
 
@@ -436,6 +440,7 @@ function LightboxVideo({ src }: { src: string }) {
       <video
         ref={videoRef}
         src={src}
+        poster={poster}
         className="h-full w-full object-contain"
         autoPlay
         loop

@@ -64,6 +64,19 @@ git push -u origin development
 3. Add the environment variables from step 2 in the Vercel project settings.
 4. Deploy. Vercel will build and host the site on every push automatically from then on.
 
+## Media and free-tier limits
+
+- Photos are resized to 2400px and saved as WebP on upload (large files are shrunk in the
+  browser first, to fit Vercel's 4.5 MB request limit).
+- Videos (max 50 MB) upload straight from the browser to Supabase Storage, with a still
+  preview frame. The gallery shows only the preview; the video downloads when someone taps
+  play, which keeps Supabase's 5 GB/month egress for people actually watching.
+- Projects set up before October 2026 need
+  [`supabase/video-posters-2026-10.sql`](./supabase/video-posters-2026-10.sql) run once, then
+  **Admin → Photos & Videos → Create previews** and **Optimise photos** clicked once.
+- The hero video (`public/videos/hero.mp4`) is served by Vercel on every home visit; keep it
+  around 4 MB (720p, ~430 kbps two-pass H.264, 64 kbps AAC, `+faststart`).
+
 ## Price list
 
 Pricing has two parts, **Packages** and **Singles**, each made of groups (e.g. "Wedding

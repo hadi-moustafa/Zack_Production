@@ -1,109 +1,67 @@
-"use client";
+import Image from "next/image";
+import { IconPlay } from "@/components/icons";
 
-import { useEffect, useRef, useState } from "react";
-import { IconSpeakerOff, IconSpeakerOn } from "@/components/icons";
-
+// A still preview of a video with a play button. Nothing from the video file
+// itself is downloaded until the visitor opens it, which keeps the gallery
+// fast and Supabase's monthly bandwidth for people actually watching.
 export default function VideoTile({
+  poster,
   src,
   caption,
   label,
   className = "",
-  suspended = false,
   onOpen,
 }: {
+  /** Still frame; without one, the browser shows the video's first frame (metadata only). */
+  poster?: string;
   src: string;
   caption?: string;
   /** Accessible name, e.g. "Wedding film by Zack Production". */
   label: string;
   className?: string;
-  /** Pause this preview (e.g. while the lightbox is open) to avoid two videos playing/sounding at once. */
-  suspended?: boolean;
   onOpen: () => void;
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [muted, setMuted] = useState(true);
-  const suspendedRef = useRef(suspended);
-  const isIntersectingRef = useRef(false);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isIntersectingRef.current = entry.isIntersecting;
-        if (suspendedRef.current) return;
-        if (entry.isIntersecting) video.play().catch(() => {});
-        else video.pause();
-      },
-      { threshold: 0.4 }
-    );
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    suspendedRef.current = suspended;
-    const video = videoRef.current;
-    if (!video) return;
-    if (suspended) {
-      video.pause();
-    } else if (isIntersectingRef.current) {
-      video.play().catch(() => {});
-    }
-  }, [suspended]);
-
-  function toggleMute(e: React.MouseEvent | React.KeyboardEvent) {
-    e.stopPropagation();
-    const video = videoRef.current;
-    if (!video) return;
-    const nextMuted = !muted;
-    video.muted = nextMuted;
-    if (!nextMuted) video.play().catch(() => {});
-    setMuted(nextMuted);
-  }
-
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      aria-label={`Play full screen: ${label}`}
+    <button
+      type="button"
       onClick={onOpen}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onOpen();
-        }
-      }}
-      className={`group relative cursor-pointer overflow-hidden rounded-md bg-neutral-900 ${className}`}
+      aria-label={`Play: ${label}`}
+      className={`group relative overflow-hidden rounded-md bg-neutral-900 ${className}`}
     >
-      <video
-        ref={videoRef}
+      {poster ? (
+        <Image
+          src={poster}
+          alt=""
+          aria-hidden
+          fill
+          loading="lazy"
+          sizes="(min-width: 768px) 25vw, 90vw"
+          className="object-cover transition duration-500 ease-out group-hover:scale-105"
+        />
+      ) : (
+        <video
+          aria-hidden
+          src={`${src}#t=0.5`}
+          muted
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      )}
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
+
+      <span
         aria-hidden
-        src={src}
-        className="absolute inset-0 h-full w-full object-cover transition duration-500 ease-out group-hover:scale-110"
-        muted={muted}
-        loop
-        playsInline
-        preload="metadata"
-      />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+        className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/45 text-white backdrop-blur-sm transition duration-300 group-hover:scale-110 group-hover:border-[var(--accent-gold-bright)] group-hover:text-[var(--accent-gold-bright)]"
+      >
+        <IconPlay className="ml-0.5 h-6 w-6" />
+      </span>
 
       {caption ? (
-        <span aria-hidden className="absolute bottom-3 left-3 max-w-[65%] text-left text-sm font-medium text-white">
+        <span aria-hidden className="absolute bottom-3 left-3 right-3 text-left text-sm font-medium text-white">
           {caption}
         </span>
       ) : null}
-
-      <button
-        type="button"
-        data-no-sound
-        onClick={toggleMute}
-        aria-label={muted ? "Unmute video" : "Mute video"}
-        aria-pressed={!muted}
-        className="absolute bottom-1.5 right-1.5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-black/50 text-white backdrop-blur-sm transition hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)]"
-      >
-        {muted ? <IconSpeakerOff className="h-4 w-4" /> : <IconSpeakerOn className="h-4 w-4" />}
-      </button>
-    </div>
+    </button>
   );
 }

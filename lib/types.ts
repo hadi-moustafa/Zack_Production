@@ -5,6 +5,8 @@ export type Photo = {
   caption: string;
   sort_order: number;
   media_type: "photo" | "video";
+  /** Still frame shown for a video until it's played (null until generated). */
+  poster_path?: string | null;
   created_at: string;
 };
 
