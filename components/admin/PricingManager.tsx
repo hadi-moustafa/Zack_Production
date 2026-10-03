@@ -247,6 +247,31 @@ function ItemEditor({
             </div>
           </div>
 
+          <div className="grid gap-3 sm:grid-cols-2 sm:items-end">
+            <div>
+              <Label>Badge (optional)</Label>
+              <TextInput
+                value={item.badge ?? ""}
+                maxLength={40}
+                placeholder="e.g. Recommended, Up to 20% off"
+                onChange={(e) => onChange({ badge: e.target.value })}
+                onBlur={() => onSave()}
+              />
+            </div>
+            <label className="flex items-center gap-2 pb-2.5 text-sm text-neutral-700">
+              <input
+                type="checkbox"
+                checked={item.highlighted ?? false}
+                onChange={(e) => {
+                  onChange({ highlighted: e.target.checked });
+                  onSave({ highlighted: e.target.checked });
+                }}
+                className="h-4 w-4 accent-neutral-900"
+              />
+              Highlight (gold border; the badge becomes a ribbon)
+            </label>
+          </div>
+
           <div>
             <Label>What&apos;s included (optional, turns the group into cards)</Label>
             <div className="mt-1.5 space-y-2">

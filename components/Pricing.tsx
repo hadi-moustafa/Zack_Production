@@ -173,17 +173,26 @@ function CardGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id
   return (
     <div>
       <h4 className="eyebrow">{group.name}</h4>
-      <ul className={`mt-4 grid gap-4 sm:grid-cols-2 ${CARD_COLUMNS[Math.min(group.items.length, 4)] ?? ""}`}>
+      <ul className={`mt-4 grid gap-4 sm:grid-cols-2 sm:pt-3 ${CARD_COLUMNS[Math.min(group.items.length, 4)] ?? ""}`}>
         {group.items.map((item) => {
           const chosen = isSelected(item.id);
           const swatch = TIER_SWATCH[item.name.trim().toLowerCase()] ?? TIER_SWATCH.gold;
           return (
             <li
               key={item.id}
-              className={`flex flex-col rounded-xl border bg-[var(--bg-dark)] p-6 transition-colors ${
-                chosen ? "border-[var(--accent-gold-bright)] shadow-[0_20px_50px_-25px_rgba(201,162,75,0.5)]" : "border-[var(--border-subtle)]"
+              className={`relative flex flex-col rounded-xl bg-[var(--bg-dark)] p-6 transition-colors ${
+                item.highlighted
+                  ? "mt-3 border-2 border-[var(--accent-gold-bright)] bg-gradient-to-b from-[#1d170a] to-[var(--bg-dark)] shadow-[0_25px_60px_-25px_rgba(232,193,105,0.55)] sm:mt-0"
+                  : chosen
+                    ? "border border-[var(--accent-gold-bright)]"
+                    : "border border-[var(--border-subtle)]"
               }`}
             >
+              {item.highlighted && item.badge ? (
+                <span className="absolute -top-3.5 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full bg-[var(--accent-gold-bright)] px-4 py-1 text-[0.75rem] font-bold uppercase tracking-[0.16em] text-[#0a0a0a] shadow-[0_6px_18px_-6px_rgba(232,193,105,0.8)]">
+                  <span aria-hidden>★</span> {item.badge}
+                </span>
+              ) : null}
               <div className="flex items-center gap-3">
                 <span aria-hidden className="h-4 w-4 shrink-0 rounded-full" style={{ background: swatch }} />
                 <p className="font-serif-display text-[1.75rem] font-semibold leading-none text-[var(--text-primary)]">
@@ -193,6 +202,7 @@ function CardGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id
               <p className="mt-2 font-serif-display text-xl italic text-[var(--accent-gold-bright)]">
                 {priceLabel(item.price, "cards")}
               </p>
+              {!item.highlighted && item.badge ? <OfferBadge text={item.badge} className="mt-3 self-start" /> : null}
               <ul className="mt-5 flex-1 space-y-2.5 border-t border-[var(--border-subtle)] pt-5 text-[var(--text-secondary)]">
                 {item.features.map((feature, i) => (
                   <li key={i} className="flex gap-2.5">
@@ -205,7 +215,7 @@ function CardGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id
                 href="/#contact"
                 aria-label={chosen ? `${item.name} selected, continue to booking` : `Choose the ${item.name} package`}
                 onClick={() => planSelection.select(toSelected(item, group))}
-                className={`${chosen ? "btn-gold" : "btn-ghost"} mt-6 w-full justify-center !px-4`}
+                className={`${chosen || item.highlighted ? "btn-gold" : "btn-ghost"} mt-6 w-full justify-center !px-4`}
               >
                 {chosen ? "Selected ✓" : "Choose"}
               </Link>
@@ -242,8 +252,9 @@ function ListGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id
                 >
                   {chosen ? "✓" : "+"}
                 </span>
-                <span className={`flex-1 ${chosen ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
+                <span className={`flex-1 ${chosen || item.highlighted ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
                   {item.name}
+                  {item.badge ? <OfferBadge text={item.badge} className="ml-2 align-middle" gold={item.highlighted} /> : null}
                 </span>
                 <span
                   className={`shrink-0 tabular-nums ${
@@ -258,5 +269,20 @@ function ListGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id
         })}
       </ul>
     </div>
+  );
+}
+
+// A small label on a price: gold for a recommendation, green for an offer.
+function OfferBadge({ text, className = "", gold = false }: { text: string; className?: string; gold?: boolean }) {
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[0.72rem] font-semibold uppercase tracking-[0.12em] ${
+        gold
+          ? "border-[var(--accent-gold-bright)]/60 bg-[var(--accent-gold)]/15 text-[var(--accent-gold-bright)]"
+          : "border-emerald-400/50 bg-emerald-400/10 text-emerald-300"
+      } ${className}`}
+    >
+      {text}
+    </span>
   );
 }

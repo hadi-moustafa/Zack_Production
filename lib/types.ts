@@ -50,6 +50,10 @@ export type PricingPackage = {
   price: string;
   /** What's included; items with any are shown as cards, others as list rows. */
   features: string[];
+  /** Optional label, e.g. "Recommended" or "Up to 20% off". */
+  badge: string;
+  /** Gold border and a ribbon for the badge: the item to steer people to. */
+  highlighted: boolean;
   sort_order: number;
   created_at: string;
 };

@@ -9,6 +9,8 @@ type PackageInput = {
   price?: string;
   features?: string[];
   sort_order?: number;
+  badge?: string;
+  highlighted?: boolean;
 };
 
 function sanitize(input: PackageInput) {
@@ -21,6 +23,8 @@ function sanitize(input: PackageInput) {
       ? input.features.map((f) => String(f).slice(0, 200)).slice(0, 30)
       : [],
     sort_order: typeof input.sort_order === "number" ? input.sort_order : 0,
+    badge: String(input.badge ?? "").trim().slice(0, 40),
+    highlighted: input.highlighted === true,
   };
 }
 
