@@ -164,7 +164,7 @@ export default function Work({ photos, categories }: { photos: Photo[]; categori
           <div className="section-index">
             <span className="num">I</span>
             <span className="line" />
-            <span className="eyebrow">My work</span>
+            <span className="eyebrow">Our work</span>
           </div>
           <h2 className="font-serif-display mt-4 text-[clamp(2.5rem,9vw,4.25rem)] font-medium leading-[1] text-[var(--text-primary)]">
             Selected Work

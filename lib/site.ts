@@ -47,7 +47,7 @@ export function absoluteUrl(path = "/") {
 
 /** Sections of the one-page site, used by the nav, footer and llms.txt. */
 export const SECTIONS = [
-  { id: "about", label: "Who I Am", description: "Meet Zack, the photographer and filmmaker behind Zack Production" },
+  { id: "about", label: "Who We Are", description: "Meet Zack, the photographer and filmmaker behind Zack Production" },
   { id: "gallery", label: "Work", description: "Wedding, graduation, food and promotional photography and films" },
   { id: "pricing", label: "Pricing", description: "Photography and film packages" },
   { id: "contact", label: "Contact", description: "Book a shoot or ask a question" },

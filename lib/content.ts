@@ -22,8 +22,8 @@ export const CONTENT_FIELDS: ContentField[] = [
   { key: "about_bio", label: "About bio", group: "About", multiline: true, placeholder: "A couple of short paragraphs about yourself and your work." },
   { key: "about_photo_caption", label: "About photo caption", group: "About", placeholder: "Behind the lens" },
 
-  { key: "pricing_description", label: "Pricing section description", group: "Pricing", multiline: true, placeholder: "Pick a package or build your own from the singles. Everything you tap is added to your booking request.", fallback: "Pick a wedding package or build your own from the singles. Everything you tap is added to your booking request." },
-  { key: "pricing_payment_note", label: "Payment note (under the prices)", group: "Pricing", multiline: true, placeholder: "Make all checks payable to Zack Production before or at the event day.", fallback: "Make all checks payable to Zack Production before or at the event day.\nContact name: Zack Production" },
+  { key: "pricing_description", label: "Pricing section description", group: "Pricing", multiline: true, placeholder: "Choose the package that fits your needs, or contact us for a tailored offer.", fallback: "Choose the package that fits your needs, or contact us for a tailored offer." },
+  { key: "pricing_payment_note", label: "Payment note (under the prices)", group: "Pricing", multiline: true, placeholder: "Please make all checks payable to Zack Production on or before the event date.", fallback: "Please make all checks payable to Zack Production on or before the event date.\nContact: Zack Production" },
 
   { key: "contact_description", label: "Contact section description", group: "Contact & Footer", multiline: true, placeholder: "Have a project in mind? Reach out and let's talk.", fallback: "Have a project in mind? Reach out and let's talk." },
   { key: "contact_phone", label: "Contact phone", group: "Contact & Footer", placeholder: "+961 71 413 009" },

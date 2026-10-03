@@ -77,7 +77,7 @@ export default function Hero({ headline, tagline }: { headline: string; tagline:
             style={{ animationDelay: "0.55s" }}
           >
             <a href="#gallery" className="btn-ghost justify-center bg-black/20 backdrop-blur-sm">
-              View my work <IconArrowRight className="h-4 w-4" />
+              View our work <IconArrowRight className="h-4 w-4" />
             </a>
             <span
               aria-hidden

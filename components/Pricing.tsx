@@ -76,7 +76,7 @@ export default function Pricing({
         </Reveal>
 
         {packageGroups.length > 0 ? (
-          <Part id="pricing-packages" numeral="1" title="Packages" intro="Complete coverage, planned with you from start to finish.">
+          <Part id="pricing-packages" numeral="1" title="Packages" intro="Complete coverage, fully planned with you from concept to delivery.">
             {packageGroups.map((group) =>
               group.layout === "cards" ? (
                 <CardGroup key={group.name} group={group} isSelected={isSelected} />

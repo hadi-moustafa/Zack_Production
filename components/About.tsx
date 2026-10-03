@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { photoPublicUrl } from "@/lib/media";
-import { site, locationLabel } from "@/lib/site";
-import { IconCamera, IconPin, IconStar } from "@/components/icons";
+import { site } from "@/lib/site";
 import Reveal from "@/components/Reveal";
 import { Flourish } from "@/components/Ornaments";
 
@@ -16,12 +15,6 @@ export default function About({
   photoCaption: string;
   photographerName: string;
 }) {
-  const traits = [
-    { icon: IconCamera, label: "Passionate about photography" },
-    { icon: IconPin, label: `Based in ${locationLabel}` },
-    { icon: IconStar, label: "Focused on quality & detail" },
-  ];
-
   return (
     <section id="about" className="relative overflow-hidden bg-[var(--bg-dark-alt)] py-20 sm:py-28">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:gap-12 sm:px-10 lg:grid-cols-2 lg:items-center">
@@ -53,10 +46,14 @@ export default function About({
           <div className="section-index">
             <span className="num">II</span>
             <span className="line" />
-            <span className="eyebrow">Who I am</span>
+            <span className="eyebrow">Who we are</span>
           </div>
           <h2 className="font-serif-display mt-4 text-[clamp(2.5rem,9vw,4.25rem)] font-medium leading-[1] text-[var(--text-primary)]">
             Hi, I&apos;m {photographerName}
+            <span className="sr-only"> – </span>
+            <span className="mt-3 block font-serif-display text-[clamp(1.35rem,4.5vw,1.9rem)] font-normal italic leading-snug text-[var(--accent-gold-bright)]">
+              Professional Photographer &amp; Videographer
+            </span>
           </h2>
           <Flourish />
           {bio ? (
@@ -64,15 +61,6 @@ export default function About({
               {bio}
             </p>
           ) : null}
-
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {traits.map((trait, i) => (
-              <Reveal key={trait.label} delay={150 + i * 90} className="flex flex-col gap-3">
-                <trait.icon aria-hidden className="h-6 w-6 text-[var(--accent-gold)]" />
-                <p className="text-base text-[var(--text-secondary)]">{trait.label}</p>
-              </Reveal>
-            ))}
-          </div>
         </Reveal>
       </div>
     </section>
