@@ -62,33 +62,22 @@ export default function About({
             <span className="eyebrow">Who we are</span>
           </div>
           <h2 className="font-serif-display mt-4 text-[clamp(2.5rem,9vw,4.25rem)] font-medium leading-[1] text-[var(--text-primary)]">
-            Hi, I&apos;m {photographerName}
-            <span className="sr-only"> – </span>
-            <span className="mt-3 block font-serif-display text-[clamp(1.35rem,4.5vw,1.9rem)] font-normal italic leading-snug text-[var(--accent-gold-bright)]">
-              Professional Photographer &amp; Videographer
-            </span>
+            {fullName || photographerName}
+            {roleList.length ? (
+              <span className="mt-4 block space-y-1">
+                {roleList.map((role) => (
+                  <span
+                    key={role}
+                    className="block font-serif-display text-[clamp(1.3rem,4.5vw,1.75rem)] font-normal italic leading-snug text-[var(--accent-gold-bright)]"
+                  >
+                    <span className="sr-only">, </span>
+                    {role}
+                  </span>
+                ))}
+              </span>
+            ) : null}
           </h2>
           <Flourish />
-
-          {fullName || roleList.length ? (
-            <div className="mt-8">
-              {fullName ? (
-                <p className="font-mono text-[0.85rem] font-medium uppercase tracking-[0.32em] text-[var(--text-primary)]">
-                  {fullName}
-                </p>
-              ) : null}
-              {roleList.length ? (
-                <ul className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.95rem] text-[var(--accent-gold-bright)]">
-                  {roleList.map((role, i) => (
-                    <li key={role} className="flex items-center gap-3">
-                      {i > 0 ? <span aria-hidden className="h-1 w-1 rounded-full bg-[var(--accent-gold)]" /> : null}
-                      {role}
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </div>
-          ) : null}
 
           {paragraphs.map((p, i) => (
             <p
