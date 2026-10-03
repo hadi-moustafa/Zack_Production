@@ -20,7 +20,12 @@ export function organizationGraph(data: SiteData) {
         description: site.description,
         logo: { "@type": "ImageObject", url: absoluteUrl("/logo.png"), width: 900, height: 336 },
         image: absoluteUrl("/videos/hero-poster.webp"),
-        founder: { "@type": "Person", name: site.founder, jobTitle: "Photographer & Filmmaker" },
+        founder: {
+          "@type": "Person",
+          name: data.content.about_name || site.founder,
+          jobTitle: data.content.about_roles.split("·")[0]?.trim() || "Director of Photography",
+          ...(data.content.about_award ? { award: data.content.about_award } : {}),
+        },
         address: {
           "@type": "PostalAddress",
           addressLocality: site.location.city,

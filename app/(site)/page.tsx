@@ -57,6 +57,10 @@ export default async function Home() {
         photoPath={aboutPhoto}
         photoCaption={content.about_photo_caption}
         photographerName={content.photographer_name}
+        fullName={content.about_name}
+        roles={content.about_roles}
+        award={content.about_award}
+        tagline={content.about_tagline}
       />
       <OrnamentDivider />
       <Work photos={photos} categories={categories} />

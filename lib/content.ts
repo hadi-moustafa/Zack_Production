@@ -19,7 +19,11 @@ export const CONTENT_FIELDS: ContentField[] = [
   { key: "hero_headline", label: "Hero headline", group: "Hero", placeholder: "Real Moments", fallback: "Real Moments" },
   { key: "hero_tagline", label: "Hero description", group: "Hero", multiline: true, placeholder: "Capturing moments that last a lifetime", fallback: "Capturing moments that last a lifetime" },
 
-  { key: "about_bio", label: "About bio", group: "About", multiline: true, placeholder: "A couple of short paragraphs about yourself and your work." },
+  { key: "about_name", label: "Full name", group: "About", placeholder: "Zack Ghosson" },
+  { key: "about_roles", label: "Roles (separate with ·)", group: "About", placeholder: "Director of Photography · Filmmaker · Editor" },
+  { key: "about_bio", label: "Bio (blank line between paragraphs)", group: "About", multiline: true, placeholder: "A couple of short paragraphs about yourself and your work." },
+  { key: "about_award", label: "Award highlight (optional)", group: "About", placeholder: "Best Director of Photography — Afdal Awards 2025 & 2026" },
+  { key: "about_tagline", label: "Signature line (optional)", group: "About", placeholder: "Creating Stories. Capturing Moments. Defining the Frame." },
   { key: "about_photo_caption", label: "About photo caption", group: "About", placeholder: "Behind the lens" },
 
   { key: "pricing_description", label: "Pricing section description", group: "Pricing", multiline: true, placeholder: "Choose the package that fits your needs, or contact us for a tailored offer.", fallback: "Choose the package that fits your needs, or contact us for a tailored offer." },

@@ -9,12 +9,25 @@ export default function About({
   photoPath,
   photoCaption,
   photographerName,
+  fullName,
+  roles,
+  award,
+  tagline,
 }: {
   bio: string;
   photoPath: string | null;
   photoCaption: string;
   photographerName: string;
+  fullName: string;
+  roles: string;
+  award: string;
+  tagline: string;
 }) {
+  const paragraphs = bio.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+  const roleList = roles.split(/[·•|]/).map((r) => r.trim()).filter(Boolean);
+  // "Best Director of Photography — Afdal Awards 2025 & 2026" → title + where/when
+  const [awardTitle, awardDetail] = award.split(/\s+[—–-]\s+/, 2);
+
   return (
     <section id="about" className="relative overflow-hidden bg-[var(--bg-dark-alt)] py-20 sm:py-28">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:gap-12 sm:px-10 lg:grid-cols-2 lg:items-center">
@@ -56,13 +69,68 @@ export default function About({
             </span>
           </h2>
           <Flourish />
-          {bio ? (
-            <p className="drop-cap mt-6 whitespace-pre-line text-[1.05rem] leading-relaxed text-[var(--text-secondary)] sm:text-[1.1rem]">
-              {bio}
+
+          {fullName || roleList.length ? (
+            <div className="mt-8">
+              {fullName ? (
+                <p className="font-mono text-[0.85rem] font-medium uppercase tracking-[0.32em] text-[var(--text-primary)]">
+                  {fullName}
+                </p>
+              ) : null}
+              {roleList.length ? (
+                <ul className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.95rem] text-[var(--accent-gold-bright)]">
+                  {roleList.map((role, i) => (
+                    <li key={role} className="flex items-center gap-3">
+                      {i > 0 ? <span aria-hidden className="h-1 w-1 rounded-full bg-[var(--accent-gold)]" /> : null}
+                      {role}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+          ) : null}
+
+          {paragraphs.map((p, i) => (
+            <p
+              key={i}
+              className={`${i === 0 ? "drop-cap mt-6" : "mt-4"} text-[1.05rem] leading-relaxed text-[var(--text-secondary)] sm:text-[1.1rem]`}
+            >
+              {p}
+            </p>
+          ))}
+
+          {award ? (
+            <div className="mt-8 flex items-center gap-4 rounded-xl border border-[var(--accent-gold)]/45 bg-[var(--accent-gold)]/[0.07] p-4 sm:p-5">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--accent-gold-bright)]/60 text-[var(--accent-gold-bright)]">
+                <AwardIcon className="h-6 w-6" />
+              </span>
+              <p>
+                <span className="block font-semibold text-[var(--text-primary)]">{awardTitle}</span>
+                {awardDetail ? <span className="block text-[0.95rem] text-[var(--accent-gold-bright)]">{awardDetail}</span> : null}
+              </p>
+            </div>
+          ) : null}
+
+          {tagline ? (
+            <p className="font-script mt-8 flex items-center gap-4 text-[clamp(1.25rem,4vw,1.6rem)] text-[var(--text-primary)]">
+              <span aria-hidden className="h-px w-10 shrink-0 bg-[var(--accent-gold)]" />
+              {tagline}
             </p>
           ) : null}
         </Reveal>
       </div>
     </section>
+  );
+}
+
+// Laurel-wrapped star for the award highlight.
+function AwardIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden className={className}>
+      <path d="M12 6.2l1.4 2.9 3.1.4-2.3 2.2.6 3.1L12 13.3l-2.8 1.5.6-3.1-2.3-2.2 3.1-.4z" fill="currentColor" stroke="none" />
+      <path d="M5.5 7.5c-1.6 2.6-1.4 6 .6 8.4 1.5 1.8 3.7 2.8 5.9 2.8M18.5 7.5c1.6 2.6 1.4 6-.6 8.4-1.5 1.8-3.7 2.8-5.9 2.8" />
+      <path d="M4.6 11.2l-1.4-.8M4.9 14.4l-1.5.1M6.6 17.2l-1.2.9M19.4 11.2l1.4-.8M19.1 14.4l1.5.1M17.4 17.2l1.2.9" />
+      <path d="M12 18.7V21M9.5 21h5" />
+    </svg>
   );
 }
