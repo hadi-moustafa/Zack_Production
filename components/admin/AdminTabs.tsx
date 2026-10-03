@@ -2,19 +2,21 @@
 
 import { useState } from "react";
 import ContentManager from "@/components/admin/ContentManager";
-import PhotosManager from "@/components/admin/PhotosManager";
+import MediaLibrary, { type SectionSlot } from "@/components/admin/MediaLibrary";
+import CategoriesManager from "@/components/admin/CategoriesManager";
 import PricingManager from "@/components/admin/PricingManager";
 import SocialLinksManager from "@/components/admin/SocialLinksManager";
 import InstagramConnect, { type InstagramStatus } from "@/components/admin/InstagramConnect";
 import ContactSubmissionsList from "@/components/admin/ContactSubmissionsList";
 import AccountSettings from "@/components/admin/AccountSettings";
 import { SECTION_PHOTO_KEYS } from "@/lib/content";
-import type { Photo, PricingPackage, PageContent, SocialLink, ContactSubmission } from "@/lib/types";
+import type { Category, Photo, PricingPackage, PageContent, SocialLink, ContactSubmission } from "@/lib/types";
 
-type TabId = "media" | "content" | "pricing" | "social" | "messages" | "account";
+type TabId = "photos" | "films" | "categories" | "content" | "pricing" | "social" | "messages" | "account";
 
 export default function AdminTabs({
   photos,
+  categories: initialCategories,
   content,
   contentMap,
   pricingPackages,
@@ -24,6 +26,7 @@ export default function AdminTabs({
   userEmail,
 }: {
   photos: Photo[];
+  categories: Category[];
   content: PageContent[];
   contentMap: Record<string, string>;
   pricingPackages: PricingPackage[];
@@ -32,10 +35,20 @@ export default function AdminTabs({
   submissions: ContactSubmission[];
   userEmail: string;
 }) {
-  const [tab, setTab] = useState<TabId>("media");
+  const [tab, setTab] = useState<TabId>("photos");
+  // Shared by the Photos, Films and Categories tabs so changes show everywhere.
+  const [items, setItems] = useState<Photo[]>(photos);
+  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [sectionPhotos, setSectionPhotos] = useState<Record<SectionSlot, string>>({
+    about: contentMap[SECTION_PHOTO_KEYS.about] ?? "",
+    contact: contentMap[SECTION_PHOTO_KEYS.contact] ?? "",
+  });
+  const photoCount = items.filter((p) => p.media_type !== "video").length;
 
   const tabs: { id: TabId; label: string; count?: number }[] = [
-    { id: "media", label: "Photos & Videos", count: photos.length },
+    { id: "photos", label: "Photos", count: photoCount },
+    { id: "films", label: "Films", count: items.length - photoCount },
+    { id: "categories", label: "Categories", count: categories.length },
     { id: "content", label: "Page Text" },
     { id: "pricing", label: "Pricing", count: pricingPackages.length },
     { id: "social", label: "Social Links" },
@@ -71,15 +84,21 @@ export default function AdminTabs({
       </nav>
 
       <div className="mt-6">
-        {tab === "media" ? (
-          <PhotosManager
-            initialPhotos={photos}
-            initialSectionPhotos={{
-              hero: contentMap[SECTION_PHOTO_KEYS.hero],
-              about: contentMap[SECTION_PHOTO_KEYS.about],
-              contact: contentMap[SECTION_PHOTO_KEYS.contact],
-            }}
+        {tab === "photos" ? (
+          <MediaLibrary
+            kind="photo"
+            items={items}
+            setItems={setItems}
+            categories={categories}
+            sectionPhotos={sectionPhotos}
+            setSectionPhotos={setSectionPhotos}
           />
+        ) : null}
+        {tab === "films" ? (
+          <MediaLibrary kind="video" items={items} setItems={setItems} categories={categories} />
+        ) : null}
+        {tab === "categories" ? (
+          <CategoriesManager categories={categories} setCategories={setCategories} items={items} />
         ) : null}
         {tab === "content" ? <ContentManager initialContent={content} /> : null}
         {tab === "pricing" ? <PricingManager initialPackages={pricingPackages} /> : null}

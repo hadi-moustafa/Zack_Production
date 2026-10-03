@@ -1,12 +1,37 @@
 export type Photo = {
   id: string;
   storage_path: string;
+  /** Legacy free-text category, kept only for history; use category_id. */
   category: string;
+  /** Null = a site image (hero/about/contact), never shown in the gallery. */
+  category_id: string | null;
   caption: string;
   sort_order: number;
   media_type: "photo" | "video";
   /** Still frame shown for a video until it's played (null until generated). */
   poster_path?: string | null;
+  /** Real pixel size, so layouts reserve the right shape before loading. */
+  width: number | null;
+  height: number | null;
+  /** Tiny base64 image shown blurred while the real one loads. */
+  blur_data: string | null;
+  /** ★ items come first in "All". */
+  featured: boolean;
+  created_at: string;
+};
+
+export type CategoryKind = "photo" | "video" | "both";
+
+export type Category = {
+  id: string;
+  name: string;
+  slug: string;
+  /** Which part of Work it appears in: Photos, Films, or both. */
+  kind: CategoryKind;
+  /** Chip thumbnail; falls back to the category's first item. */
+  cover_path: string | null;
+  sort_order: number;
+  visible: boolean;
   created_at: string;
 };
 

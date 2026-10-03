@@ -31,11 +31,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: downloadError?.message ?? "Couldn't read the photo." }, { status: 500 });
   }
 
-  const optimized = await sharp(Buffer.from(await original.arrayBuffer()))
+  const { data: optimized, info } = await sharp(Buffer.from(await original.arrayBuffer()))
     .rotate()
     .resize({ width: MAX_DIMENSION, height: MAX_DIMENSION, fit: "inside", withoutEnlargement: true })
     .webp({ quality: 82 })
-    .toBuffer();
+    .toBuffer({ resolveWithObject: true });
+  const tiny = await sharp(optimized).resize(16, 16, { fit: "inside" }).webp({ quality: 40 }).toBuffer();
 
   const newPath = `${crypto.randomUUID()}.webp`;
   const { error: uploadError } = await storage.upload(newPath, optimized, {
@@ -46,7 +47,12 @@ export async function POST(request: Request) {
 
   const { data: updated, error: updateError } = await supabase
     .from("photos")
-    .update({ storage_path: newPath })
+    .update({
+      storage_path: newPath,
+      width: info.width,
+      height: info.height,
+      blur_data: `data:image/webp;base64,${tiny.toString("base64")}`,
+    })
     .eq("id", id)
     .select()
     .single();

@@ -1,15 +1,22 @@
-// Shared category ordering used by both the admin category picker and the
-// public "My Work" director's board, so the known categories always line up
-// the same way everywhere, with anything new falling in alphabetically after.
-export const PRIMARY_CATEGORY_ORDER = ["Weddings", "Food", "Promotions", "Graduations", "Videos"];
+import type { Category } from "@/lib/types";
 
-export function sortCategories(categories: string[]): string[] {
-  return [...categories].sort((a, b) => {
-    const ai = PRIMARY_CATEGORY_ORDER.indexOf(a);
-    const bi = PRIMARY_CATEGORY_ORDER.indexOf(b);
-    if (ai !== -1 && bi !== -1) return ai - bi;
-    if (ai !== -1) return -1;
-    if (bi !== -1) return 1;
-    return a.localeCompare(b);
-  });
+/** URL-safe id for a category name, e.g. "Pre-wedding Films" → "pre-wedding-films". */
+export function slugify(name: string) {
+  return (
+    name
+      .toLowerCase()
+      .normalize("NFKD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "category"
+  );
+}
+
+export function byOrder<T extends { sort_order: number }>(a: T, b: T) {
+  return a.sort_order - b.sort_order;
+}
+
+/** Categories that can hold this kind of media. */
+export function categoriesFor(categories: Category[], kind: "photo" | "video") {
+  return categories.filter((c) => c.kind === "both" || c.kind === kind).sort(byOrder);
 }

@@ -1,16 +1,17 @@
 import { createServerSupabaseClient } from "@/lib/supabaseServer";
 import LogoutButton from "@/components/admin/LogoutButton";
 import AdminTabs from "@/components/admin/AdminTabs";
-import type { Photo, PricingPackage, PageContent, SocialLink, ContactSubmission } from "@/lib/types";
+import type { Category, Photo, PricingPackage, PageContent, SocialLink, ContactSubmission } from "@/lib/types";
 import { withDefaults } from "@/lib/content";
 import type { InstagramStatus } from "@/components/admin/InstagramConnect";
 
 export default async function AdminDashboardPage() {
   const supabase = await createServerSupabaseClient();
 
-  const [{ data: userData }, photosRes, pricingRes, contentRes, socialRes, submissionsRes, instagramRes] = await Promise.all([
+  const [{ data: userData }, photosRes, categoriesRes, pricingRes, contentRes, socialRes, submissionsRes, instagramRes] = await Promise.all([
     supabase.auth.getUser(),
     supabase.from("photos").select("*").order("sort_order", { ascending: true }),
+    supabase.from("categories").select("*").order("sort_order", { ascending: true }),
     supabase.from("pricing_packages").select("*").order("sort_order", { ascending: true }),
     supabase.from("page_content").select("*"),
     supabase.from("social_links").select("*"),
@@ -19,6 +20,7 @@ export default async function AdminDashboardPage() {
   ]);
 
   const photos = (photosRes.data ?? []) as Photo[];
+  const categories = (categoriesRes.data ?? []) as Category[];
   const pricingPackages = (pricingRes.data ?? []).map((p) => ({
     ...p,
     features: Array.isArray(p.features) ? p.features : [],
@@ -46,6 +48,7 @@ export default async function AdminDashboardPage() {
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-8 sm:py-10">
         <AdminTabs
           photos={photos}
+          categories={categories}
           content={content}
           contentMap={contentMap}
           pricingPackages={pricingPackages}
