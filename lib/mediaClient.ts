@@ -2,12 +2,24 @@
 
 const POSTER_MAX_WIDTH = 1280;
 
+/** The frame a video element is currently showing, as a JPEG (max 1280px wide). */
+export function frameToJpeg(video: HTMLVideoElement): Promise<Blob> {
+  const scale = Math.min(1, POSTER_MAX_WIDTH / video.videoWidth);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(video.videoWidth * scale);
+  canvas.height = Math.round(video.videoHeight * scale);
+  canvas.getContext("2d")!.drawImage(video, 0, 0, canvas.width, canvas.height);
+  return new Promise((resolve, reject) =>
+    canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error("Couldn't create the preview image."))), "image/jpeg", 0.82)
+  );
+}
+
 /**
- * Grabs a still frame (about half a second in, past any fade from black) from
- * a video file or URL and returns it as a JPEG. URLs must allow CORS, which
- * Supabase public storage does.
+ * Grabs a still frame from a video file or URL as a JPEG. By default it's a
+ * quarter of the way in, which skips intros, title cards and fades from black.
+ * URLs must allow CORS, which Supabase public storage does.
  */
-export function captureVideoFrame(source: File | string, atSeconds = 0.5): Promise<Blob> {
+export function captureVideoFrame(source: File | string, atSeconds?: number): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const video = document.createElement("video");
     const objectUrl = typeof source === "string" ? null : URL.createObjectURL(source);
@@ -27,23 +39,13 @@ export function captureVideoFrame(source: File | string, atSeconds = 0.5): Promi
       reject(new Error("Couldn't read the video to make a preview."));
     });
     video.addEventListener("loadedmetadata", () => {
-      video.currentTime = Math.min(atSeconds, Math.max(0, video.duration - 0.1));
+      const target = atSeconds ?? Math.max(0.5, video.duration * 0.25);
+      video.currentTime = Math.min(target, Math.max(0, video.duration - 0.1));
     });
     video.addEventListener("seeked", () => {
-      const scale = Math.min(1, POSTER_MAX_WIDTH / video.videoWidth);
-      const canvas = document.createElement("canvas");
-      canvas.width = Math.round(video.videoWidth * scale);
-      canvas.height = Math.round(video.videoHeight * scale);
-      canvas.getContext("2d")!.drawImage(video, 0, 0, canvas.width, canvas.height);
-      canvas.toBlob(
-        (blob) => {
-          cleanup();
-          if (blob) resolve(blob);
-          else reject(new Error("Couldn't create the preview image."));
-        },
-        "image/jpeg",
-        0.82
-      );
+      frameToJpeg(video)
+        .then(resolve, reject)
+        .finally(cleanup);
     });
 
     video.src = typeof source === "string" ? source : objectUrl!;

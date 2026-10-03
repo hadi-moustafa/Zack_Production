@@ -66,17 +66,17 @@ git push -u origin development
 
 ## Work: films, photos and categories
 
-- **Admin → Photos / Films:** drop many files at once (per-file progress), pick the category
-  they go into, drag to reorder, ★ to show an item first, or tick several to move/star/delete
-  them together. Photos with no category are *site images* (e.g. the About photo): they never
-  show in the gallery.
-- **Admin → Categories:** add, rename, reorder or hide the filters visitors see, choose each
-  one's thumbnail, and whether it holds photos, films or both. A category can only be deleted
-  when it's empty.
-- **On the site:** Work shows filter chips (each has a shareable link, e.g. `/?work=weddings`),
-  a Films part (featured film + swipeable strip; only still previews load until someone taps
-  play) and a Photos part laid out at each photo's real shape, with a blur-up placeholder and
-  12 at a time.
+- **On the site**, Selected Work opens on **Highlights**: a tile per category (cover, name,
+  counts) and a curated selection: your ★ items, or a balanced pick from each category until you
+  star some. Opening a category shows its title, description and a **Films | Photos** switch.
+  A sticky bar keeps the categories in reach while scrolling, every view has a shareable link
+  (`/?work=weddings&view=photos`), and the viewer supports swipe, arrows, keys and a counter.
+- **Admin → Photos / Films:** drop many files at once (per-file progress), drag to reorder,
+  ★ to feature, tick several to move/star/delete. Tap a tile to edit it: category, caption,
+  star, About/Contact use, or, for films, scrub to any moment and **use that frame as the
+  preview**. Photos with no category are *site images* and never show in the gallery.
+- **Admin → Categories:** add, rename, reorder, hide, set a short description and cover, and
+  whether a category holds photos, films or both. Only empty categories can be deleted.
 
 ## Media and free-tier limits
 

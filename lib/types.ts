@@ -26,6 +26,8 @@ export type Category = {
   id: string;
   name: string;
   slug: string;
+  /** Short line shown under the title, e.g. "Birthdays, gender reveals and more". */
+  description: string;
   /** Which part of Work it appears in: Photos, Films, or both. */
   kind: CategoryKind;
   /** Chip thumbnail; falls back to the category's first item. */

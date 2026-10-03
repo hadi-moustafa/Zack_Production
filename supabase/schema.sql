@@ -312,3 +312,9 @@ update public.photos p
 set category_id = c.id
 from public.categories c
 where p.category_id is null and trim(p.category) = c.name;
+
+-- ---------------------------------------------------------------------------
+-- Category descriptions (October 2026): a short line shown under a category's
+-- title on the site, so names can stay short. Safe to run more than once.
+
+alter table public.categories add column if not exists description text not null default '';

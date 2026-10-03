@@ -81,7 +81,7 @@ export default function CategoriesManager({
       <Card>
         <SectionHeading
           title="Categories"
-          description="These are the filters visitors see above your work. Renaming updates every item instantly. Hidden categories (and their items) disappear from the site without being deleted."
+          description="These are the categories visitors browse in Selected Work, in this order. Keep names short (1–3 words) and put the detail in the description. Renaming updates every item instantly; hidden categories disappear from the site without being deleted."
         />
         {error ? <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
 
@@ -129,6 +129,17 @@ export default function CategoriesManager({
                   </div>
                 </div>
 
+                <div className="mt-3">
+                  <Label htmlFor={`cat-desc-${category.id}`}>Short description (optional, shown under the title)</Label>
+                  <TextInput
+                    id={`cat-desc-${category.id}`}
+                    defaultValue={category.description}
+                    maxLength={140}
+                    placeholder="e.g. Birthdays, gender reveals, celebrities and more"
+                    onBlur={(e) => e.target.value.trim() !== category.description && update(category.id, { description: e.target.value.trim() })}
+                  />
+                </div>
+
                 <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-neutral-600">
                   <span>
                     {photos} photo{photos === 1 ? "" : "s"} · {films} film{films === 1 ? "" : "s"}
@@ -153,7 +164,7 @@ export default function CategoriesManager({
 
                 {thumbs.length > 0 ? (
                   <div className="mt-3">
-                    <p className="text-xs font-medium text-neutral-500">Filter thumbnail</p>
+                    <p className="text-xs font-medium text-neutral-500">Cover image on the site</p>
                     <div className="mt-1.5 flex gap-2 overflow-x-auto pb-1">
                       <button
                         type="button"
@@ -163,7 +174,7 @@ export default function CategoriesManager({
                       >
                         Auto
                       </button>
-                      {thumbs.slice(0, 12).map((path) => (
+                      {thumbs.slice(0, 40).map((path) => (
                         <button
                           key={path}
                           type="button"

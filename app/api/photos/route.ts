@@ -10,7 +10,9 @@ const MAX_DIMENSION = 2400; // resize longest edge down to this
 // (this also lets Supabase serve repeats from its CDN instead of counting egress).
 const CACHE_FOR_A_YEAR = "31536000";
 const VIDEO_PATH_RE = /^[0-9a-f-]{36}\.(mp4|webm|mov)$/;
-const POSTER_PATH_RE = /^[0-9a-f-]{36}\.poster\.(jpg|webp)$/;
+// "<video uuid>.poster.jpg", or "<video uuid>.poster-<timestamp>.jpg" once a
+// new frame has been picked (a new name, because files are cached for a year).
+const POSTER_PATH_RE = /^[0-9a-f-]{36}\.poster(-\d+)?\.(jpg|webp)$/;
 const UUID_RE = /^[0-9a-f-]{36}$/;
 const BLUR_RE = /^data:image\/(webp|jpeg);base64,[A-Za-z0-9+/=]{1,2000}$/;
 
@@ -182,8 +184,16 @@ export async function PATCH(request: Request) {
   }
 
   if (typeof body.id !== "string") return NextResponse.json({ error: "Missing photo id." }, { status: 400 });
+  const { data: before } = update.poster_path
+    ? await supabase.from("photos").select("poster_path").eq("id", body.id).single()
+    : { data: null };
   const { data, error } = await supabase.from("photos").update(update).eq("id", body.id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  // A newly picked preview replaces the old file.
+  if (before?.poster_path && before.poster_path !== update.poster_path) {
+    await supabase.storage.from(PHOTOS_BUCKET).remove([before.poster_path]);
+    await supabase.from("categories").update({ cover_path: update.poster_path }).eq("cover_path", before.poster_path);
+  }
   return NextResponse.json({ photo: data });
 }
 

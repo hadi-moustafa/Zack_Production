@@ -25,6 +25,7 @@ export async function POST(request: Request) {
   const name = String(body?.name ?? "").trim().slice(0, 60);
   if (!name) return NextResponse.json({ error: "Give the category a name." }, { status: 400 });
   const kind = KINDS.has(body?.kind) ? body.kind : "both";
+  const description = String(body?.description ?? "").trim().slice(0, 140);
 
   const { data: last } = await supabase
     .from("categories")
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
 
   const { data, error } = await supabase
     .from("categories")
-    .insert({ name, kind, slug: await uniqueSlug(supabase, name), sort_order: (last?.sort_order ?? 0) + 10 })
+    .insert({ name, kind, description, slug: await uniqueSlug(supabase, name), sort_order: (last?.sort_order ?? 0) + 10 })
     .select()
     .single();
   if (error) {
@@ -73,6 +74,7 @@ export async function PATCH(request: Request) {
     update.slug = await uniqueSlug(supabase, update.name as string, id);
   }
   if (KINDS.has(body.kind)) update.kind = body.kind;
+  if (typeof body.description === "string") update.description = body.description.trim().slice(0, 140);
   if (typeof body.visible === "boolean") update.visible = body.visible;
   if (body.cover_path === null || typeof body.cover_path === "string") update.cover_path = body.cover_path;
 

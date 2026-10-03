@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { createClient, photoPublicUrl, PHOTOS_BUCKET } from "@/lib/supabaseClient";
 import {
   blurDataUrl,
   captureVideoFrame,
+  frameToJpeg,
   sendWithProgress,
   shrinkImageForUpload,
   videoSize,
@@ -13,7 +14,7 @@ import {
 import { SECTION_PHOTO_KEYS } from "@/lib/content";
 import { byOrder, categoriesFor } from "@/lib/categories";
 import type { Category, Photo } from "@/lib/types";
-import { Card, SectionHeading, TextInput, SecondaryButton, DangerLink } from "@/components/admin/ui";
+import { Card, SectionHeading, Label, TextInput, SecondaryButton, DangerLink } from "@/components/admin/ui";
 import { IconUpload } from "@/components/icons";
 
 const MAX_VIDEO_BYTES = 50 * 1024 * 1024; // Supabase free plan's per-file limit
@@ -21,6 +22,11 @@ const CACHE_FOR_A_YEAR = "31536000"; // files are UUID-named and never overwritt
 const IMAGE_ACCEPT = "image/jpeg,image/png,image/webp";
 const VIDEO_ACCEPT = "video/mp4,video/webm,video/quicktime";
 const SITE_IMAGES = "__site__";
+const LIBRARY_PAGE = 60;
+
+function plural(n: number, word: string) {
+  return `${n} ${word}${n === 1 ? "" : "s"}`;
+}
 const ALL = "__all__";
 
 // Hero uses the showreel, so only these sections take a picked photo.
@@ -333,6 +339,35 @@ export default function MediaLibrary({
     setMaintenance(null);
   }
 
+  // ---------- details ----------
+
+  const [detailId, setDetailId] = useState<string | null>(null);
+  const [limit, setLimit] = useState(LIBRARY_PAGE);
+  const detail = items.find((p) => p.id === detailId) ?? null;
+  const starredCount = items.filter((p) => p.featured).length;
+
+  const filters = [
+    { id: ALL, label: "All", count: items.length },
+    ...usable.map((c) => ({ id: c.id, label: c.name, count: items.filter((p) => p.category_id === c.id).length })),
+    ...(items.some((p) => !p.category_id)
+      ? [{ id: SITE_IMAGES, label: kind === "photo" ? "Site images" : "No category", count: items.filter((p) => !p.category_id).length }]
+      : []),
+  ];
+
+  // Saves a picked frame as the film's new preview (under a new name, since
+  // previews are cached for a year).
+  async function replacePoster(video: Photo, blob: Blob) {
+    const posterPath = `${video.storage_path.replace(/\.\w+$/, "")}.poster-${Date.now()}.jpg`;
+    const { error: upErr } = await createClient()
+      .storage.from(PHOTOS_BUCKET)
+      .upload(posterPath, blob, { contentType: "image/jpeg", cacheControl: CACHE_FOR_A_YEAR });
+    if (upErr) throw new Error(upErr.message);
+    const blur = await blurDataUrl(blob);
+    const json = await patch({ id: video.id, poster_path: posterPath, blur_data: blur });
+    if (!json) throw new Error("Couldn't save the preview.");
+    updateLocal([video.id], { poster_path: posterPath, blur_data: blur });
+  }
+
   // ---------- render ----------
 
   const selectedIds = Array.from(selected).filter((id) => items.some((p) => p.id === id));
@@ -458,32 +493,42 @@ export default function MediaLibrary({
         </Card>
       ) : null}
 
+      {items.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <span className="text-lg leading-none">★</span>
+          <span className="font-semibold">{plural(starredCount, "starred " + noun)}</span>
+          <span className="text-amber-800/80">
+            {starredCount >= 4
+              ? "These lead the Highlights view on the site."
+              : `Star 4–12 of your best ${noun}s to choose what Highlights shows. Until then it picks automatically from each category.`}
+          </span>
+        </div>
+      ) : null}
+
       <Card>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-neutral-900">
             {kind === "photo" ? "Photos" : "Films"} ({shown.length}
             {filter === ALL ? "" : ` of ${items.length}`})
           </h2>
-          <p className="text-xs text-neutral-500">Drag to reorder · ★ shows first in “All”</p>
+          <p className="text-xs text-neutral-500">Tap an item to edit · drag to reorder</p>
         </div>
 
         <div className="mb-4 flex flex-wrap gap-2">
-          {[
-            { id: ALL, label: "All" },
-            ...usable.map((c) => ({ id: c.id, label: c.name })),
-            ...(items.some((p) => !p.category_id)
-              ? [{ id: SITE_IMAGES, label: kind === "photo" ? "Site images" : "No category" }]
-              : []),
-          ].map((f) => (
+          {filters.map((f) => (
             <button
               key={f.id}
               type="button"
-              onClick={() => setFilter(f.id)}
-              className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${
+              onClick={() => {
+                setFilter(f.id);
+                setLimit(LIBRARY_PAGE);
+              }}
+              className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${
                 filter === f.id ? "bg-neutral-900 text-white" : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
               }`}
             >
               {f.label}
+              <span className={`text-xs tabular-nums ${filter === f.id ? "text-white/70" : "text-neutral-500"}`}>{f.count}</span>
             </button>
           ))}
         </div>
@@ -518,15 +563,24 @@ export default function MediaLibrary({
               Clear
             </button>
           </div>
+        ) : shown.length > 1 ? (
+          <button
+            type="button"
+            onClick={() => setSelected(new Set(shown.map((p) => p.id)))}
+            className="mb-3 text-xs font-semibold text-neutral-600 hover:text-neutral-900 hover:underline"
+          >
+            Select all {shown.length}
+          </button>
         ) : null}
 
         {shown.length === 0 ? (
           <p className="text-sm text-neutral-500">Nothing here yet.</p>
         ) : (
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {shown.map((item, i) => {
+          <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+            {shown.slice(0, limit).map((item) => {
               const thumb = kind === "video" ? item.poster_path : item.storage_path;
               const isSelected = selected.has(item.id);
+              const slot = kind === "photo" && sectionPhotos ? SLOTS.find((s) => sectionPhotos[s.slot] === item.storage_path) : undefined;
               return (
                 <li
                   key={item.id}
@@ -535,120 +589,297 @@ export default function MediaLibrary({
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={() => dropOn(item.id)}
                   onDragEnd={() => setDragId(null)}
-                  className={`flex flex-col rounded-lg border bg-white p-2 transition ${
-                    isSelected ? "border-neutral-900 ring-2 ring-neutral-900/15" : "border-neutral-200"
-                  } ${dragId === item.id ? "opacity-40" : ""}`}
+                  className={`group relative overflow-hidden rounded-lg bg-neutral-100 ${
+                    kind === "video" ? "aspect-[9/16]" : "aspect-square"
+                  } ${isSelected ? "ring-[3px] ring-neutral-900" : ""} ${dragId === item.id ? "opacity-40" : ""}`}
                 >
-                  <div className="relative aspect-square cursor-grab overflow-hidden rounded-md bg-neutral-100 active:cursor-grabbing">
+                  <button
+                    type="button"
+                    onClick={() => setDetailId(item.id)}
+                    aria-label={`Edit ${noun}${item.caption ? `: ${item.caption}` : ""}`}
+                    className="absolute inset-0 cursor-pointer"
+                  >
                     {thumb ? (
                       <Image
                         src={photoPublicUrl(thumb)}
-                        alt={item.caption || categoryName(item.category_id)}
+                        alt=""
                         fill
-                        sizes="(min-width: 1024px) 220px, 45vw"
+                        sizes="(min-width: 1024px) 150px, 33vw"
                         placeholder={item.blur_data ? "blur" : "empty"}
                         blurDataURL={item.blur_data ?? undefined}
-                        className="object-cover"
+                        className="object-cover transition group-hover:scale-105"
                       />
                     ) : (
                       <video src={photoPublicUrl(item.storage_path)} muted preload="metadata" className="h-full w-full object-cover" />
                     )}
-                    <label className="absolute left-1.5 top-1.5 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md bg-white/90 shadow">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => toggleSelect(item.id)}
-                        aria-label={`Select ${noun} ${i + 1}`}
-                        className="h-4 w-4 accent-neutral-900"
-                      />
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => setFeatured([item.id], !item.featured)}
-                      aria-label={item.featured ? "Unstar" : "Star (show first)"}
-                      aria-pressed={item.featured}
-                      className={`absolute right-1.5 top-1.5 flex h-8 w-8 items-center justify-center rounded-md text-lg shadow ${
-                        item.featured ? "bg-amber-400 text-white" : "bg-white/90 text-neutral-400 hover:text-amber-500"
-                      }`}
-                    >
-                      ★
-                    </button>
-                  </div>
-
-                  <select
-                    aria-label="Category"
-                    value={item.category_id ?? ""}
-                    onChange={(e) => setCategory([item.id], e.target.value || null)}
-                    className={`${selectClass} mt-2 !py-1.5 text-sm`}
+                    <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent px-1.5 pb-1 pt-5 text-left text-[0.65rem] font-semibold leading-tight text-white">
+                      {filter === ALL ? categoryName(item.category_id) : item.caption || "\u00a0"}
+                      {slot ? <span className="block text-emerald-300">✓ {slot.label}</span> : null}
+                    </span>
+                  </button>
+                  <label className="absolute left-1 top-1 flex h-7 w-7 cursor-pointer items-center justify-center rounded-md bg-white/90 shadow">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleSelect(item.id)}
+                      aria-label={`Select ${noun}`}
+                      className="h-4 w-4 accent-neutral-900"
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setFeatured([item.id], !item.featured)}
+                    aria-label={item.featured ? "Unstar" : "Star for Highlights"}
+                    aria-pressed={item.featured}
+                    className={`absolute right-1 top-1 flex h-7 w-7 items-center justify-center rounded-md text-base shadow ${
+                      item.featured ? "bg-amber-400 text-white" : "bg-white/90 text-neutral-400 hover:text-amber-500"
+                    }`}
                   >
-                    {usable.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                    {item.category_id && !usable.some((c) => c.id === item.category_id) ? (
-                      <option value={item.category_id}>{categoryName(item.category_id)}</option>
-                    ) : null}
-                    <option value="">{kind === "photo" ? "Site image" : "No category"}</option>
-                  </select>
-                  <TextInput
-                    aria-label="Caption"
-                    placeholder="Caption (optional)"
-                    value={item.caption}
-                    onChange={(e) => updateLocal([item.id], { caption: e.target.value })}
-                    onBlur={(e) => patch({ id: item.id, caption: e.target.value })}
-                    className="!mt-2 !py-1.5 text-sm"
-                  />
-
-                  {kind === "photo" && sectionPhotos ? (
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {SLOTS.map(({ slot, label }) => {
-                        const active = sectionPhotos[slot] === item.storage_path;
-                        return (
-                          <button
-                            key={slot}
-                            type="button"
-                            onClick={() => assignSlot(slot, item.storage_path)}
-                            aria-pressed={active}
-                            className={`rounded-full px-2 py-1 text-[0.7rem] font-semibold transition ${
-                              active ? "bg-emerald-600 text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
-                            }`}
-                          >
-                            {active ? "✓ " : ""}
-                            {label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  ) : null}
-
-                  <div className="mt-auto flex items-center justify-between pt-2">
-                    <div className="flex gap-1">
-                      <button
-                        type="button"
-                        onClick={() => moveBy(item.id, -1)}
-                        aria-label="Move earlier"
-                        className="h-8 w-8 rounded-md border border-neutral-200 text-neutral-600 hover:border-neutral-900"
-                      >
-                        ←
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => moveBy(item.id, 1)}
-                        aria-label="Move later"
-                        className="h-8 w-8 rounded-md border border-neutral-200 text-neutral-600 hover:border-neutral-900"
-                      >
-                        →
-                      </button>
-                    </div>
-                    <DangerLink onClick={() => remove([item.id])}>Delete</DangerLink>
-                  </div>
+                    ★
+                  </button>
                 </li>
               );
             })}
           </ul>
         )}
+
+        {shown.length > limit ? (
+          <div className="mt-4 text-center">
+            <SecondaryButton onClick={() => setLimit((n) => n + LIBRARY_PAGE)}>
+              Show {Math.min(LIBRARY_PAGE, shown.length - limit)} more ({shown.length - limit} left)
+            </SecondaryButton>
+          </div>
+        ) : null}
       </Card>
+
+      {detail ? (
+        <DetailsPanel
+          item={detail}
+          kind={kind}
+          usable={usable}
+          categoryName={categoryName}
+          sectionPhotos={sectionPhotos}
+          isFirst={items[0]?.id === detail.id}
+          isLast={items[items.length - 1]?.id === detail.id}
+          onClose={() => setDetailId(null)}
+          onCategory={(id) => setCategory([detail.id], id)}
+          onCaption={(caption) => {
+            updateLocal([detail.id], { caption });
+            patch({ id: detail.id, caption });
+          }}
+          onStar={() => setFeatured([detail.id], !detail.featured)}
+          onSlot={(slot) => assignSlot(slot, detail.storage_path)}
+          onMove={(dir) => moveBy(detail.id, dir)}
+          onDelete={async () => {
+            await remove([detail.id]);
+            setDetailId(null);
+          }}
+          onPoster={(blob) => replacePoster(detail, blob)}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+// Edit one item: bigger preview and every setting in one place. On films,
+// scrub to any moment and use it as the preview image.
+function DetailsPanel({
+  item,
+  kind,
+  usable,
+  categoryName,
+  sectionPhotos,
+  isFirst,
+  isLast,
+  onClose,
+  onCategory,
+  onCaption,
+  onStar,
+  onSlot,
+  onMove,
+  onDelete,
+  onPoster,
+}: {
+  item: Photo;
+  kind: "photo" | "video";
+  usable: Category[];
+  categoryName: (id: string | null) => string;
+  sectionPhotos?: Record<SectionSlot, string>;
+  isFirst: boolean;
+  isLast: boolean;
+  onClose: () => void;
+  onCategory: (id: string | null) => void;
+  onCaption: (caption: string) => void;
+  onStar: () => void;
+  onSlot: (slot: SectionSlot) => void;
+  onMove: (dir: -1 | 1) => void;
+  onDelete: () => void;
+  onPoster: (blob: Blob) => Promise<void>;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [caption, setCaption] = useState(item.caption);
+  const [posterState, setPosterState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  async function useCurrentFrame() {
+    const video = videoRef.current;
+    if (!video) return;
+    video.pause();
+    setPosterState("saving");
+    try {
+      await onPoster(await frameToJpeg(video));
+      setPosterState("saved");
+    } catch {
+      setPosterState("error");
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center sm:p-6" onClick={onClose}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Edit ${kind === "photo" ? "photo" : "film"}`}
+        onClick={(e) => e.stopPropagation()}
+        className="max-h-[92svh] w-full overflow-y-auto rounded-t-2xl bg-white p-4 shadow-xl sm:max-w-3xl sm:rounded-2xl sm:p-6"
+      >
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-neutral-900">Edit {kind === "photo" ? "photo" : "film"}</h2>
+          <button type="button" onClick={onClose} aria-label="Close" className="flex h-10 w-10 items-center justify-center rounded-full text-2xl text-neutral-500 hover:bg-neutral-100">
+            &times;
+          </button>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-[minmax(0,15rem)_1fr]">
+          <div>
+            <div className={`relative mx-auto overflow-hidden rounded-lg bg-neutral-900 ${kind === "video" ? "aspect-[9/16] max-h-[55svh]" : ""}`}>
+              {kind === "video" ? (
+                <video
+                  ref={videoRef}
+                  src={photoPublicUrl(item.storage_path)}
+                  poster={item.poster_path ? photoPublicUrl(item.poster_path) : undefined}
+                  crossOrigin="anonymous"
+                  controls
+                  playsInline
+                  muted
+                  preload="metadata"
+                  className="h-full w-full object-contain"
+                />
+              ) : (
+                <Image
+                  src={photoPublicUrl(item.storage_path)}
+                  alt={item.caption || "Photo"}
+                  width={item.width ?? 800}
+                  height={item.height ?? 1000}
+                  sizes="240px"
+                  className="h-auto w-full"
+                />
+              )}
+            </div>
+            {kind === "video" ? (
+              <div className="mt-3 text-center">
+                <p className="text-xs text-neutral-500">Play or drag the timeline to a great moment, then:</p>
+                <button
+                  type="button"
+                  onClick={useCurrentFrame}
+                  disabled={posterState === "saving"}
+                  className="mt-2 inline-flex items-center justify-center rounded-lg bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-700 disabled:opacity-50"
+                >
+                  {posterState === "saving" ? "Saving…" : "Use this frame as the preview"}
+                </button>
+                {posterState === "saved" ? <p className="mt-1 text-xs font-semibold text-emerald-600">Preview updated ✓</p> : null}
+                {posterState === "error" ? <p className="mt-1 text-xs text-red-600">Couldn&apos;t save the frame. Try again.</p> : null}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="detail-category">Category</Label>
+              <select
+                id="detail-category"
+                value={item.category_id ?? ""}
+                onChange={(e) => onCategory(e.target.value || null)}
+                className={`${selectClass} mt-1.5`}
+              >
+                {usable.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+                {item.category_id && !usable.some((c) => c.id === item.category_id) ? (
+                  <option value={item.category_id}>{categoryName(item.category_id)}</option>
+                ) : null}
+                <option value="">{kind === "photo" ? "Site image (not in gallery)" : "No category (hidden)"}</option>
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="detail-caption">Caption (optional)</Label>
+              <TextInput
+                id="detail-caption"
+                value={caption}
+                placeholder={kind === "photo" ? "e.g. Kassem & Emman" : "e.g. Kassem & Emman — wedding film"}
+                onChange={(e) => setCaption(e.target.value)}
+                onBlur={() => caption !== item.caption && onCaption(caption)}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={onStar}
+              aria-pressed={item.featured}
+              className={`flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm transition ${
+                item.featured ? "border-amber-300 bg-amber-50 text-amber-900" : "border-neutral-200 text-neutral-700 hover:border-neutral-400"
+              }`}
+            >
+              <span className={`text-xl ${item.featured ? "text-amber-500" : "text-neutral-300"}`}>★</span>
+              <span>
+                <span className="block font-semibold">{item.featured ? "Starred" : "Star this " + (kind === "photo" ? "photo" : "film")}</span>
+                <span className="block text-xs opacity-75">Starred items lead the Highlights view and come first in their category.</span>
+              </span>
+            </button>
+            {kind === "photo" && sectionPhotos ? (
+              <div>
+                <Label>Use on the page</Label>
+                <div className="mt-1.5 flex flex-wrap gap-2">
+                  {SLOTS.map(({ slot, label }) => {
+                    const active = sectionPhotos[slot] === item.storage_path;
+                    return (
+                      <button
+                        key={slot}
+                        type="button"
+                        onClick={() => onSlot(slot)}
+                        aria-pressed={active}
+                        className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
+                          active ? "bg-emerald-600 text-white" : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+                        }`}
+                      >
+                        {active ? "✓ " : ""}
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-neutral-100 pt-4">
+              <div className="flex gap-2">
+                <SecondaryButton disabled={isFirst} onClick={() => onMove(-1)} className="!px-3 !py-2">
+                  ← Earlier
+                </SecondaryButton>
+                <SecondaryButton disabled={isLast} onClick={() => onMove(1)} className="!px-3 !py-2">
+                  Later →
+                </SecondaryButton>
+              </div>
+              <DangerLink onClick={onDelete}>Delete {kind === "photo" ? "photo" : "film"}</DangerLink>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
