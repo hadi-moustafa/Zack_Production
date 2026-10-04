@@ -611,8 +611,8 @@
   filter: brightness(0) invert(1);
 }
 
-/* Logo wall: every logo is already a white mark on transparency
-   (scripts/logos.mjs); --lh is the height of a square mark. */
+/* Logo wall: every logo is already a colour mark on transparency, made to
+   read on dark (scripts/logos.mjs); --lh is the height of a square mark. */
 .hl-logo {
   width: auto;
   max-width: 100%;

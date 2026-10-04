@@ -11,12 +11,14 @@
 // rendered from their vectors with poppler's pdftocairo; everything else goes
 // through sharp.
 //
-// Every logo becomes the same thing: a white mark on transparency, trimmed
-// tight. A solid background is keyed out by colour distance, so a dark logo
-// on white, a white logo on black and a colour logo on a coloured card all
-// come out alike, keeping their inner detail (letters knocked out of a badge
-// stay knocked out). Each logo's ink density is recorded so the page can give
-// light script logos and heavy block logos the same visual weight.
+// Every logo becomes the same kind of thing: its own colours on transparency,
+// trimmed tight. A solid background is keyed out by colour distance, so a dark
+// logo on white, a white logo on black and a colour logo on a coloured card
+// all come out alike, keeping their inner detail (letters knocked out of a
+// badge stay knocked out). Colours are kept but made to read on the dark site:
+// black and dark greys turn light, and dark colours are lifted in lightness
+// with their hue kept. Each logo's ink density is recorded so the page can
+// give light script logos and heavy block logos the same visual weight.
 //
 // Per-logo fixes in the config, for files that need a hand:
 //   crop:  [x, y, w, h]   part of the source to use (fractions), e.g. to drop a frame
@@ -72,6 +74,51 @@ async function rasterize(file, tmp) {
   return sharp(file, { density: 300, limitInputPixels: false }).rotate();
 }
 
+// OKLab, to lift a colour's lightness without shifting its hue.
+const toLin = (c) => ((c /= 255) <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+const toSrgb = (c) => 255 * (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055);
+function oklab(r, g, b) {
+  [r, g, b] = [toLin(r), toLin(g), toLin(b)];
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  return [
+    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+  ];
+}
+function linFromOklab(L, a, b) {
+  const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+  const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+  const s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
+  return [
+    4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+    -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
+  ];
+}
+
+/** A logo colour made to read on the dark site, hue kept. */
+function onDark(r, g, b) {
+  const [L, a, bb] = oklab(r, g, b);
+  const C = Math.hypot(a, bb);
+  // Greys flip towards white; colours keep their lightness above a floor.
+  const grey = Math.max(L, 1 - 0.6 * L);
+  const colour = Math.max(L, 0.66);
+  const w = Math.min(1, Math.max(0, (C - 0.02) / 0.06));
+  const L2 = grey + (colour - grey) * w;
+  if (L2 === L) return [r, g, b];
+  // Shrink the chroma until the colour fits in sRGB.
+  let k = 1;
+  for (let i = 0; i < 12; i++) {
+    const rgb = linFromOklab(L2, a * k, bb * k);
+    if (rgb.every((c) => c >= -1e-4 && c <= 1 + 1e-4)) break;
+    k *= 0.9;
+  }
+  return linFromOklab(L2, a * k, bb * k).map((c) => Math.round(Math.min(255, Math.max(0, toSrgb(Math.min(1, Math.max(0, c)))))));
+}
+
 const lum = (r, g, b) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
 /** Per-pixel ink (0–255): how much each pixel belongs to the logo. */
@@ -105,7 +152,7 @@ function inkOf(data, width, height, entry) {
   const ink = new Float32Array(n);
   if (!paper) {
     for (let p = 0; p < n; p++) ink[p] = data[p * 4 + 3];
-    return ink;
+    return { ink, paper };
   }
   const solid = entry.ink === "solid";
   const dist = new Float32Array(n);
@@ -116,7 +163,7 @@ function inkOf(data, width, height, entry) {
     dist[p] = d;
     if (d > 30 && data[i + 3] > 128 && (p & 3) === 0) sample.push(d);
   }
-  // Stretch so the logo's strongest colour becomes full white.
+  // Stretch so the logo's strongest colour becomes fully opaque.
   sample.sort((a, b) => a - b);
   const hi = Math.max(80, sample[Math.floor(sample.length * 0.9)] ?? 255);
   const lo = entry.tolerance ?? 18;
@@ -125,7 +172,8 @@ function inkOf(data, width, height, entry) {
     const t = Math.min(1, Math.max(0, (dist[p] - lo) / (top - lo)));
     ink[p] = t * data[p * 4 + 3];
   }
-  return ink;
+  // Only a keyed-out background bleeds into the edge pixels.
+  return { ink, paper: transparentFrame ? null : paper };
 }
 
 /** 64-bit difference hash of the final mark, to catch the same logo twice. */
@@ -154,7 +202,7 @@ async function normalize(entry, tmp) {
     .raw()
     .toBuffer({ resolveWithObject: true });
   const { width, height } = info;
-  const ink = inkOf(data, width, height, entry);
+  const { ink, paper } = inkOf(data, width, height, entry);
 
   let top = height, left = width, bottom = -1, right = -1;
   for (let y = 0; y < height; y++) {
@@ -193,17 +241,30 @@ async function normalize(entry, tmp) {
 
   const w = right - left + 1;
   const h = bottom - top + 1;
-  const white = Buffer.alloc(w * h * 4, 255);
+  const mark = Buffer.alloc(w * h * 4);
+  const cache = new Map();
   let total = 0;
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
-      const a = Math.round(ink[(y + top) * width + (x + left)]);
-      white[(y * w + x) * 4 + 3] = a;
+      const p = (y + top) * width + (x + left);
+      const a = Math.round(ink[p]);
       total += a;
+      if (!a) continue;
+      let [r, g, b] = data.subarray(p * 4, p * 4 + 3);
+      if (paper) {
+        // Edge pixels are part background; take the background back out.
+        const t = Math.max(0.05, ink[p] / Math.max(1, data[p * 4 + 3]));
+        [r, g, b] = [r, g, b].map((c, i) => Math.round(Math.min(255, Math.max(0, paper[i] + (c - paper[i]) / t))));
+      }
+      const key = (r << 16) | (g << 8) | b;
+      if (!cache.has(key)) cache.set(key, onDark(r, g, b));
+      const o = (y * w + x) * 4;
+      [mark[o], mark[o + 1], mark[o + 2]] = cache.get(key);
+      mark[o + 3] = a;
     }
   }
 
-  const out = await sharp(white, { raw: { width: w, height: h, channels: 4 } })
+  const out = await sharp(mark, { raw: { width: w, height: h, channels: 4 } })
     .resize({ height: HEIGHT, width: MAX_WIDTH, fit: "inside" })
     .webp({ quality: 90, alphaQuality: 100, effort: 6 })
     .toBuffer({ resolveWithObject: true });
