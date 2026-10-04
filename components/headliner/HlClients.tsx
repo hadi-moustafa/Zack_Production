@@ -162,7 +162,7 @@ function BrandWall({ brands }: { brands: Client[] }) {
               ) : (
                 <span className="hl-display text-[clamp(1.5rem,5vw,2.25rem)] transition group-hover:text-[var(--accent-gold)]">{b.name}</span>
               )}
-              {b.role ? <span className="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-[var(--text-secondary)]">{b.role}</span> : null}
+              {b.role ? <span className="font-mono text-[0.75rem] uppercase tracking-[0.14em] text-[var(--text-secondary)]">{b.role}</span> : null}
             </Wrap>
           </li>
         ))}

@@ -128,7 +128,7 @@ export default function Pricing({
         {paymentNote ? (
           <div className="mt-10 border-t border-[var(--border-subtle)] pt-6 text-center">
             <p className="eyebrow">Payment</p>
-            <p className="mx-auto mt-2 max-w-xl whitespace-pre-line text-[0.95rem] leading-relaxed text-[var(--text-secondary)]">
+            <p className="mx-auto mt-2 max-w-xl whitespace-pre-line text-base leading-relaxed text-[var(--text-secondary)]">
               {paymentNote}
             </p>
           </div>
@@ -276,7 +276,7 @@ function ListGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id
 function OfferBadge({ text, className = "", gold = false }: { text: string; className?: string; gold?: boolean }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[0.72rem] font-semibold uppercase tracking-[0.12em] ${
+      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[0.75rem] font-semibold uppercase tracking-[0.12em] ${
         gold
           ? "border-[var(--accent-gold-bright)]/60 bg-[var(--accent-gold)]/15 text-[var(--accent-gold-bright)]"
           : "border-emerald-400/50 bg-emerald-400/10 text-emerald-300"

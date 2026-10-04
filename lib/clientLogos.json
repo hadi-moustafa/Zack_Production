@@ -11,17 +11,17 @@
     "name": "MTV Lebanon",
     "tier": "elite",
     "src": "/clients/mtv-lebanon.webp",
-    "width": 838,
+    "width": 627,
     "height": 240,
-    "density": 0.524
+    "density": 1
   },
   {
     "name": "OTV",
     "tier": "elite",
     "src": "/clients/otv.webp",
-    "width": 614,
+    "width": 390,
     "height": 240,
-    "density": 0.397
+    "density": 1
   },
   {
     "name": "YouTube",
@@ -37,7 +37,7 @@
     "src": "/clients/lebanese-international-university.webp",
     "width": 240,
     "height": 240,
-    "density": 0.269
+    "density": 0.791
   },
   {
     "name": "Beirut Sports Arena",

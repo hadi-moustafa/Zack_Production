@@ -461,6 +461,19 @@
   opacity: clamp(0, calc(1 - var(--p) * 3.2), 1);
   transform: translateY(calc(var(--p) * -120px));
 }
+/* The closing line, set like a film title card. */
+.hl-cinematic {
+  font-family: var(--font-cinematic), "Trajan Pro", Georgia, serif;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  color: #fff;
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.6),
+    0 6px 40px rgba(0, 0, 0, 0.75);
+}
 .hl-hero-after {
   opacity: clamp(0, calc((var(--p) - 0.45) * 3), 1);
   transform: scale(calc(1.15 - clamp(0, calc((var(--p) - 0.45) * 3), 1) * 0.15));
@@ -878,7 +891,7 @@
   }
   .hl-cursor span {
     font-family: var(--font-mono), monospace;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.14em;
     color: var(--hl-ink);

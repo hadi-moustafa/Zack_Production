@@ -86,7 +86,7 @@ export default function Hero({ headline, tagline }: { headline: string; tagline:
               <ScribbleArrow className="h-8 w-10 -scale-x-100 rotate-[200deg]" /> Go on, have a look
             </span>
           </div>
-          <p className="animate-fade-up mt-4 text-[0.95rem] text-[var(--text-primary)]/75" style={{ animationDelay: "0.65s" }}>
+          <p className="animate-fade-up mt-4 text-base text-[var(--text-primary)]/75" style={{ animationDelay: "0.65s" }}>
             {responsePromise}
           </p>
         </div>

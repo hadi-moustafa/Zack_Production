@@ -117,7 +117,7 @@ export default function HlPricing({
         {paymentNote ? (
           <div className="mt-12 border-t border-[var(--border-subtle)] pt-6">
             <p className="hl-label">Payment</p>
-            <p className="mt-2 max-w-xl whitespace-pre-line text-[0.95rem] leading-relaxed text-[var(--text-secondary)]">{paymentNote}</p>
+            <p className="mt-2 max-w-xl whitespace-pre-line text-base leading-relaxed text-[var(--text-secondary)]">{paymentNote}</p>
           </div>
         ) : null}
       </div>
@@ -151,11 +151,11 @@ function Passes({ group, isSelected }: { group: PricingGroup; isSelected: (id: s
               {item.highlighted && item.badge ? (
                 <span className="hl-sticker absolute right-4 top-14 rotate-[8deg]">★ {item.badge}</span>
               ) : null}
-              <p className="font-mono text-[0.72rem] uppercase tracking-[0.2em] text-[var(--text-secondary)]">All access</p>
+              <p className="font-mono text-[0.75rem] uppercase tracking-[0.2em] text-[var(--text-secondary)]">All access</p>
               <p className="hl-display mt-2 text-[clamp(3.25rem,14vw,4.5rem)]">{item.name}</p>
               <p className="hl-em mt-1 text-[1.6rem] leading-tight">{priceLabel(item.price, "cards")}</p>
               {!item.highlighted && item.badge ? (
-                <span className="mt-3 self-start rounded-full border border-[var(--hl-volt)] px-3 py-1 font-mono text-[0.72rem] uppercase tracking-[0.12em] text-[var(--hl-volt)]">
+                <span className="mt-3 self-start rounded-full border border-[var(--hl-volt)] px-3 py-1 font-mono text-[0.75rem] uppercase tracking-[0.12em] text-[var(--hl-volt)]">
                   {item.badge}
                 </span>
               ) : null}
@@ -171,7 +171,7 @@ function Passes({ group, isSelected }: { group: PricingGroup; isSelected: (id: s
               </ul>
               <div aria-hidden className="mt-6">
                 <div className="hl-barcode" />
-                <p className="mt-1.5 flex justify-between font-mono text-[0.65rem] uppercase tracking-[0.2em] text-[var(--text-secondary)]">
+                <p className="mt-1.5 flex justify-between font-mono text-[0.75rem] uppercase tracking-[0.2em] text-[var(--text-secondary)]">
                   <span>N° {String(i + 1).padStart(3, "0")}</span>
                   <span>Zack Production</span>
                 </p>
@@ -229,7 +229,7 @@ function Menu({ group, isSelected }: { group: PricingGroup; isSelected: (id: str
                 <span className={`text-[1.05rem] ${chosen || item.highlighted ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"} group-hover:text-[var(--text-primary)]`}>
                   {item.name}
                   {item.badge ? (
-                    <span className="ml-2 inline-block rounded-full border border-[var(--hl-volt)] px-2 py-0.5 align-middle font-mono text-[0.68rem] uppercase tracking-[0.1em] text-[var(--hl-volt)]">
+                    <span className="ml-2 inline-block rounded-full border border-[var(--hl-volt)] px-2 py-0.5 align-middle font-mono text-[0.75rem] uppercase tracking-[0.1em] text-[var(--hl-volt)]">
                       {item.badge}
                     </span>
                   ) : null}

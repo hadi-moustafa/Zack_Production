@@ -7,7 +7,7 @@ import type { SiteData } from "@/lib/siteData";
 import type { NavLink } from "@/components/headliner/HlNav";
 
 const linkClass =
-  "inline-flex min-h-11 items-center gap-2.5 text-[var(--text-secondary)] transition hover:text-[var(--accent-gold-bright)]";
+  "inline-flex min-h-11 min-w-11 items-center gap-2.5 text-[var(--text-secondary)] transition hover:text-[var(--accent-gold-bright)]";
 
 export default function HlFooter({ logo, data, links }: { logo: React.ReactNode; data: SiteData; links: NavLink[] }) {
   const { contact, socialLinks, content } = data;
@@ -73,7 +73,7 @@ export default function HlFooter({ logo, data, links }: { logo: React.ReactNode;
                   </a>
                 </li>
               ) : null}
-              <li className="inline-flex min-h-11 items-center gap-2.5 text-[var(--text-secondary)]">
+              <li className="inline-flex min-h-11 min-w-11 items-center gap-2.5 text-[var(--text-secondary)]">
                 <IconPin aria-hidden className="h-4 w-4 text-[var(--hl-volt)]" /> {locationLabel}
               </li>
             </ul>

@@ -25,6 +25,8 @@
 //   keep:  [x, y, w, h]   part of the finished mark to keep, e.g. to drop a phone number
 //   erase: [[x, y, w, h]] parts of the finished mark to remove, e.g. a social handle
 //   mode:  "silhouette"   use a transparent file's shape as-is (light logos)
+//   mode:  "original"     keep the logo exactly as designed, background and
+//                         all (a badge or a colour that only works on its plate)
 //   ink:   "solid"        every colour counts fully (a red box keeps its weight)
 //   tolerance: 18         how far from the background a colour must be to count
 //   busy:  0.35           share of the frame allowed to differ from the background
@@ -146,7 +148,7 @@ function inkOf(data, width, height, entry) {
     const median = (c) => frame.map((i) => data[i + c]).sort((a, b) => a - b)[frame.length >> 1];
     paper = [median(0), median(1), median(2)];
     const off = frame.filter((i) => Math.hypot(data[i] - paper[0], data[i + 1] - paper[1], data[i + 2] - paper[2]) > 48).length;
-    if (off / frame.length > (entry.busy ?? 0.35)) throw new Error("busy background: give it a crop, or use a cleaner file");
+    if (entry.mode !== "original" && off / frame.length > (entry.busy ?? 0.35)) throw new Error("busy background: give it a crop, or use a cleaner file");
   }
 
   const ink = new Float32Array(n);
@@ -178,7 +180,7 @@ function inkOf(data, width, height, entry) {
 
 /** 64-bit difference hash of the final mark, to catch the same logo twice. */
 async function dhash(buffer) {
-  const px = await sharp(buffer).extractChannel(3).resize(9, 8, { fit: "fill" }).raw().toBuffer();
+  const px = await sharp(buffer).flatten({ background: "#000" }).greyscale().resize(9, 8, { fit: "fill" }).raw().toBuffer();
   let bits = "";
   for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) bits += px[y * 9 + x] > px[y * 9 + x + 1] ? "1" : "0";
   return bits;
@@ -216,6 +218,8 @@ async function normalize(entry, tmp) {
     }
   }
   if (bottom < 0) throw new Error("nothing visible after removing the background");
+
+  if (entry.mode === "original") return original(data, width, height, paper ? [left, top, right, bottom] : null);
 
   // Hand fixes on the finished mark, then tighten the box again.
   if (entry.keep || entry.erase) {
@@ -265,6 +269,41 @@ async function normalize(entry, tmp) {
   }
 
   const out = await sharp(mark, { raw: { width: w, height: h, channels: 4 } })
+    .resize({ height: HEIGHT, width: MAX_WIDTH, fit: "inside" })
+    .webp({ quality: 90, alphaQuality: 100, effort: 6 })
+    .toBuffer({ resolveWithObject: true });
+  return { out, density: total / (w * h * 255) };
+}
+
+/**
+ * The source pixels untouched. On an opaque background, the mark plus an
+ * even margin of that background; on transparency, trimmed to the shape.
+ */
+async function original(data, width, height, box) {
+  let left = width, top = height, right = -1, bottom = -1;
+  if (box) {
+    [left, top, right, bottom] = box;
+    const pad = Math.round(0.14 * Math.max(right - left, bottom - top));
+    [left, top] = [Math.max(0, left - pad), Math.max(0, top - pad)];
+    [right, bottom] = [Math.min(width - 1, right + pad), Math.min(height - 1, bottom + pad)];
+  } else {
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        if (data[(y * width + x) * 4 + 3] > 16) {
+          if (y < top) top = y;
+          if (y > bottom) bottom = y;
+          if (x < left) left = x;
+          if (x > right) right = x;
+        }
+      }
+    }
+  }
+  const w = right - left + 1, h = bottom - top + 1;
+  const img = sharp(data, { raw: { width, height, channels: 4 } }).extract({ left, top, width: w, height: h });
+  const { data: px } = await img.clone().raw().toBuffer({ resolveWithObject: true });
+  let total = 0;
+  for (let i = 3; i < px.length; i += 4) total += px[i];
+  const out = await img
     .resize({ height: HEIGHT, width: MAX_WIDTH, fit: "inside" })
     .webp({ quality: 90, alphaQuality: 100, effort: 6 })
     .toBuffer({ resolveWithObject: true });

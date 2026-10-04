@@ -369,7 +369,7 @@ body::after {
   transform: rotate(0deg);
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 500;
   background: var(--bg-dark);
   box-shadow: 0 0 0 2px var(--bg-dark), 0 0 0 3px rgba(201, 162, 75, 0.4);

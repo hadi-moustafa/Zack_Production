@@ -56,7 +56,7 @@ export default function InstagramReelCard({ reel }: { reel: InstagramReel }) {
           className="absolute inset-0 z-10"
         />
 
-        <span className="pointer-events-none absolute left-3 top-3 z-20 inline-flex items-center gap-1.5 rounded-full bg-black/55 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur">
+        <span className="pointer-events-none absolute left-3 top-3 z-20 inline-flex items-center gap-1.5 rounded-full bg-black/55 px-2.5 py-1 text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur">
           <span className="rec-dot inline-block h-1.5 w-1.5 rounded-full bg-[#ee2a7b]" /> Latest reel
         </span>
         <button

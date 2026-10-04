@@ -84,7 +84,7 @@ export default function HlContact({
                 <IconWhatsapp aria-hidden className="h-9 w-9 shrink-0" />
                 <span>
                   <span className="hl-display block text-[1.9rem]">Skip the form</span>
-                  <span className="block text-[0.95rem] font-medium">Chat with us on WhatsApp</span>
+                  <span className="block text-base font-medium">Chat with us on WhatsApp</span>
                 </span>
                 <IconArrowRight aria-hidden className="ml-auto h-5 w-5 shrink-0 transition group-hover:translate-x-1" />
               </a>
@@ -108,7 +108,7 @@ export default function HlContact({
                 <div className="rounded-xl border border-[var(--hl-volt)]/60 p-4">
                   <div className="flex items-center justify-between gap-3">
                     <p className="field-label">Your selection</p>
-                    <a href="#pricing" className="inline-flex min-h-11 items-center text-[0.95rem] text-[var(--accent-gold-bright)] underline-offset-4 hover:underline">
+                    <a href="#pricing" className="inline-flex min-h-11 items-center text-base text-[var(--accent-gold-bright)] underline-offset-4 hover:underline">
                       Edit
                     </a>
                   </div>
@@ -165,7 +165,7 @@ export default function HlContact({
                 <button type="submit" disabled={submitting} className="hl-btn w-full !min-h-14 !text-base">
                   {submitting ? "Sending…" : "Send message"} <IconArrowRight aria-hidden className="h-5 w-5" />
                 </button>
-                <p className="mt-3 text-[0.95rem] text-[var(--text-secondary)]">
+                <p className="mt-3 text-base text-[var(--text-secondary)]">
                   {contact.whatsappDigits ? "Your message opens in WhatsApp, ready to send. " : null}
                   {responsePromise}
                 </p>

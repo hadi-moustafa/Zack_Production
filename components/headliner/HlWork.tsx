@@ -100,7 +100,7 @@ export default function HlWork({ photos, categories }: { photos: Photo[]; catego
               >
                 <span className="w-7 shrink-0 font-mono text-sm text-[var(--accent-gold-bright)]">{String(i + 1).padStart(2, "0")}</span>
                 <span className="min-w-0 flex-1">
-                  <span className="hl-index-name hl-display hl-outline-text block break-words text-[clamp(2.3rem,11vw,7rem)] transition-colors duration-300">
+                  <span className="hl-index-name hl-display hl-outline-text block break-words text-[clamp(1.9rem,9vw,7rem)] transition-colors duration-300">
                     {g.category.name}
                   </span>
                   <span className="mt-1 block font-mono text-[0.78rem] uppercase tracking-[0.16em] text-[var(--text-secondary)]">
@@ -225,7 +225,7 @@ function FilmCard({ item, n, onOpen, showCategory = false }: { item: Item; n: nu
       </span>
       <span aria-hidden className="absolute inset-x-3 bottom-3 text-left">
         {showCategory ? (
-          <span className="block font-mono text-[0.72rem] uppercase tracking-[0.14em] text-[var(--accent-gold-bright)]">{item.category.name}</span>
+          <span className="block font-mono text-[0.75rem] uppercase tracking-[0.14em] text-[var(--accent-gold-bright)]">{item.category.name}</span>
         ) : null}
         {item.caption ? <span className="mt-0.5 block text-sm font-medium text-white">{item.caption}</span> : null}
       </span>

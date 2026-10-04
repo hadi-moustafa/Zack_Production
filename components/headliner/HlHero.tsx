@@ -49,7 +49,7 @@ export default function HlHero({ name, headline, tagline }: { name: string; head
           aria-hidden
           className="hl-hero-after pointer-events-none absolute inset-0 flex items-center justify-center px-6 text-center"
         >
-          <span className="hl-em text-[clamp(3rem,13vw,9rem)] leading-[0.95] !text-white [text-shadow:0_6px_40px_rgba(0,0,0,0.6)]">
+          <span className="hl-cinematic text-[clamp(2.1rem,10.5vw,7.5rem)]">
             {tagline}
           </span>
         </p>
@@ -74,7 +74,7 @@ export default function HlHero({ name, headline, tagline }: { name: string; head
               <a href="#gallery" className="hl-btn" data-cursor="Watch">
                 View our work <IconArrowRight aria-hidden className="h-4 w-4" />
               </a>
-              <p className="text-[0.95rem] text-[var(--text-secondary)]">{responsePromise}</p>
+              <p className="text-base text-[var(--text-secondary)]">{responsePromise}</p>
             </div>
           </div>
         </div>

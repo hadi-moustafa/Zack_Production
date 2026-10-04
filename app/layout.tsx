@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Instrument_Sans, DM_Mono } from "next/font/google";
+import { Cormorant_Garamond, Instrument_Sans, DM_Mono, Cinzel } from "next/font/google";
 import SoundProvider from "@/components/sound/SoundProvider";
 import { site, baseOpenGraph } from "@/lib/site";
 import "./globals.css";
@@ -26,6 +26,15 @@ const dmMono = DM_Mono({
   weight: ["400", "500"],
 });
 
+// Film-poster capitals for the hero's closing line. It only shows after
+// scrolling, so it isn't preloaded ahead of the first paint.
+const cinzel = Cinzel({
+  variable: "--font-cinematic",
+  subsets: ["latin"],
+  weight: ["700"],
+  preload: false,
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
@@ -50,7 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${instrument.variable} ${dmMono.variable} h-full antialiased`}
+      className={`${cormorant.variable} ${instrument.variable} ${dmMono.variable} ${cinzel.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-[var(--bg-dark)] text-[var(--text-primary)]">
         <noscript>

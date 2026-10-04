@@ -155,7 +155,7 @@ function SoundEq() {
         <i />
         <i />
       </span>
-      <span className="hidden font-mono text-[0.72rem] uppercase tracking-[0.16em] sm:inline">
+      <span className="hidden font-mono text-[0.75rem] uppercase tracking-[0.16em] sm:inline">
         {sound.enabled ? "Sound on" : "Sound off"}
       </span>
     </button>

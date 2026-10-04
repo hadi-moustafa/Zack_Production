@@ -95,7 +95,7 @@ export default function About({
               </span>
               <p>
                 <span className="block font-semibold text-[var(--text-primary)]">{awardTitle}</span>
-                {awardDetail ? <span className="block text-[0.95rem] text-[var(--accent-gold-bright)]">{awardDetail}</span> : null}
+                {awardDetail ? <span className="block text-base text-[var(--accent-gold-bright)]">{awardDetail}</span> : null}
               </p>
             </div>
           ) : null}
