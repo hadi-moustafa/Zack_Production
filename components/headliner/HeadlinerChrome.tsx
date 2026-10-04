@@ -6,6 +6,7 @@ import HlNav, { type NavLink } from "@/components/headliner/HlNav";
 import HlFooter from "@/components/headliner/HlFooter";
 import HlFx from "@/components/headliner/HlFx";
 import { getClients } from "@/lib/clients";
+import { CLIENT_LOGOS } from "@/lib/clientLogos";
 import { SECTIONS } from "@/lib/site";
 import type { SiteData } from "@/lib/siteData";
 
@@ -24,7 +25,7 @@ export default async function HeadlinerChrome({
   const clients = await getClients();
   const links: NavLink[] = SECTIONS.flatMap((s) => {
     const link = { href: `/#${s.id}`, label: s.label };
-    return s.id === "about" && clients.length ? [link, { href: "/#clients", label: "Clients" }] : [link];
+    return s.id === "about" && (clients.length || CLIENT_LOGOS.length) ? [link, { href: "/#clients", label: "Clients" }] : [link];
   });
 
   return (

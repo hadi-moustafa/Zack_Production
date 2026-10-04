@@ -5,14 +5,16 @@ import Image from "next/image";
 import { photoPublicUrl } from "@/lib/media";
 import InView from "@/components/headliner/InView";
 import { Kicker, SplitWords } from "@/components/headliner/Kinetic";
+import { CLIENT_LOGOS, type ClientLogo } from "@/lib/clientLogos";
 import type { Client } from "@/lib/types";
 
-// Brands and well-known people we've worked with, all entered in Admin →
+// Brands and well-known people we've worked with: the logo wall from
+// public/clients (see scripts/logos.mjs), then anyone entered in Admin →
 // Clients. Renders nothing until there's at least one.
 export default function HlClients({ clients }: { clients: Client[] }) {
   const brands = clients.filter((c) => c.kind === "brand");
   const people = clients.filter((c) => c.kind === "person");
-  if (brands.length + people.length === 0) return null;
+  if (CLIENT_LOGOS.length + brands.length + people.length === 0) return null;
 
   return (
     <section id="clients" className="relative overflow-hidden bg-[var(--bg-dark)] py-20 sm:py-28">
@@ -28,6 +30,7 @@ export default function HlClients({ clients }: { clients: Client[] }) {
         </InView>
       </div>
 
+      {CLIENT_LOGOS.length ? <LogoWall logos={CLIENT_LOGOS} /> : null}
       {brands.length ? <BrandWall brands={brands} /> : null}
       {people.length ? <AList people={people} /> : null}
     </section>
@@ -41,6 +44,89 @@ function Wrap({ client, className, children }: { client: Client; className: stri
     </a>
   ) : (
     <div className={className}>{children}</div>
+  );
+}
+
+/**
+ * Same visual weight for every logo: a square mark is drawn taller than a
+ * long wordmark (height ∝ aspect^-0.4, a touch kinder to wordmarks than
+ * equal areas would be, clamped).
+ */
+function logoHeight(logo: ClientLogo) {
+  const k = Math.min(1.1, Math.max(0.4, (logo.width / logo.height) ** -0.4));
+  return `calc(var(--lh) * ${k.toFixed(3)})`;
+}
+
+function Logo({ logo, priority = false }: { logo: ClientLogo; priority?: boolean }) {
+  return (
+    <Image
+      src={logo.src}
+      alt={`${logo.name} logo`}
+      width={logo.width}
+      height={logo.height}
+      priority={priority}
+      sizes="(min-width: 1024px) 20vw, 45vw"
+      className="hl-logo"
+      style={{ height: logoHeight(logo) }}
+    />
+  );
+}
+
+// The elite logos stand big and bright in the front row; everyone else
+// drifts past smaller and dimmer on a row above and a row below, behind them.
+function LogoWall({ logos }: { logos: ClientLogo[] }) {
+  const elite = logos.filter((l) => l.tier === "elite");
+  const others = logos.filter((l) => l.tier !== "elite");
+  // Long lists split across the two back rows; short ones fill both.
+  const split = others.length >= 8;
+  const half = Math.ceil(others.length / 2);
+  const rows = others.length ? [split ? others.slice(0, half) : others, split ? others.slice(half) : [...others].reverse()] : [];
+
+  return (
+    <div className="hl-logowall mt-14">
+      {rows[0] ? <BackRow logos={rows[0]} /> : null}
+
+      {elite.length ? (
+        <InView as="ul" className="hl-logo-front relative z-10 mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-10 gap-y-8 px-5 py-10 sm:gap-x-16 sm:px-8 sm:py-14" threshold={0.2}>
+          {elite.map((logo, i) => (
+            <li key={logo.src} className="hl-rise flex max-w-full items-center" style={{ "--d": `${i * 90}ms` } as React.CSSProperties}>
+              <Logo logo={logo} />
+            </li>
+          ))}
+        </InView>
+      ) : null}
+
+      {rows[1] ? <BackRow logos={rows[1]} reverse /> : null}
+
+      {/* The back rows are decorative copies; this is the real list of the rest. */}
+      {others.length ? (
+        <ul className="sr-only">
+          {others.map((logo) => (
+            <li key={logo.src}>{logo.name}</li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
+
+function BackRow({ logos, reverse = false }: { logos: ClientLogo[]; reverse?: boolean }) {
+  // Enough copies that one pass is wider than any screen.
+  const run = Array.from({ length: Math.ceil(10 / logos.length) }, () => logos).flat();
+  return (
+    <div aria-hidden className="hl-logo-back overflow-hidden py-5">
+      <div className="hl-tape-track" data-reverse={reverse ? "" : undefined} style={{ "--speed": `${run.length * 4}s` } as React.CSSProperties}>
+        {[0, 1].map((copy) => (
+          <div key={copy} className="flex shrink-0 items-center">
+            {run.map((logo, i) => (
+              <span key={i} className="flex shrink-0 items-center px-6 sm:px-10">
+                <Image src={logo.src} alt="" width={logo.width} height={logo.height} sizes="160px" className="hl-logo" style={{ height: logoHeight(logo) }} />
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 

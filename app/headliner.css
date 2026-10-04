@@ -626,6 +626,40 @@
 .hl-logo-mono {
   filter: brightness(0) invert(1);
 }
+
+/* Logo wall: every logo is already a white silhouette (scripts/logos.mjs);
+   --lh is the height of a square mark, wider marks get shorter. */
+.hl-logo {
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+.hl-logo-front {
+  --lh: clamp(3.75rem, 16vw, 6.5rem);
+}
+/* A soft pool of dark so the front row reads clearly over the drift. */
+.hl-logo-front::before {
+  content: "";
+  position: absolute;
+  inset: -10% -5%;
+  z-index: -1;
+  background: radial-gradient(closest-side, var(--bg-dark) 55%, transparent);
+}
+.hl-logo-back {
+  --lh: clamp(2.25rem, 8vw, 3.25rem);
+  opacity: 0.4;
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.hl-logowall .hl-logo-back + .hl-logo-front,
+.hl-logowall .hl-logo-front + .hl-logo-back {
+  margin-top: -0.5rem;
+}
+@media (min-width: 1024px) and (pointer: fine) {
+  .hl-logo-back {
+    filter: blur(0.6px);
+    transform: scale(0.94);
+  }
+}
 .hl-person:hover .hl-person-name,
 .hl-person:focus-visible .hl-person-name {
   color: var(--accent-gold);

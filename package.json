@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "logos": "node scripts/logos.mjs",
+    "prebuild": "node scripts/logos.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
