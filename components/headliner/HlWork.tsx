@@ -6,7 +6,7 @@ import { Lightbox } from "@/components/Work";
 import { IconArrowRight, IconClose, IconPlay } from "@/components/icons";
 import InView from "@/components/headliner/InView";
 import { Kicker, SplitWords } from "@/components/headliner/Kinetic";
-import { buildGroups, countLabel, pickHighlights, plural, type Group, type Item } from "@/lib/work";
+import { buildGroups, countLabel, pickHighlights, type Group, type Item } from "@/lib/work";
 import { sfx } from "@/lib/sfx";
 import type { Category, Photo } from "@/lib/types";
 
@@ -67,11 +67,6 @@ export default function HlWork({ photos, categories }: { photos: Photo[]; catego
   }
 
   if (groups.length === 0) return null;
-  const filmTotal = groups.reduce((n, g) => n + g.films.length, 0);
-  const photoTotal = groups.reduce((n, g) => n + g.photos.length, 0);
-  const summary = [filmTotal ? plural(filmTotal, "film") : "", photoTotal ? plural(photoTotal, "photograph") : ""]
-    .filter(Boolean)
-    .join(" and ");
   const group = active ? groups.find((g) => g.category.slug === active.slug) : undefined;
   const openList = (list: Item[], index: number) => setOpen({ list, index });
 
@@ -79,16 +74,13 @@ export default function HlWork({ photos, categories }: { photos: Photo[]; catego
     <section id="gallery" className="relative overflow-hidden bg-[var(--bg-dark)] py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <InView>
-          <Kicker n="04">Our work</Kicker>
+          <Kicker n="03">Our work</Kicker>
           <h2 className="hl-display mt-5 text-[clamp(3.4rem,16vw,10rem)]">
             <SplitWords text="The work" /> <span className="hl-em">speaks.</span>
             <span className="hl-wipe block hl-outline-text" style={{ "--d": "300ms" } as React.CSSProperties}>
               Loudly.
             </span>
           </h2>
-          <p className="hl-rise mt-5 max-w-lg text-[1.05rem] text-[var(--text-secondary)]" style={{ "--d": "300ms" } as React.CSSProperties}>
-            {summary} across {plural(groups.length, "category", "categories")}. Hit play, or step into a category.
-          </p>
         </InView>
       </div>
 

@@ -48,13 +48,6 @@ export const CONTENT_FIELDS: ContentField[] = [
     multiline: true,
     placeholder: "Best DoP — Afdal Awards 2025 & 2026 · MTV Lebanon · 35+ countries",
   },
-  {
-    key: "headliner_stats",
-    label: "Big numbers (one per line: number | label) — film and photo counts are added automatically",
-    group: "Headliner design",
-    multiline: true,
-    placeholder: "35+ | Countries filmed in\n2× | Best DoP, Afdal Awards",
-  },
 ];
 
 // Which uploaded photo (by storage_path) backs each section's background image.

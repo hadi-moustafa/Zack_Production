@@ -20,7 +20,7 @@ export default function HlClients({ clients }: { clients: Client[] }) {
     <section id="clients" className="relative overflow-hidden bg-[var(--bg-dark)] py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <InView>
-          <Kicker n="03">The guest list</Kicker>
+          <Kicker n="02">The guest list</Kicker>
           <h2 className="hl-display mt-5 text-[clamp(3rem,13vw,8.5rem)]">
             <SplitWords text="They don't hire" /> <span className="hl-em">just anyone.</span>
           </h2>

@@ -48,7 +48,7 @@ export default function HlPricing({
     <section id="pricing" className="relative overflow-hidden bg-[var(--bg-dark-alt)] py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <InView>
-          <Kicker n="05">Pricing</Kicker>
+          <Kicker n="04">Pricing</Kicker>
           <h2 className="hl-display mt-5 text-[clamp(3.4rem,16vw,10rem)]">
             <SplitWords text="The rate" /> <span className="hl-em">card.</span>
           </h2>

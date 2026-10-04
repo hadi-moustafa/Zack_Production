@@ -38,7 +38,7 @@ export default function HlAbout({
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <InView>
-        <Kicker n="02">Who we are</Kicker>
+        <Kicker n="01">Who we are</Kicker>
         <h2 className="hl-display mt-5 text-[clamp(4.2rem,24vw,14rem)]">
           <SplitWords text={first} />
           {rest.length ? (
