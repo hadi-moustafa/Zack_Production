@@ -45,12 +45,12 @@ export default function HlHero({ name, headline, tagline }: { name: string; head
           </svg>
         </div>
 
-        {/* Bottom-left, clear of the sticky phone CTA. */}
+        {/* Bottom-left, clear of the sticky phone CTA; one line on a phone. */}
         <p
           aria-hidden
           className="hl-hero-after pointer-events-none absolute inset-0 flex items-end"
         >
-          <span className="hl-cinematic mx-auto block w-full max-w-7xl px-5 pb-28 text-left text-[clamp(3.5rem,17vw,10rem)] sm:px-8 lg:pb-14">
+          <span className="hl-cinematic mx-auto block w-full max-w-7xl px-5 pb-28 text-left text-[length:calc((100vw_-_2.5rem)/8.6)] sm:px-8 sm:text-[clamp(3.5rem,17vw,10rem)] lg:pb-14">
             {tagline}
           </span>
         </p>
