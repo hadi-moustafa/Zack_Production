@@ -12,7 +12,8 @@ import { usePlanSelection } from "@/lib/planSelection";
 // contact form itself is on screen.
 export default function StickyCta({ whatsappDigits }: { whatsappDigits: string | null }) {
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  // A design preview is the home page too.
+  const isHome = pathname === "/" || pathname.startsWith("/preview/");
   const [pastHero, setPastHero] = useState(false);
   const [contactInView, setContactInView] = useState(false);
   const selectedCount = usePlanSelection().length;
@@ -46,7 +47,7 @@ export default function StickyCta({ whatsappDigits }: { whatsappDigits: string |
       aria-hidden={!visible}
     >
       <div className="mx-auto flex max-w-xl items-center gap-3">
-        <Link href="/#contact" tabIndex={visible ? 0 : -1} className="btn-gold min-h-12 flex-1 justify-center">
+        <Link href={isHome ? "#contact" : "/#contact"} tabIndex={visible ? 0 : -1} className="btn-gold min-h-12 flex-1 justify-center">
           {selectedCount > 0 ? `Continue · ${selectedCount} selected` : "Book a shoot"}{" "}
           <IconArrowRight className="h-4 w-4" />
         </Link>

@@ -76,3 +76,23 @@ export type ContactSubmission = {
   message: string;
   created_at: string;
 };
+
+export type ClientKind = "brand" | "person";
+
+/** A brand or well-known person we've worked with (shown by the Headliner design). */
+export type Client = {
+  id: string;
+  name: string;
+  kind: ClientKind;
+  /** e.g. "Singer", "Grand opening" — optional. */
+  role: string;
+  /** Logo (brands) or photo (people), in the photos bucket. */
+  image_path: string | null;
+  /** Draw the logo as a plain white silhouette (best for transparent logos). */
+  logo_mono: boolean;
+  /** Optional link: their profile, or the film we made with them. */
+  url: string;
+  sort_order: number;
+  visible: boolean;
+  created_at: string;
+};

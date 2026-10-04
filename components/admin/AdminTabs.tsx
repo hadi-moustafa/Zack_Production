@@ -9,10 +9,13 @@ import SocialLinksManager from "@/components/admin/SocialLinksManager";
 import InstagramConnect, { type InstagramStatus } from "@/components/admin/InstagramConnect";
 import ContactSubmissionsList from "@/components/admin/ContactSubmissionsList";
 import AccountSettings from "@/components/admin/AccountSettings";
+import DesignPicker from "@/components/admin/DesignPicker";
+import ClientsManager from "@/components/admin/ClientsManager";
+import type { DesignId } from "@/lib/design";
 import { SECTION_PHOTO_KEYS } from "@/lib/content";
-import type { Category, Photo, PricingPackage, PageContent, SocialLink, ContactSubmission } from "@/lib/types";
+import type { Category, Client, Photo, PricingPackage, PageContent, SocialLink, ContactSubmission } from "@/lib/types";
 
-type TabId = "photos" | "films" | "categories" | "content" | "pricing" | "social" | "messages" | "account";
+type TabId = "design" | "photos" | "films" | "categories" | "clients" | "content" | "pricing" | "social" | "messages" | "account";
 
 export default function AdminTabs({
   photos,
@@ -23,6 +26,9 @@ export default function AdminTabs({
   socialLinks,
   instagramStatus,
   submissions,
+  clients,
+  clientsTableMissing,
+  design,
   userEmail,
 }: {
   photos: Photo[];
@@ -33,6 +39,9 @@ export default function AdminTabs({
   socialLinks: SocialLink[];
   instagramStatus: InstagramStatus;
   submissions: ContactSubmission[];
+  clients: Client[];
+  clientsTableMissing: boolean;
+  design: DesignId;
   userEmail: string;
 }) {
   const [tab, setTab] = useState<TabId>("photos");
@@ -49,10 +58,12 @@ export default function AdminTabs({
     { id: "photos", label: "Photos", count: photoCount },
     { id: "films", label: "Films", count: items.length - photoCount },
     { id: "categories", label: "Categories", count: categories.length },
+    { id: "clients", label: "Clients", count: clients.length },
     { id: "content", label: "Page Text" },
     { id: "pricing", label: "Pricing", count: pricingPackages.length },
     { id: "social", label: "Social Links" },
     { id: "messages", label: "Messages", count: submissions.length },
+    { id: "design", label: "Design" },
     { id: "account", label: "Account" },
   ];
 
@@ -100,6 +111,8 @@ export default function AdminTabs({
         {tab === "categories" ? (
           <CategoriesManager categories={categories} setCategories={setCategories} items={items} />
         ) : null}
+        {tab === "clients" ? <ClientsManager initialClients={clients} tableMissing={clientsTableMissing} /> : null}
+        {tab === "design" ? <DesignPicker initialDesign={design} /> : null}
         {tab === "content" ? <ContentManager initialContent={content} /> : null}
         {tab === "pricing" ? <PricingManager initialPackages={pricingPackages} /> : null}
         {tab === "social" ? (

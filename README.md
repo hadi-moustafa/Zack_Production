@@ -90,6 +90,19 @@ git push -u origin development
   around 4 MB (720p, ~430 kbps two-pass H.264, 64 kbps AAC, `+faststart`).
 - Database changes live in `supabase/*.sql` (all also appended to `schema.sql`).
 
+## Two designs
+
+The public site can wear **Classic** (gold on ink) or **Headliner** (loud and kinetic: the
+showreel inside the name, magenta and volt on black, ticker tapes, VIP-pass pricing, a client
+wall, synthesised sound effects). Switch in Admin → Design; both use the same content.
+`/preview/classic` and `/preview/headliner` (noindex) show either one without changing the live
+site. Headliner code lives in `components/headliner/` and `app/headliner.css`, scoped under
+`[data-design="headliner"]`.
+
+Headliner's client wall reads the `clients` table, managed in Admin → Clients. Run
+[`supabase/clients-2026-10.sql`](./supabase/clients-2026-10.sql) once to create it; the section
+stays hidden until it has entries.
+
 ## Price list
 
 Pricing has two parts, **Packages** and **Singles**, each made of groups (e.g. "Wedding

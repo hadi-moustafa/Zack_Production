@@ -12,10 +12,11 @@ const cormorant = Cormorant_Garamond({
   style: ["normal", "italic"],
 });
 
-// Body copy
+// Body copy (and, condensed via its width axis, the Headliner design's display type)
 const instrument = Instrument_Sans({
   variable: "--font-body",
   subsets: ["latin"],
+  axes: ["wdth"],
 });
 
 // Small uppercase labels
@@ -53,7 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="flex min-h-full flex-col bg-[var(--bg-dark)] text-[var(--text-primary)]">
         <noscript>
-          <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
+          <style>{`.reveal,.hl-rise,.hl-slam,.hl-wipe,.hl-words .w>span{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}`}</style>
         </noscript>
         <SoundProvider>{children}</SoundProvider>
       </body>

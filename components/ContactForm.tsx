@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { photoPublicUrl } from "@/lib/media";
 import { IconArrowRight, IconClose, IconMail, IconPhone, IconPin, IconWhatsapp } from "@/components/icons";
 import SocialShowcase from "@/components/SocialShowcase";
 import Reveal from "@/components/Reveal";
 import { Flourish } from "@/components/Ornaments";
-import { planSelection, usePlanSelection, describeSelection } from "@/lib/planSelection";
+import { planSelection } from "@/lib/planSelection";
+import { useContactSubmit } from "@/lib/useContactSubmit";
 import { locationLabel, responsePromise } from "@/lib/site";
-import { LAST_WHATSAPP_URL_KEY, telUrl, whatsappUrl } from "@/lib/contact";
+import { telUrl, whatsappUrl } from "@/lib/contact";
 import type { ContactDetails } from "@/lib/siteData";
 import type { SocialLink } from "@/lib/types";
 import type { InstagramReel } from "@/lib/instagram";
@@ -28,64 +27,7 @@ export default function ContactForm({
   instagramReel: InstagramReel | null;
   backgroundPhotoPath: string | null;
 }) {
-  const router = useRouter();
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const selected = usePlanSelection();
-  const selectionText = describeSelection(selected);
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setError(null);
-
-    const formData = new FormData(e.currentTarget);
-    const name = String(formData.get("name") || "").trim();
-    const customerPhone = String(formData.get("phone") || "").trim();
-    const customerEmail = String(formData.get("email") || "").trim();
-    const message = String(formData.get("message") || "").trim();
-
-    if (!name || !customerPhone || !message) {
-      setError("Please fill in your name, phone and message.");
-      return;
-    }
-
-    setSubmitting(true);
-
-    // Open WhatsApp synchronously, inside the submit handler, so browsers
-    // don't treat it as a blocked popup (an await first would lose the gesture).
-    if (contact.whatsappDigits) {
-      const lines = [
-        `New inquiry from ${name}`,
-        `Phone: ${customerPhone}`,
-        customerEmail ? `Email: ${customerEmail}` : null,
-        selectionText ? `\nInterested in:\n${selectionText}` : null,
-        "",
-        message,
-      ].filter((l): l is string => l !== null);
-      const waUrl = whatsappUrl(contact.whatsappDigits, lines.join("\n"));
-      try {
-        sessionStorage.setItem(LAST_WHATSAPP_URL_KEY, waUrl);
-      } catch {
-        // Storage blocked: the thank-you page falls back to a plain chat link.
-      }
-      window.open(waUrl, "_blank", "noopener,noreferrer");
-    }
-
-    // Save the lead too; keepalive lets it finish while we navigate away.
-    fetch("/api/contact", {
-      method: "POST",
-      keepalive: true,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        email: customerEmail || undefined,
-        phone: customerPhone,
-        message: selectionText ? `Interested in:\n${selectionText}\n\n${message}` : message,
-      }),
-    }).catch(() => {});
-
-    router.push("/thank-you");
-  }
+  const { handleSubmit, submitting, error, selected } = useContactSubmit(contact);
 
   return (
     <section id="contact" className="relative overflow-hidden bg-[var(--bg-dark)] py-20 sm:py-28">

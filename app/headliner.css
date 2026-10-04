@@ -1,0 +1,919 @@
+/* ==========================================================================
+   Headliner design. Everything is scoped to [data-design="headliner"] (set by
+   HeadlinerChrome), so the Classic design is untouched.
+
+   Palette — dark only. Contrast ratios against --bg-dark (#050506):
+     --text-primary        #f7f4ff  19.4:1  headings, body
+     --text-secondary      #b6afc6   9.6:1  secondary copy
+     --accent-gold         #ff2e7e   5.8:1  "flare" magenta: large type, fills
+     --accent-gold-bright  #ff6ba8   7.6:1  small magenta text (labels, links)
+     --hl-volt             #d4ff2e  17.6:1  stickers and buttons, always with
+                                            #050506 text on top (17.6:1)
+     --hl-violet           #8a5cff          glows and gradients only, never text
+   The Classic token names are reused so shared pages (privacy, thank-you,
+   404) pick up the new colours without their own styles.
+   ========================================================================== */
+
+:root:has([data-design="headliner"]),
+[data-design="headliner"] {
+  --bg-dark: #050506;
+  --bg-dark-alt: #0d0a12;
+  --text-primary: #f7f4ff;
+  --text-secondary: #b6afc6;
+  --accent-gold: #ff2e7e;
+  --accent-gold-bright: #ff6ba8;
+  --border-subtle: rgba(255, 255, 255, 0.14);
+  --hl-volt: #d4ff2e;
+  --hl-violet: #8a5cff;
+  --hl-blue: #3d7bff;
+  --hl-ink: #050506;
+  --hl-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --hl-snap: cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+[data-design="headliner"] {
+  background: var(--bg-dark);
+  color: var(--text-primary);
+}
+
+[data-design="headliner"] ::selection {
+  background: var(--hl-volt);
+  color: var(--hl-ink);
+}
+
+/* A cooler, violet vignette instead of Classic's warm one (desktop only, as before). */
+@media (min-width: 1024px) and (pointer: fine) {
+  :root:has([data-design="headliner"]) body::after {
+    background: radial-gradient(ellipse at 50% 40%, transparent 50%, rgba(60, 20, 90, 0.32) 100%);
+  }
+}
+
+/* Shared buttons recoloured for the shared pages: magenta with ink text (5.8:1). */
+[data-design="headliner"] .btn-gold {
+  background: var(--accent-gold);
+  color: var(--hl-ink);
+  border-radius: 999px;
+}
+[data-design="headliner"] .btn-gold:hover {
+  box-shadow: 0 12px 34px -10px rgba(255, 46, 126, 0.75);
+}
+[data-design="headliner"] .btn-ghost {
+  border-radius: 999px;
+}
+
+/* ---------- Type ---------- */
+
+/* Condensed, heavy, shouting: Instrument Sans at 75% width. */
+.hl-display {
+  font-family: var(--font-body), Arial, sans-serif;
+  font-weight: 700;
+  font-stretch: 75%;
+  text-transform: uppercase;
+  line-height: 0.84;
+  letter-spacing: -0.012em;
+}
+
+/* The elegant counter-voice inside loud headlines. */
+.hl-em {
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  color: var(--accent-gold);
+}
+
+.hl-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-gold-bright);
+}
+
+.hl-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px currentColor;
+}
+/* Outlined type. The variable font's glyphs are built from overlapping
+   shapes, so a plain stroke would show their seams; instead a double-width
+   stroke is painted under a fill in the section's own background colour
+   (--hl-fill), which hides the inner half and every seam. */
+.hl-outline-text {
+  color: var(--hl-fill, var(--bg-dark));
+  -webkit-text-stroke: 3px var(--text-primary);
+  -webkit-text-stroke-width: clamp(2px, 0.045em, 3.5px);
+  paint-order: stroke fill;
+}
+
+/* Section number, e.g. "02 / WHO WE ARE" */
+.hl-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.hl-kicker .n {
+  display: inline-flex;
+  min-width: 2.75rem;
+  height: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--hl-volt);
+  color: var(--hl-ink);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- Buttons ---------- */
+
+.hl-btn {
+  position: relative;
+  display: inline-flex;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--hl-volt);
+  padding: 0.9rem 1.75rem;
+  color: var(--hl-ink);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  isolation: isolate;
+  transition: transform 0.35s var(--hl-ease), box-shadow 0.35s var(--hl-ease);
+}
+.hl-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #fff;
+  transform: translateY(101%);
+  transition: transform 0.45s var(--hl-ease);
+}
+.hl-btn:hover {
+  transform: translateY(-2px) rotate(-1deg);
+  box-shadow: 0 16px 40px -12px rgba(212, 255, 46, 0.55);
+}
+.hl-btn:hover::before {
+  transform: translateY(0);
+}
+.hl-btn:active {
+  transform: scale(0.97);
+}
+.hl-btn:disabled {
+  opacity: 0.6;
+}
+
+.hl-btn-ghost {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  padding: 0.8rem 1.5rem;
+  color: var(--text-primary);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: border-color 0.3s, color 0.3s, background-color 0.3s;
+}
+.hl-btn-ghost:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold-bright);
+}
+.hl-btn-ghost[aria-pressed="true"] {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--hl-ink);
+}
+
+/* ---------- Scroll-triggered motion (InView sets data-inview) ---------- */
+
+.hl-rise {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 0.9s var(--hl-ease), transform 1.1s var(--hl-ease);
+  transition-delay: var(--d, 0ms);
+}
+[data-inview="1"].hl-rise,
+[data-inview="1"] .hl-rise {
+  opacity: 1;
+  transform: none;
+}
+
+/* Lands like a stamp: oversized and blurred, then hard into place. */
+.hl-slam {
+  opacity: 0;
+  transform: scale(1.45);
+  filter: blur(12px);
+  transition: opacity 0.5s var(--hl-snap), transform 0.65s var(--hl-snap), filter 0.6s var(--hl-snap);
+  transition-delay: var(--d, 0ms);
+}
+[data-inview="1"].hl-slam,
+[data-inview="1"] .hl-slam {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* Wiped on from the left like a title card. */
+.hl-wipe {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1.1s var(--hl-snap);
+  transition-delay: var(--d, 0ms);
+}
+[data-inview="1"].hl-wipe,
+[data-inview="1"] .hl-wipe {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Words sliding up out of their own line (SplitWords). */
+.hl-words .w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+.hl-words .w > span {
+  display: inline-block;
+  transform: translateY(105%);
+  transition: transform 0.9s var(--hl-ease);
+  transition-delay: calc(var(--i, 0) * 70ms + var(--d, 0ms));
+}
+[data-inview="1"].hl-words .w > span,
+[data-inview="1"] .hl-words .w > span {
+  transform: none;
+}
+
+/* ---------- Intro: a film-leader countdown, then the name ---------- */
+
+.hl-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--hl-ink);
+  animation: hl-intro-out 0.7s var(--hl-snap) 2.55s forwards;
+}
+.hl-intro[data-seen],
+.hl-intro.is-done {
+  display: none;
+}
+@keyframes hl-intro-out {
+  to {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+.hl-intro-ring {
+  position: absolute;
+  width: min(70vw, 420px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: conic-gradient(from 0deg, rgba(255, 46, 126, 0.55) var(--sweep, 0deg), transparent 0);
+  animation: hl-sweep 0.5s linear 3, hl-fade-out 0.2s linear 1.45s forwards;
+}
+.hl-intro-ring::before,
+.hl-intro-ring::after {
+  content: "";
+  position: absolute;
+  background: rgba(255, 255, 255, 0.25);
+}
+.hl-intro-ring::before {
+  left: 50%;
+  top: -20%;
+  bottom: -20%;
+  width: 1px;
+}
+.hl-intro-ring::after {
+  top: 50%;
+  left: -40%;
+  right: -40%;
+  height: 1px;
+}
+@property --sweep {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes hl-sweep {
+  from {
+    --sweep: 0deg;
+  }
+  to {
+    --sweep: 360deg;
+  }
+}
+.hl-intro-count {
+  position: absolute;
+  font-size: min(38vw, 240px);
+  opacity: 0;
+}
+.hl-intro-count:nth-of-type(1) {
+  animation: hl-blink 0.5s steps(1) 0s;
+}
+.hl-intro-count:nth-of-type(2) {
+  animation: hl-blink 0.5s steps(1) 0.5s;
+}
+.hl-intro-count:nth-of-type(3) {
+  animation: hl-blink 0.5s steps(1) 1s;
+}
+@keyframes hl-blink {
+  0%,
+  99% {
+    opacity: 1;
+  }
+}
+.hl-intro-name {
+  position: relative;
+  text-align: center;
+  opacity: 0;
+  animation: hl-name-in 0.55s var(--hl-snap) 1.5s forwards;
+}
+@keyframes hl-name-in {
+  0% {
+    opacity: 0;
+    transform: scale(2.6);
+    filter: blur(18px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.hl-intro-flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  animation: hl-flash 0.45s ease-out 1.55s;
+}
+@keyframes hl-flash {
+  0% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.hl-intro-sub {
+  display: block;
+  opacity: 0;
+  letter-spacing: 0.2em;
+  animation: hl-track 1s var(--hl-ease) 1.85s forwards;
+}
+@keyframes hl-track {
+  from {
+    opacity: 0;
+    letter-spacing: 0.2em;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.62em;
+  }
+}
+@keyframes hl-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ---------- Hero: the showreel plays inside the name ---------- */
+
+.hl-hero {
+  --p: 0;
+  position: relative;
+  height: 210svh;
+  background: var(--hl-ink);
+}
+.hl-hero-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+}
+
+/* Black card with white letters, multiplied over the video: black hides the
+   film, white lets it through, so the reel only plays inside the name. */
+.hl-knockout {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 84px 12px 39svh;
+  background: #000;
+  mix-blend-mode: multiply;
+  transform: scale(calc(1 + var(--p) * var(--p) * 9));
+  transform-origin: 50% 42%;
+  opacity: clamp(0, calc(1.25 - var(--p) * 1.7), 1);
+  will-change: transform, opacity;
+}
+.hl-knockout svg {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+}
+.hl-knockout .wide {
+  display: none;
+}
+@media (orientation: landscape) {
+  .hl-knockout {
+    padding: 96px 3vw 34svh;
+  }
+  .hl-knockout .tall {
+    display: none;
+  }
+  .hl-knockout .wide {
+    display: block;
+  }
+}
+.hl-knockout text {
+  font-family: var(--font-body), Arial, sans-serif;
+  font-weight: 700;
+  font-stretch: 75%;
+  fill: #fff;
+}
+
+.hl-hero-copy {
+  opacity: clamp(0, calc(1 - var(--p) * 3.2), 1);
+  transform: translateY(calc(var(--p) * -120px));
+}
+.hl-hero-after {
+  opacity: clamp(0, calc((var(--p) - 0.45) * 3), 1);
+  transform: scale(calc(1.15 - clamp(0, calc((var(--p) - 0.45) * 3), 1) * 0.15));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hl-hero {
+    height: auto;
+  }
+  .hl-hero-stage {
+    position: relative;
+  }
+  .hl-knockout,
+  .hl-hero-copy {
+    transform: none;
+    opacity: 1;
+  }
+  .hl-hero-after {
+    display: none;
+  }
+}
+
+/* Gloss sweeping across the letters every few seconds (desktop only). */
+@media (min-width: 1024px) and (pointer: fine) {
+  .hl-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.22) 50%, transparent 60%);
+    background-size: 250% 100%;
+    animation: hl-sheen 6s ease-in-out infinite;
+    mix-blend-mode: overlay;
+  }
+}
+@keyframes hl-sheen {
+  0%,
+  60% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.hl-live-dot {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #ff2d2d;
+  box-shadow: 0 0 0 0 rgba(255, 45, 45, 0.7);
+  animation: hl-pulse 1.6s infinite;
+}
+@keyframes hl-pulse {
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 45, 45, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 45, 45, 0);
+  }
+}
+
+/* ---------- Ticker tapes ---------- */
+
+.hl-tape {
+  position: relative;
+  width: 112%;
+  margin-left: -6%;
+  overflow: hidden;
+  padding: 0.85rem 0;
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.9);
+}
+.hl-tape-track {
+  display: flex;
+  width: max-content;
+  animation: hl-marquee var(--speed, 40s) linear infinite;
+}
+.hl-tape-track[data-reverse] {
+  animation-direction: reverse;
+}
+.hl-tape:hover .hl-tape-track,
+.hl-strip:hover .hl-tape-track {
+  animation-play-state: paused;
+}
+@keyframes hl-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- Big numbers ---------- */
+
+.hl-stat-num {
+  background: linear-gradient(100deg, var(--text-primary) 0 50%, transparent 50%) no-repeat;
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--text-primary);
+  transition: background-position 1.6s var(--hl-ease) 0.4s;
+}
+[data-inview="1"] .hl-stat-num {
+  background-position: 0 0;
+}
+
+/* ---------- About ---------- */
+
+.hl-duotone {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.hl-duotone img {
+  filter: grayscale(1) contrast(1.15) brightness(0.95);
+  transition: filter 0.8s var(--hl-ease), transform 1.2s var(--hl-ease);
+}
+.hl-duotone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--hl-violet), var(--accent-gold) 70%);
+  mix-blend-mode: color;
+  opacity: 0.85;
+  transition: opacity 0.8s var(--hl-ease);
+  pointer-events: none;
+}
+.hl-duotone:hover img {
+  filter: none;
+  transform: scale(1.04);
+}
+.hl-duotone:hover::after {
+  opacity: 0;
+}
+
+.hl-seal {
+  animation: hl-spin 18s linear infinite;
+}
+@keyframes hl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hl-sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--hl-volt);
+  color: var(--hl-ink);
+  padding: 0.45rem 0.85rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------- Clients ---------- */
+
+.hl-logo-mono {
+  filter: brightness(0) invert(1);
+}
+.hl-person:hover .hl-person-name,
+.hl-person:focus-visible .hl-person-name {
+  color: var(--accent-gold);
+  -webkit-text-stroke: 0;
+}
+
+/* Photo that follows the pointer over the A-list (desktop enhancement only). */
+.hl-follow {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 30;
+  width: 240px;
+  aspect-ratio: 4 / 5;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 6px;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.7) rotate(-6deg);
+  transition: opacity 0.25s, transform 0.4s var(--hl-ease);
+}
+.hl-follow[data-on="1"] {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(-3deg);
+}
+
+/* ---------- Work ---------- */
+
+.hl-index-row {
+  transition: color 0.35s var(--hl-ease), padding 0.45s var(--hl-ease);
+}
+@media (hover: hover) {
+  .hl-index-row:hover {
+    padding-left: 1.25rem;
+  }
+  .hl-index-row:hover .hl-index-name {
+    color: var(--accent-gold);
+    -webkit-text-stroke: 0;
+  }
+}
+
+.hl-scroller {
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+.hl-scroller::-webkit-scrollbar {
+  display: none;
+}
+.hl-scroller > * {
+  scroll-snap-align: start;
+}
+
+.hl-film {
+  transition: transform 0.5s var(--hl-ease), box-shadow 0.5s var(--hl-ease);
+}
+@media (hover: hover) {
+  .hl-film:hover {
+    transform: translateY(-8px) rotate(-1.5deg);
+    box-shadow: 0 30px 60px -25px rgba(255, 46, 126, 0.55);
+  }
+}
+
+/* RGB-split flicker on hover (desktop only). */
+@media (min-width: 1024px) and (pointer: fine) {
+  .hl-glitch:hover {
+    animation: hl-glitch 0.45s steps(2) 1;
+  }
+}
+@keyframes hl-glitch {
+  0% {
+    text-shadow: 3px 0 #ff2e7e, -3px 0 #3d7bff;
+    transform: translateX(2px);
+  }
+  50% {
+    text-shadow: -4px 0 #ff2e7e, 4px 0 #3d7bff;
+    transform: translateX(-2px) skewX(-6deg);
+  }
+  100% {
+    text-shadow: none;
+    transform: none;
+  }
+}
+
+.hl-takeover {
+  animation: hl-takeover-in 0.6s var(--hl-snap);
+}
+@keyframes hl-takeover-in {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ---------- Pricing: VIP passes ---------- */
+
+.hl-pass {
+  --mx: 50%;
+  --my: 30%;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 22px;
+  background: linear-gradient(170deg, #17121f, #0a080d 60%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: transform 0.5s var(--hl-ease), border-color 0.4s;
+}
+/* Holographic foil: follows the pointer on desktop, shimmers on its own on phones. */
+.hl-pass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.16), transparent 40%),
+    linear-gradient(115deg, transparent 20%, rgba(255, 46, 126, 0.22) 35%, rgba(212, 255, 46, 0.16) 45%, rgba(61, 123, 255, 0.24) 55%, rgba(138, 92, 255, 0.2) 65%, transparent 80%);
+  background-size: 100% 100%, 250% 250%;
+  animation: hl-holo 7s ease-in-out infinite alternate;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+@keyframes hl-holo {
+  from {
+    background-position: 0 0, 0% 0%;
+  }
+  to {
+    background-position: 0 0, 100% 100%;
+  }
+}
+/* Lanyard slot */
+.hl-pass::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 54px;
+  height: 9px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: var(--hl-ink);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+.hl-pass[data-hot="1"] {
+  border: 2px solid var(--hl-volt);
+}
+.hl-pass[data-chosen="1"] {
+  border-color: var(--accent-gold);
+}
+@media (hover: hover) {
+  .hl-pass:hover {
+    transform: translateY(-6px) rotate(-0.6deg);
+  }
+}
+.hl-barcode {
+  height: 38px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--text-primary) 0 2px,
+    transparent 2px 4px,
+    var(--text-primary) 4px 5px,
+    transparent 5px 9px,
+    var(--text-primary) 9px 12px,
+    transparent 12px 13px
+  );
+  opacity: 0.55;
+}
+
+/* ---------- Custom cursor (desktop with a mouse only) ---------- */
+
+.hl-cursor {
+  display: none;
+}
+@media (min-width: 1024px) and (pointer: fine) {
+  .hl-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    width: 18px;
+    height: 18px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff;
+    mix-blend-mode: difference;
+    pointer-events: none;
+    transform: translate3d(var(--cx, -100px), var(--cy, -100px), 0) translate(-50%, -50%);
+    transition: width 0.3s var(--hl-ease), height 0.3s var(--hl-ease);
+  }
+  .hl-cursor[data-hover="1"] {
+    width: 64px;
+    height: 64px;
+  }
+  .hl-cursor[data-label]:not([data-label=""]) {
+    width: 92px;
+    height: 92px;
+    mix-blend-mode: normal;
+    background: var(--hl-volt);
+  }
+  .hl-cursor span {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: var(--hl-ink);
+  }
+}
+
+/* Sound toggle: dancing equaliser bars while sound is on. */
+.hl-eq i {
+  display: block;
+  width: 3px;
+  border-radius: 2px;
+  background: currentColor;
+  height: 30%;
+  transition: height 0.3s;
+}
+.hl-eq[data-on="1"] i {
+  animation: hl-eq 0.9s ease-in-out infinite alternate;
+}
+.hl-eq[data-on="1"] i:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.hl-eq[data-on="1"] i:nth-child(3) {
+  animation-delay: -0.6s;
+}
+.hl-eq[data-on="1"] i:nth-child(4) {
+  animation-delay: -0.15s;
+}
+@keyframes hl-eq {
+  from {
+    height: 20%;
+  }
+  to {
+    height: 100%;
+  }
+}
+
+/* Full-screen mobile menu */
+.hl-menu {
+  clip-path: circle(0 at calc(100% - 44px) 40px);
+  transition: clip-path 0.7s var(--hl-snap);
+}
+.hl-menu[data-open="1"] {
+  clip-path: circle(150% at calc(100% - 44px) 40px);
+}
+.hl-menu .hl-menu-link {
+  transform: translateY(110%);
+  transition: transform 0.6s var(--hl-ease);
+  transition-delay: calc(var(--i, 0) * 60ms + 150ms);
+}
+.hl-menu[data-open="1"] .hl-menu-link {
+  transform: none;
+}
+
+/* ---------- Respect reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .hl-intro {
+    display: none;
+  }
+  .hl-rise,
+  .hl-slam,
+  .hl-wipe,
+  .hl-words .w > span {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    clip-path: none;
+    transition: none;
+  }
+  .hl-tape-track,
+  .hl-seal,
+  .hl-pass::before,
+  .hl-live-dot,
+  .hl-eq[data-on="1"] i,
+  .hl-takeover {
+    animation: none;
+  }
+  .hl-stat-num {
+    background-position: 0 0;
+    transition: none;
+  }
+  .hl-menu,
+  .hl-menu .hl-menu-link {
+    transition: none;
+  }
+}

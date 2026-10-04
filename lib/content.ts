@@ -7,7 +7,7 @@
 export type ContentField = {
   key: string;
   label: string;
-  group: "Brand" | "Hero" | "About" | "Pricing" | "Contact & Footer";
+  group: "Brand" | "Hero" | "About" | "Pricing" | "Contact & Footer" | "Headliner design";
   multiline?: boolean;
   placeholder?: string;
   fallback?: string;
@@ -39,6 +39,22 @@ export const CONTENT_FIELDS: ContentField[] = [
   },
   { key: "footer_email", label: "Contact email", group: "Contact & Footer", placeholder: "name@example.com" },
   { key: "footer_tagline", label: "Footer tagline", group: "Contact & Footer", placeholder: "We Entertain People.", fallback: "We Entertain People." },
+
+  // Only the Headliner design shows these. Blank = built from the About details.
+  {
+    key: "headliner_ticker",
+    label: "Ticker tape lines (separate with ·) — blank uses your roles and award",
+    group: "Headliner design",
+    multiline: true,
+    placeholder: "Best DoP — Afdal Awards 2025 & 2026 · MTV Lebanon · 35+ countries",
+  },
+  {
+    key: "headliner_stats",
+    label: "Big numbers (one per line: number | label) — film and photo counts are added automatically",
+    group: "Headliner design",
+    multiline: true,
+    placeholder: "35+ | Countries filmed in\n2× | Best DoP, Afdal Awards",
+  },
 ];
 
 // Which uploaded photo (by storage_path) backs each section's background image.
