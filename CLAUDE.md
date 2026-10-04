@@ -25,7 +25,7 @@ These standards are mandatory for every change.
 - Dark theme only. Use the palette tokens in `app/globals.css`; small text never uses a
   low-contrast accent.
 - Fonts (fixed set): Cormorant Garamond = headings and italic accents, Instrument Sans =
-  body, DM Mono = small uppercase labels, Limelight = the hero's cinematic closing line only.
+  body, DM Mono = small uppercase labels, Anton = the hero's cinematic closing line only.
 - Social profiles are linked in the nav/footer and listed in the structured data (`sameAs`).
 
 ## Every page needs

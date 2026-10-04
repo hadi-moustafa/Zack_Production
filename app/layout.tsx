@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Instrument_Sans, DM_Mono, Limelight } from "next/font/google";
+import { Cormorant_Garamond, Instrument_Sans, DM_Mono, Anton } from "next/font/google";
 import SoundProvider from "@/components/sound/SoundProvider";
 import { site, baseOpenGraph } from "@/lib/site";
 import "./globals.css";
@@ -26,9 +26,9 @@ const dmMono = DM_Mono({
   weight: ["400", "500"],
 });
 
-// Old-Hollywood marquee type for the hero's closing line. It only shows after
+// Blockbuster-trailer capitals for the hero's closing line. It only shows after
 // scrolling, so it isn't preloaded ahead of the first paint.
-const limelight = Limelight({
+const anton = Anton({
   variable: "--font-cinematic",
   subsets: ["latin"],
   weight: "400",
@@ -59,7 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${instrument.variable} ${dmMono.variable} ${limelight.variable} h-full antialiased`}
+      className={`${cormorant.variable} ${instrument.variable} ${dmMono.variable} ${anton.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-[var(--bg-dark)] text-[var(--text-primary)]">
         <noscript>
