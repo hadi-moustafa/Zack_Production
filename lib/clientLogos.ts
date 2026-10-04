@@ -8,6 +8,8 @@ export type ClientLogo = {
   src: string;
   width: number;
   height: number;
+  /** Share of the logo's box covered by ink (0–1), to balance light and heavy marks. */
+  density: number;
 };
 
 export const CLIENT_LOGOS = logos as ClientLogo[];

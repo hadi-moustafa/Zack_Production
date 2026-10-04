@@ -44,3 +44,6 @@ supabase/.temp/
 
 # source images already uploaded to Supabase Storage
 /images/
+
+# client logo sources (processed into public/clients by npm run logos)
+/logos/

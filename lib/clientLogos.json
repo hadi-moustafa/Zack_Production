@@ -1,1 +1,1010 @@
-[]
+[
+  {
+    "name": "Carrefour",
+    "tier": "elite",
+    "src": "/clients/carrefour.webp",
+    "width": 294,
+    "height": 240,
+    "density": 0.212
+  },
+  {
+    "name": "MTV Lebanon",
+    "tier": "elite",
+    "src": "/clients/mtv-lebanon.webp",
+    "width": 838,
+    "height": 240,
+    "density": 0.524
+  },
+  {
+    "name": "OTV",
+    "tier": "elite",
+    "src": "/clients/otv.webp",
+    "width": 614,
+    "height": 240,
+    "density": 0.397
+  },
+  {
+    "name": "YouTube",
+    "tier": "elite",
+    "src": "/clients/youtube.webp",
+    "width": 574,
+    "height": 240,
+    "density": 0.524
+  },
+  {
+    "name": "Lebanese International University",
+    "tier": "elite",
+    "src": "/clients/lebanese-international-university.webp",
+    "width": 240,
+    "height": 240,
+    "density": 0.269
+  },
+  {
+    "name": "Beirut Sports Arena",
+    "tier": "elite",
+    "src": "/clients/beirut-sports-arena.webp",
+    "width": 228,
+    "height": 240,
+    "density": 0.282
+  },
+  {
+    "name": "360 Media",
+    "tier": "elite",
+    "src": "/clients/360-media.webp",
+    "width": 254,
+    "height": 240,
+    "density": 0.479
+  },
+  {
+    "name": "JAF",
+    "tier": "elite",
+    "src": "/clients/jaf.webp",
+    "width": 313,
+    "height": 240,
+    "density": 0.293
+  },
+  {
+    "name": "Chicken Way",
+    "tier": "elite",
+    "src": "/clients/chicken-way.webp",
+    "width": 355,
+    "height": 240,
+    "density": 0.263
+  },
+  {
+    "name": "Atyab Farrouj",
+    "tier": "elite",
+    "src": "/clients/atyab-farrouj.webp",
+    "width": 317,
+    "height": 240,
+    "density": 0.352
+  },
+  {
+    "name": "Al Jadeed Television",
+    "tier": "others",
+    "src": "/clients/al-jadeed-television.webp",
+    "width": 385,
+    "height": 240,
+    "density": 0.358
+  },
+  {
+    "name": "UEFA Euro 2024",
+    "tier": "others",
+    "src": "/clients/uefa-euro-2024.webp",
+    "width": 184,
+    "height": 240,
+    "density": 0.284
+  },
+  {
+    "name": "KSrelief",
+    "tier": "others",
+    "src": "/clients/ksrelief.webp",
+    "width": 475,
+    "height": 240,
+    "density": 0.102
+  },
+  {
+    "name": "Keune Haircosmetics",
+    "tier": "others",
+    "src": "/clients/keune-haircosmetics.webp",
+    "width": 546,
+    "height": 240,
+    "density": 0.179
+  },
+  {
+    "name": "Warwick Palm Beach Hotel",
+    "tier": "others",
+    "src": "/clients/warwick-palm-beach-hotel.webp",
+    "width": 220,
+    "height": 240,
+    "density": 0.108
+  },
+  {
+    "name": "American University of Culture & Education",
+    "tier": "others",
+    "src": "/clients/american-university-of-culture-and-education.webp",
+    "width": 237,
+    "height": 240,
+    "density": 0.359
+  },
+  {
+    "name": "Pearl of Beirut Hotel & Spa",
+    "tier": "others",
+    "src": "/clients/pearl-of-beirut-hotel-and-spa.webp",
+    "width": 301,
+    "height": 240,
+    "density": 0.094
+  },
+  {
+    "name": "Phoenicia Cuisine Libanaise",
+    "tier": "others",
+    "src": "/clients/phoenicia-cuisine-libanaise.webp",
+    "width": 545,
+    "height": 240,
+    "density": 0.165
+  },
+  {
+    "name": "Abou Taam Engineering & Construction",
+    "tier": "others",
+    "src": "/clients/abou-taam-engineering-and-construction.webp",
+    "width": 200,
+    "height": 240,
+    "density": 0.185
+  },
+  {
+    "name": "Addison Original Denim",
+    "tier": "others",
+    "src": "/clients/addison-original-denim.webp",
+    "width": 255,
+    "height": 240,
+    "density": 0.287
+  },
+  {
+    "name": "Afdal Awards",
+    "tier": "others",
+    "src": "/clients/afdal-awards.webp",
+    "width": 359,
+    "height": 240,
+    "density": 0.151
+  },
+  {
+    "name": "Ahmad Obeid Beauty Lounge",
+    "tier": "others",
+    "src": "/clients/ahmad-obeid-beauty-lounge.webp",
+    "width": 327,
+    "height": 240,
+    "density": 0.133
+  },
+  {
+    "name": "Al Ghadi Travel & Tourism",
+    "tier": "others",
+    "src": "/clients/al-ghadi-travel-and-tourism.webp",
+    "width": 319,
+    "height": 240,
+    "density": 0.169
+  },
+  {
+    "name": "Al Ghina",
+    "tier": "others",
+    "src": "/clients/al-ghina.webp",
+    "width": 548,
+    "height": 240,
+    "density": 0.241
+  },
+  {
+    "name": "Alex Moussa Men's Salon & Spa",
+    "tier": "others",
+    "src": "/clients/alex-moussa-men-s-salon-and-spa.webp",
+    "width": 812,
+    "height": 240,
+    "density": 0.153
+  },
+  {
+    "name": "Ali Srour Media",
+    "tier": "others",
+    "src": "/clients/ali-srour-media.webp",
+    "width": 267,
+    "height": 240,
+    "density": 0.392
+  },
+  {
+    "name": "Ali Wehbi",
+    "tier": "others",
+    "src": "/clients/ali-wehbi.webp",
+    "width": 234,
+    "height": 240,
+    "density": 0.371
+  },
+  {
+    "name": "Ali Yehya",
+    "tier": "others",
+    "src": "/clients/ali-yehya.webp",
+    "width": 364,
+    "height": 240,
+    "density": 0.295
+  },
+  {
+    "name": "Apple Town",
+    "tier": "others",
+    "src": "/clients/apple-town.webp",
+    "width": 335,
+    "height": 240,
+    "density": 0.581
+  },
+  {
+    "name": "Aqua La Vie",
+    "tier": "others",
+    "src": "/clients/aqua-la-vie.webp",
+    "width": 389,
+    "height": 240,
+    "density": 0.163
+  },
+  {
+    "name": "Auto Ghneim",
+    "tier": "others",
+    "src": "/clients/auto-ghneim.webp",
+    "width": 519,
+    "height": 240,
+    "density": 0.251
+  },
+  {
+    "name": "Avaia",
+    "tier": "others",
+    "src": "/clients/avaia.webp",
+    "width": 657,
+    "height": 240,
+    "density": 0.269
+  },
+  {
+    "name": "Blendout",
+    "tier": "others",
+    "src": "/clients/blendout.webp",
+    "width": 633,
+    "height": 240,
+    "density": 0.166
+  },
+  {
+    "name": "Book a Coffee",
+    "tier": "others",
+    "src": "/clients/book-a-coffee.webp",
+    "width": 263,
+    "height": 240,
+    "density": 0.273
+  },
+  {
+    "name": "Brandelta",
+    "tier": "others",
+    "src": "/clients/brandelta.webp",
+    "width": 335,
+    "height": 240,
+    "density": 0.189
+  },
+  {
+    "name": "BSLC Beirut Skin & Laser Clinic",
+    "tier": "others",
+    "src": "/clients/bslc-beirut-skin-and-laser-clinic.webp",
+    "width": 495,
+    "height": 240,
+    "density": 0.141
+  },
+  {
+    "name": "Capital Clinics",
+    "tier": "others",
+    "src": "/clients/capital-clinics.webp",
+    "width": 153,
+    "height": 240,
+    "density": 0.38
+  },
+  {
+    "name": "Carissa",
+    "tier": "others",
+    "src": "/clients/carissa.webp",
+    "width": 164,
+    "height": 240,
+    "density": 0.282
+  },
+  {
+    "name": "Carkit",
+    "tier": "others",
+    "src": "/clients/carkit.webp",
+    "width": 796,
+    "height": 240,
+    "density": 0.201
+  },
+  {
+    "name": "COR Clinic of Regenerative Medicine",
+    "tier": "others",
+    "src": "/clients/cor-clinic-of-regenerative-medicine.webp",
+    "width": 590,
+    "height": 240,
+    "density": 0.274
+  },
+  {
+    "name": "Daise Shaar",
+    "tier": "others",
+    "src": "/clients/daise-shaar.webp",
+    "width": 805,
+    "height": 240,
+    "density": 0.139
+  },
+  {
+    "name": "Damour Village",
+    "tier": "others",
+    "src": "/clients/damour-village.webp",
+    "width": 354,
+    "height": 240,
+    "density": 0.228
+  },
+  {
+    "name": "Dental Life",
+    "tier": "others",
+    "src": "/clients/dental-life.webp",
+    "width": 691,
+    "height": 240,
+    "density": 0.187
+  },
+  {
+    "name": "Dr. Ghinwa Beauty Clinic",
+    "tier": "others",
+    "src": "/clients/dr-ghinwa-beauty-clinic.webp",
+    "width": 647,
+    "height": 240,
+    "density": 0.124
+  },
+  {
+    "name": "Dr. Hussein Abou Khalil",
+    "tier": "others",
+    "src": "/clients/dr-hussein-abou-khalil.webp",
+    "width": 387,
+    "height": 240,
+    "density": 0.21
+  },
+  {
+    "name": "Diana Rizk",
+    "tier": "others",
+    "src": "/clients/diana-rizk.webp",
+    "width": 220,
+    "height": 240,
+    "density": 0.054
+  },
+  {
+    "name": "Dream Town Real Estate Group",
+    "tier": "others",
+    "src": "/clients/dream-town-real-estate-group.webp",
+    "width": 275,
+    "height": 240,
+    "density": 0.415
+  },
+  {
+    "name": "Elie Abi Hanna",
+    "tier": "others",
+    "src": "/clients/elie-abi-hanna.webp",
+    "width": 211,
+    "height": 240,
+    "density": 0.255
+  },
+  {
+    "name": "Eve Wedding Events",
+    "tier": "others",
+    "src": "/clients/eve-wedding-events.webp",
+    "width": 315,
+    "height": 240,
+    "density": 0.179
+  },
+  {
+    "name": "Fash Kool",
+    "tier": "others",
+    "src": "/clients/fash-kool.webp",
+    "width": 488,
+    "height": 240,
+    "density": 0.309
+  },
+  {
+    "name": "FitLife",
+    "tier": "others",
+    "src": "/clients/fitlife.webp",
+    "width": 307,
+    "height": 240,
+    "density": 0.403
+  },
+  {
+    "name": "Foody's",
+    "tier": "others",
+    "src": "/clients/foody-s.webp",
+    "width": 301,
+    "height": 240,
+    "density": 0.279
+  },
+  {
+    "name": "Gala",
+    "tier": "others",
+    "src": "/clients/gala.webp",
+    "width": 393,
+    "height": 240,
+    "density": 0.25
+  },
+  {
+    "name": "Ghada Blanco Weddings & Events",
+    "tier": "others",
+    "src": "/clients/ghada-blanco-weddings-and-events.webp",
+    "width": 172,
+    "height": 240,
+    "density": 0.11
+  },
+  {
+    "name": "Gold Prime",
+    "tier": "others",
+    "src": "/clients/gold-prime.webp",
+    "width": 458,
+    "height": 240,
+    "density": 0.133
+  },
+  {
+    "name": "Gustoso",
+    "tier": "others",
+    "src": "/clients/gustoso.webp",
+    "width": 449,
+    "height": 240,
+    "density": 0.176
+  },
+  {
+    "name": "Habbet Loulou",
+    "tier": "others",
+    "src": "/clients/habbet-loulou.webp",
+    "width": 579,
+    "height": 240,
+    "density": 0.23
+  },
+  {
+    "name": "Haifamajic Beauty Salon",
+    "tier": "others",
+    "src": "/clients/haifamajic-beauty-salon.webp",
+    "width": 385,
+    "height": 240,
+    "density": 0.096
+  },
+  {
+    "name": "Heaven",
+    "tier": "others",
+    "src": "/clients/heaven.webp",
+    "width": 517,
+    "height": 240,
+    "density": 0.153
+  },
+  {
+    "name": "Hilal Style",
+    "tier": "others",
+    "src": "/clients/hilal-style.webp",
+    "width": 1433,
+    "height": 240,
+    "density": 0.396
+  },
+  {
+    "name": "HIMO",
+    "tier": "others",
+    "src": "/clients/himo.webp",
+    "width": 794,
+    "height": 240,
+    "density": 0.313
+  },
+  {
+    "name": "HN Production",
+    "tier": "others",
+    "src": "/clients/hn-production.webp",
+    "width": 285,
+    "height": 240,
+    "density": 0.214
+  },
+  {
+    "name": "Housein Slim Photography",
+    "tier": "others",
+    "src": "/clients/housein-slim-photography.webp",
+    "width": 1213,
+    "height": 240,
+    "density": 0.102
+  },
+  {
+    "name": "Icon",
+    "tier": "others",
+    "src": "/clients/icon.webp",
+    "width": 534,
+    "height": 240,
+    "density": 0.126
+  },
+  {
+    "name": "IDAL",
+    "tier": "others",
+    "src": "/clients/idal.webp",
+    "width": 211,
+    "height": 240,
+    "density": 0.305
+  },
+  {
+    "name": "Imdad",
+    "tier": "others",
+    "src": "/clients/imdad.webp",
+    "width": 922,
+    "height": 240,
+    "density": 0.146
+  },
+  {
+    "name": "Janouby",
+    "tier": "others",
+    "src": "/clients/janouby.webp",
+    "width": 282,
+    "height": 240,
+    "density": 0.277
+  },
+  {
+    "name": "Jasmine International",
+    "tier": "others",
+    "src": "/clients/jasmine-international.webp",
+    "width": 350,
+    "height": 240,
+    "density": 0.065
+  },
+  {
+    "name": "JM Jewels",
+    "tier": "others",
+    "src": "/clients/jm-jewels.webp",
+    "width": 238,
+    "height": 240,
+    "density": 0.193
+  },
+  {
+    "name": "Jardin d'Amour",
+    "tier": "others",
+    "src": "/clients/jardin-d-amour.webp",
+    "width": 440,
+    "height": 240,
+    "density": 0.135
+  },
+  {
+    "name": "La Joyería by Lina Joudi",
+    "tier": "others",
+    "src": "/clients/la-joyeria-by-lina-joudi.webp",
+    "width": 208,
+    "height": 240,
+    "density": 0.132
+  },
+  {
+    "name": "Limits",
+    "tier": "others",
+    "src": "/clients/limits.webp",
+    "width": 199,
+    "height": 240,
+    "density": 0.273
+  },
+  {
+    "name": "Loulou Hanna",
+    "tier": "others",
+    "src": "/clients/loulou-hanna.webp",
+    "width": 240,
+    "height": 240,
+    "density": 0.707
+  },
+  {
+    "name": "Luckyland Collection",
+    "tier": "others",
+    "src": "/clients/luckyland-collection.webp",
+    "width": 276,
+    "height": 240,
+    "density": 0.238
+  },
+  {
+    "name": "Lunar Group",
+    "tier": "others",
+    "src": "/clients/lunar-group.webp",
+    "width": 1440,
+    "height": 240,
+    "density": 0.378
+  },
+  {
+    "name": "Maison de Zeina",
+    "tier": "others",
+    "src": "/clients/maison-de-zeina.webp",
+    "width": 255,
+    "height": 240,
+    "density": 0.093
+  },
+  {
+    "name": "Maintex",
+    "tier": "others",
+    "src": "/clients/maintex.webp",
+    "width": 230,
+    "height": 240,
+    "density": 0.141
+  },
+  {
+    "name": "Mary Photography",
+    "tier": "others",
+    "src": "/clients/mary-photography.webp",
+    "width": 837,
+    "height": 240,
+    "density": 0.098
+  },
+  {
+    "name": "Meat Way",
+    "tier": "others",
+    "src": "/clients/meat-way.webp",
+    "width": 346,
+    "height": 240,
+    "density": 0.906
+  },
+  {
+    "name": "Mit Ceramica",
+    "tier": "others",
+    "src": "/clients/mit-ceramica.webp",
+    "width": 829,
+    "height": 240,
+    "density": 0.159
+  },
+  {
+    "name": "Moments & Memories",
+    "tier": "others",
+    "src": "/clients/moments-and-memories.webp",
+    "width": 860,
+    "height": 240,
+    "density": 0.111
+  },
+  {
+    "name": "New Decor",
+    "tier": "others",
+    "src": "/clients/new-decor.webp",
+    "width": 255,
+    "height": 240,
+    "density": 0.191
+  },
+  {
+    "name": "Next Resto Café",
+    "tier": "others",
+    "src": "/clients/next-resto-cafe.webp",
+    "width": 751,
+    "height": 240,
+    "density": 0.305
+  },
+  {
+    "name": "One Beirut",
+    "tier": "others",
+    "src": "/clients/one-beirut.webp",
+    "width": 359,
+    "height": 240,
+    "density": 0.268
+  },
+  {
+    "name": "Optimum Dental Clinic",
+    "tier": "others",
+    "src": "/clients/optimum-dental-clinic.webp",
+    "width": 590,
+    "height": 240,
+    "density": 0.148
+  },
+  {
+    "name": "Other Side",
+    "tier": "others",
+    "src": "/clients/other-side.webp",
+    "width": 261,
+    "height": 240,
+    "density": 0.564
+  },
+  {
+    "name": "Pain Clinics",
+    "tier": "others",
+    "src": "/clients/pain-clinics.webp",
+    "width": 753,
+    "height": 240,
+    "density": 0.168
+  },
+  {
+    "name": "Pain Parfait",
+    "tier": "others",
+    "src": "/clients/pain-parfait.webp",
+    "width": 392,
+    "height": 240,
+    "density": 0.14
+  },
+  {
+    "name": "Pamela Skaff",
+    "tier": "others",
+    "src": "/clients/pamela-skaff.webp",
+    "width": 532,
+    "height": 240,
+    "density": 0.131
+  },
+  {
+    "name": "Parapluie Fine Art Photography",
+    "tier": "others",
+    "src": "/clients/parapluie-fine-art-photography.webp",
+    "width": 960,
+    "height": 240,
+    "density": 0.092
+  },
+  {
+    "name": "Passion P-Side",
+    "tier": "others",
+    "src": "/clients/passion-p-side.webp",
+    "width": 582,
+    "height": 240,
+    "density": 0.233
+  },
+  {
+    "name": "PharmaKo",
+    "tier": "others",
+    "src": "/clients/pharmako.webp",
+    "width": 300,
+    "height": 240,
+    "density": 0.265
+  },
+  {
+    "name": "Phoenix International School",
+    "tier": "others",
+    "src": "/clients/phoenix-international-school.webp",
+    "width": 599,
+    "height": 240,
+    "density": 0.15
+  },
+  {
+    "name": "Pick & Go Market",
+    "tier": "others",
+    "src": "/clients/pick-and-go-market.webp",
+    "width": 277,
+    "height": 240,
+    "density": 0.286
+  },
+  {
+    "name": "Plus Properties Cyprus",
+    "tier": "others",
+    "src": "/clients/plus-properties-cyprus.webp",
+    "width": 527,
+    "height": 240,
+    "density": 0.283
+  },
+  {
+    "name": "ProRituals Beauty Clinic",
+    "tier": "others",
+    "src": "/clients/prorituals-beauty-clinic.webp",
+    "width": 821,
+    "height": 240,
+    "density": 0.15
+  },
+  {
+    "name": "Rachidi Home",
+    "tier": "others",
+    "src": "/clients/rachidi-home.webp",
+    "width": 1600,
+    "height": 220,
+    "density": 0.194
+  },
+  {
+    "name": "Rani Masri Beauty Studio",
+    "tier": "others",
+    "src": "/clients/rani-masri-beauty-studio.webp",
+    "width": 1181,
+    "height": 240,
+    "density": 0.35
+  },
+  {
+    "name": "Raw Beauty Skin Clinic & Spa",
+    "tier": "others",
+    "src": "/clients/raw-beauty-skin-clinic-and-spa.webp",
+    "width": 304,
+    "height": 240,
+    "density": 0.072
+  },
+  {
+    "name": "RH Premium",
+    "tier": "others",
+    "src": "/clients/rh-premium.webp",
+    "width": 580,
+    "height": 240,
+    "density": 0.108
+  },
+  {
+    "name": "Rocket Fireworks",
+    "tier": "others",
+    "src": "/clients/rocket-fireworks.webp",
+    "width": 337,
+    "height": 240,
+    "density": 0.089
+  },
+  {
+    "name": "Sachi",
+    "tier": "others",
+    "src": "/clients/sachi.webp",
+    "width": 604,
+    "height": 240,
+    "density": 0.294
+  },
+  {
+    "name": "Salameh Cargo",
+    "tier": "others",
+    "src": "/clients/salameh-cargo.webp",
+    "width": 421,
+    "height": 240,
+    "density": 0.268
+  },
+  {
+    "name": "Salon Classic",
+    "tier": "others",
+    "src": "/clients/salon-classic.webp",
+    "width": 876,
+    "height": 240,
+    "density": 0.154
+  },
+  {
+    "name": "Sense",
+    "tier": "others",
+    "src": "/clients/sense.webp",
+    "width": 246,
+    "height": 240,
+    "density": 0.123
+  },
+  {
+    "name": "Seven Luxury Car Rental",
+    "tier": "others",
+    "src": "/clients/seven-luxury-car-rental.webp",
+    "width": 1241,
+    "height": 240,
+    "density": 0.536
+  },
+  {
+    "name": "SkinTech Clinic",
+    "tier": "others",
+    "src": "/clients/skintech-clinic.webp",
+    "width": 695,
+    "height": 240,
+    "density": 0.191
+  },
+  {
+    "name": "Skin IQ Beauty Lounge",
+    "tier": "others",
+    "src": "/clients/skin-iq-beauty-lounge.webp",
+    "width": 628,
+    "height": 240,
+    "density": 0.185
+  },
+  {
+    "name": "SkinLuxe",
+    "tier": "others",
+    "src": "/clients/skinluxe.webp",
+    "width": 845,
+    "height": 240,
+    "density": 0.111
+  },
+  {
+    "name": "Spectre Middle East",
+    "tier": "others",
+    "src": "/clients/spectre-middle-east.webp",
+    "width": 246,
+    "height": 240,
+    "density": 0.245
+  },
+  {
+    "name": "Squaze Architecture & Design",
+    "tier": "others",
+    "src": "/clients/squaze-architecture-and-design.webp",
+    "width": 173,
+    "height": 240,
+    "density": 0.67
+  },
+  {
+    "name": "Stars Wedding",
+    "tier": "others",
+    "src": "/clients/stars-wedding.webp",
+    "width": 453,
+    "height": 240,
+    "density": 0.07
+  },
+  {
+    "name": "Studio 4memories",
+    "tier": "others",
+    "src": "/clients/studio-4memories.webp",
+    "width": 597,
+    "height": 240,
+    "density": 0.157
+  },
+  {
+    "name": "Tawfeer",
+    "tier": "others",
+    "src": "/clients/tawfeer.webp",
+    "width": 240,
+    "height": 240,
+    "density": 0.487
+  },
+  {
+    "name": "The Concept",
+    "tier": "others",
+    "src": "/clients/the-concept.webp",
+    "width": 349,
+    "height": 240,
+    "density": 0.118
+  },
+  {
+    "name": "The Pasta Mix",
+    "tier": "others",
+    "src": "/clients/the-pasta-mix.webp",
+    "width": 167,
+    "height": 240,
+    "density": 0.09
+  },
+  {
+    "name": "Tivoli",
+    "tier": "others",
+    "src": "/clients/tivoli.webp",
+    "width": 546,
+    "height": 240,
+    "density": 0.384
+  },
+  {
+    "name": "True Story Productions",
+    "tier": "others",
+    "src": "/clients/true-story-productions.webp",
+    "width": 847,
+    "height": 240,
+    "density": 0.094
+  },
+  {
+    "name": "Visualized by Jawad",
+    "tier": "others",
+    "src": "/clients/visualized-by-jawad.webp",
+    "width": 250,
+    "height": 240,
+    "density": 0.083
+  },
+  {
+    "name": "Vivid Gentlemen's Club",
+    "tier": "others",
+    "src": "/clients/vivid-gentlemen-s-club.webp",
+    "width": 290,
+    "height": 240,
+    "density": 0.181
+  },
+  {
+    "name": "Water Beat",
+    "tier": "others",
+    "src": "/clients/water-beat.webp",
+    "width": 365,
+    "height": 240,
+    "density": 0.295
+  },
+  {
+    "name": "Wayla International Cuisine",
+    "tier": "others",
+    "src": "/clients/wayla-international-cuisine.webp",
+    "width": 400,
+    "height": 240,
+    "density": 0.2
+  },
+  {
+    "name": "Wonka Magic Tricks Shop",
+    "tier": "others",
+    "src": "/clients/wonka-magic-tricks-shop.webp",
+    "width": 223,
+    "height": 240,
+    "density": 0.471
+  },
+  {
+    "name": "Youssef Kamoun",
+    "tier": "others",
+    "src": "/clients/youssef-kamoun.webp",
+    "width": 461,
+    "height": 240,
+    "density": 0.156
+  },
+  {
+    "name": "Delux Rent a Car",
+    "tier": "others",
+    "src": "/clients/delux-rent-a-car.webp",
+    "width": 708,
+    "height": 240,
+    "density": 0.165
+  },
+  {
+    "name": "Bak Bak",
+    "tier": "others",
+    "src": "/clients/bak-bak.webp",
+    "width": 884,
+    "height": 240,
+    "density": 0.249
+  }
+]

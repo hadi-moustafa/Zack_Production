@@ -1,0 +1,718 @@
+[
+  {
+    "name": "Carrefour",
+    "tier": "elite",
+    "file": "elite/carrfour logo .jpg"
+  },
+  {
+    "name": "MTV Lebanon",
+    "tier": "elite",
+    "file": "elite/mtv logo .png",
+    "crop": [
+      0,
+      0,
+      1,
+      0.815
+    ]
+  },
+  {
+    "name": "OTV",
+    "tier": "elite",
+    "file": "elite/lb-otv-lebanon-1620.jpg"
+  },
+  {
+    "name": "YouTube",
+    "tier": "elite",
+    "file": "others/youtube.png",
+    "ink": "solid"
+  },
+  {
+    "name": "Lebanese International University",
+    "tier": "elite",
+    "file": "elite/LIU LOGO (1).png"
+  },
+  {
+    "name": "Beirut Sports Arena",
+    "tier": "elite",
+    "file": "elite/B.S.A. Logo.png"
+  },
+  {
+    "name": "360 Media",
+    "tier": "elite",
+    "file": "elite/LOGO ILL.pdf"
+  },
+  {
+    "name": "JAF",
+    "tier": "elite",
+    "file": "elite/WhatsApp Image 2026-02-16 at 19.44.14.jpeg"
+  },
+  {
+    "name": "Chicken Way",
+    "tier": "elite",
+    "file": "elite/checkin way .png"
+  },
+  {
+    "name": "Atyab Farrouj",
+    "tier": "elite",
+    "file": "elite/atyab farouj.jpg"
+  },
+  {
+    "name": "Al Jadeed Television",
+    "tier": "others",
+    "file": "others/شعار_قناة_الجديد.jpg"
+  },
+  {
+    "name": "UEFA Euro 2024",
+    "tier": "others",
+    "file": "others/PHOTO-2024-06-06-02-28-51.jpg"
+  },
+  {
+    "name": "KSrelief",
+    "tier": "others",
+    "file": "others/ksrelif-logo.pdf.pdf"
+  },
+  {
+    "name": "Keune Haircosmetics",
+    "tier": "others",
+    "file": "others/Keune-Haircosmetics-Logo-2022-Black (1).pdf"
+  },
+  {
+    "name": "Warwick Palm Beach Hotel",
+    "tier": "others",
+    "file": "others/WhatsApp Image 2026-02-20 at 09.14.40.jpeg"
+  },
+  {
+    "name": "American University of Culture & Education",
+    "tier": "others",
+    "file": "others/thumbnail_AUCE Logo.jpg"
+  },
+  {
+    "name": "Pearl of Beirut Hotel & Spa",
+    "tier": "others",
+    "file": "others/pearl hotel logo.jpg"
+  },
+  {
+    "name": "Phoenicia Cuisine Libanaise",
+    "tier": "others",
+    "file": "others/Phoenician Logo Gold.pdf"
+  },
+  {
+    "name": "Abou Taam Engineering & Construction",
+    "tier": "others",
+    "file": "others/abou taam logo .png"
+  },
+  {
+    "name": "Addison Original Denim",
+    "tier": "others",
+    "file": "others/addison  2.png"
+  },
+  {
+    "name": "Afdal Awards",
+    "tier": "others",
+    "file": "others/logo afdal .jpg"
+  },
+  {
+    "name": "Ahmad Obeid Beauty Lounge",
+    "tier": "others",
+    "file": "others/ahmad obiad.PNG"
+  },
+  {
+    "name": "Al Ghadi Travel & Tourism",
+    "tier": "others",
+    "file": "others/AL GHADI TRAVEL (LOGO).pdf"
+  },
+  {
+    "name": "Al Ghina",
+    "tier": "others",
+    "file": "others/al ghina .png",
+    "keep": [
+      0.02,
+      0,
+      0.98,
+      1
+    ]
+  },
+  {
+    "name": "Alex Moussa Men's Salon & Spa",
+    "tier": "others",
+    "file": "others/PHOTO-2021-02-06-19-32-44.jpg"
+  },
+  {
+    "name": "Ali Srour Media",
+    "tier": "others",
+    "file": "others/ali srour logo11.png"
+  },
+  {
+    "name": "Ali Wehbi",
+    "tier": "others",
+    "file": "others/ali wehbe salon gold .png"
+  },
+  {
+    "name": "Ali Yehya",
+    "tier": "others",
+    "file": "others/Salon Ali Yehyas Logo-2 copy.png"
+  },
+  {
+    "name": "Apple Town",
+    "tier": "others",
+    "file": "others/apple town .JPG"
+  },
+  {
+    "name": "Aqua La Vie",
+    "tier": "others",
+    "file": "others/la vie.pdf"
+  },
+  {
+    "name": "Auto Ghneim",
+    "tier": "others",
+    "file": "others/auto ghneim .jpg"
+  },
+  {
+    "name": "Avaia",
+    "tier": "others",
+    "file": "others/aviana.jpg"
+  },
+  {
+    "name": "Blendout",
+    "tier": "others",
+    "file": "others/PHOTO-2020-08-01-21-34-53.jpg"
+  },
+  {
+    "name": "Book a Coffee",
+    "tier": "others",
+    "file": "others/00daf3ff-de7d-4ece-b03c-d3552508c906.JPG",
+    "crop": [
+      0.1,
+      0.08,
+      0.8,
+      0.84
+    ],
+    "tolerance": 45
+  },
+  {
+    "name": "Brandelta",
+    "tier": "others",
+    "file": "others/logo brandelta.png"
+  },
+  {
+    "name": "BSLC Beirut Skin & Laser Clinic",
+    "tier": "others",
+    "file": "others/logo blce.png"
+  },
+  {
+    "name": "Capital Clinics",
+    "tier": "others",
+    "file": "others/Untitled-1 copy 2.jpg"
+  },
+  {
+    "name": "Carissa",
+    "tier": "others",
+    "file": "others/ntv logo.png",
+    "erase": [
+      [
+        0.55,
+        0.87,
+        0.45,
+        0.13
+      ]
+    ]
+  },
+  {
+    "name": "Carkit",
+    "tier": "others",
+    "file": "others/PHOTO-2025-06-27-21-46-22.jpg"
+  },
+  {
+    "name": "COR Clinic of Regenerative Medicine",
+    "tier": "others",
+    "file": "others/COR Logo Final 20-10-2017.jpg"
+  },
+  {
+    "name": "Daise Shaar",
+    "tier": "others",
+    "file": "others/PHOTO-2020-10-30-13-14-48.jpg"
+  },
+  {
+    "name": "Damour Village",
+    "tier": "others",
+    "file": "others/all master logos (dragged) 3.pdf"
+  },
+  {
+    "name": "Dental Life",
+    "tier": "others",
+    "file": "others/573b576e-1845-487c-85c1-fe8941cd77d8.JPG"
+  },
+  {
+    "name": "Dr. Ghinwa Beauty Clinic",
+    "tier": "others",
+    "file": "others/562fb3db-278c-41f1-a592-27819fb62928.JPG"
+  },
+  {
+    "name": "Dr. Hussein Abou Khalil",
+    "tier": "others",
+    "file": "others/HBK logo Final Black 2.pdf"
+  },
+  {
+    "name": "Diana Rizk",
+    "tier": "others",
+    "file": "others/IMG_2639.JPG"
+  },
+  {
+    "name": "Dream Town Real Estate Group",
+    "tier": "others",
+    "file": "others/final logo (1) (1).png"
+  },
+  {
+    "name": "Elie Abi Hanna",
+    "tier": "others",
+    "file": "others/PHOTO-2020-06-26-01-21-17.jpg"
+  },
+  {
+    "name": "Eve Wedding Events",
+    "tier": "others",
+    "file": "others/all master logos (dragged) 2.pdf"
+  },
+  {
+    "name": "Fash Kool",
+    "tier": "others",
+    "file": "others/fashkool logo.pdf"
+  },
+  {
+    "name": "FitLife",
+    "tier": "others",
+    "file": "others/IMG_4944.JPG"
+  },
+  {
+    "name": "Foody's",
+    "tier": "others",
+    "file": "others/PHOTO-2020-10-07-15-40-55 copy.png"
+  },
+  {
+    "name": "Gala",
+    "tier": "others",
+    "file": "others/Gala Logo (final) (1).psd"
+  },
+  {
+    "name": "Ghada Blanco Weddings & Events",
+    "tier": "others",
+    "file": "others/22384088_954703134669253_7153599573829967243_o.png"
+  },
+  {
+    "name": "Gold Prime",
+    "tier": "others",
+    "file": "others/gold prime.png"
+  },
+  {
+    "name": "Gustoso",
+    "tier": "others",
+    "file": "others/gustoso 1 3.pdf",
+    "keep": [
+      0,
+      0,
+      1,
+      0.88
+    ]
+  },
+  {
+    "name": "Habbet Loulou",
+    "tier": "others",
+    "file": "others/lolo logo .jpg"
+  },
+  {
+    "name": "Haifamajic Beauty Salon",
+    "tier": "others",
+    "file": "others/36694772_459757817804797_8472285567927713792_n.jpg"
+  },
+  {
+    "name": "Heaven",
+    "tier": "others",
+    "file": "others/heaven logo.png"
+  },
+  {
+    "name": "Hilal Style",
+    "tier": "others",
+    "file": "others/index copy.png"
+  },
+  {
+    "name": "HIMO",
+    "tier": "others",
+    "file": "others/Untitled-1.pdf"
+  },
+  {
+    "name": "HN Production",
+    "tier": "others",
+    "file": "others/PHOTO-2022-08-12-19-45-38 copy.png"
+  },
+  {
+    "name": "Housein Slim Photography",
+    "tier": "others",
+    "file": "others/Hussein Slim poster.png"
+  },
+  {
+    "name": "Icon",
+    "tier": "others",
+    "file": "others/icon logo copy.png"
+  },
+  {
+    "name": "IDAL",
+    "tier": "others",
+    "file": "others/idal.png"
+  },
+  {
+    "name": "Imdad",
+    "tier": "others",
+    "file": "others/imdad logo .jpg",
+    "keep": [
+      0,
+      0,
+      1,
+      0.45
+    ]
+  },
+  {
+    "name": "Janouby",
+    "tier": "others",
+    "file": "others/PHOTO-2020-06-22-13-14-27.jpg"
+  },
+  {
+    "name": "Jasmine International",
+    "tier": "others",
+    "file": "others/logo jasmine.ai"
+  },
+  {
+    "name": "JM Jewels",
+    "tier": "others",
+    "file": "others/jewels.png"
+  },
+  {
+    "name": "Jardin d'Amour",
+    "tier": "others",
+    "file": "others/91A06EAD-28BC-4E9D-A6A0-1602F49DAC75.JPG"
+  },
+  {
+    "name": "La Joyería by Lina Joudi",
+    "tier": "others",
+    "file": "others/logo la joyeri.pdf"
+  },
+  {
+    "name": "Limits",
+    "tier": "others",
+    "file": "others/Limits logo.psd"
+  },
+  {
+    "name": "Loulou Hanna",
+    "tier": "others",
+    "file": "others/loulou hanna.png"
+  },
+  {
+    "name": "Luckyland Collection",
+    "tier": "others",
+    "file": "others/PHOTO-2020-06-24-09-09-55 copy.jpg"
+  },
+  {
+    "name": "Lunar Group",
+    "tier": "others",
+    "file": "others/bold logo.JPG"
+  },
+  {
+    "name": "Maison de Zeina",
+    "tier": "others",
+    "file": "others/zeina beirut.pdf.png"
+  },
+  {
+    "name": "Maintex",
+    "tier": "others",
+    "file": "others/maintex.png"
+  },
+  {
+    "name": "Mary Photography",
+    "tier": "others",
+    "file": "others/PHOTO-2020-11-15-18-41-39.jpg"
+  },
+  {
+    "name": "Meat Way",
+    "tier": "others",
+    "file": "others/meat way logo5 (2).pdf (1) 2.pdf"
+  },
+  {
+    "name": "Mit Ceramica",
+    "tier": "others",
+    "file": "others/Mit Ceramica Logo Gold.png"
+  },
+  {
+    "name": "Moments & Memories",
+    "tier": "others",
+    "file": "others/memories.png"
+  },
+  {
+    "name": "New Decor",
+    "tier": "others",
+    "file": "others/IMG_0885 copy 2.png"
+  },
+  {
+    "name": "Next Resto Café",
+    "tier": "others",
+    "file": "others/Next Resto Cafe Logo.pdf"
+  },
+  {
+    "name": "One Beirut",
+    "tier": "others",
+    "file": "others/IMG_4894.JPG"
+  },
+  {
+    "name": "Optimum Dental Clinic",
+    "tier": "others",
+    "file": "others/logooooooooo.pdf"
+  },
+  {
+    "name": "Other Side",
+    "tier": "others",
+    "file": "others/other side.png"
+  },
+  {
+    "name": "Pain Clinics",
+    "tier": "others",
+    "file": "others/Pain clinic logo new.pdf"
+  },
+  {
+    "name": "Pain Parfait",
+    "tier": "others",
+    "file": "others/logo colored  2.pdf"
+  },
+  {
+    "name": "Pamela Skaff",
+    "tier": "others",
+    "file": "others/PHOTO-2020-11-13-18-29-39.jpg"
+  },
+  {
+    "name": "Parapluie Fine Art Photography",
+    "tier": "others",
+    "file": "others/PHOTO-2021-02-04-21-56-40.jpg"
+  },
+  {
+    "name": "Passion P-Side",
+    "tier": "others",
+    "file": "others/IMG_0441.png"
+  },
+  {
+    "name": "PharmaKo",
+    "tier": "others",
+    "file": "others/PK 4-01.pdf"
+  },
+  {
+    "name": "Phoenix International School",
+    "tier": "others",
+    "file": "others/phonix high school .png"
+  },
+  {
+    "name": "Pick & Go Market",
+    "tier": "others",
+    "file": "others/pick and go logo .jpg",
+    "keep": [
+      0,
+      0,
+      1,
+      0.88
+    ]
+  },
+  {
+    "name": "Plus Properties Cyprus",
+    "tier": "others",
+    "file": "others/PLUS PROPERTIES CYPRUS.pdf"
+  },
+  {
+    "name": "ProRituals Beauty Clinic",
+    "tier": "others",
+    "file": "others/Rituals_logo.ai"
+  },
+  {
+    "name": "Rachidi Home",
+    "tier": "others",
+    "file": "others/Logo rachidi.png"
+  },
+  {
+    "name": "Rani Masri Beauty Studio",
+    "tier": "others",
+    "file": "others/Rani Masri Logo.pdf"
+  },
+  {
+    "name": "Raw Beauty Skin Clinic & Spa",
+    "tier": "others",
+    "file": "others/IMG_7934 2.PNG"
+  },
+  {
+    "name": "RH Premium",
+    "tier": "others",
+    "file": "others/Screen Shot 2022-04-16 at 6.17.56 PM copy.png"
+  },
+  {
+    "name": "Rocket Fireworks",
+    "tier": "others",
+    "file": "others/PHOTO-2023-08-08-03-13-12.png",
+    "crop": [
+      0.15,
+      0.22,
+      0.7,
+      0.52
+    ],
+    "tolerance": 130,
+    "busy": 1
+  },
+  {
+    "name": "Sachi",
+    "tier": "others",
+    "file": "others/logo sachi  2.png"
+  },
+  {
+    "name": "Salameh Cargo",
+    "tier": "others",
+    "file": "others/Salameh Cargo Logo.pdf"
+  },
+  {
+    "name": "Salon Classic",
+    "tier": "others",
+    "file": "others/13164323_991207334297176_9013553237983530945_n.png",
+    "crop": [
+      0.03,
+      0.03,
+      0.94,
+      0.94
+    ]
+  },
+  {
+    "name": "Sense",
+    "tier": "others",
+    "file": "others/PHOTO-2019-04-03-01-39-56.jpg"
+  },
+  {
+    "name": "Seven Luxury Car Rental",
+    "tier": "others",
+    "file": "others/51.5x11.5 cms (2).png",
+    "crop": [
+      0.01,
+      0.03,
+      0.98,
+      0.94
+    ]
+  },
+  {
+    "name": "SkinTech Clinic",
+    "tier": "others",
+    "file": "others/images.png"
+  },
+  {
+    "name": "Skin IQ Beauty Lounge",
+    "tier": "others",
+    "file": "others/skin iq logo .png"
+  },
+  {
+    "name": "SkinLuxe",
+    "tier": "others",
+    "file": "others/jessy.png"
+  },
+  {
+    "name": "Spectre Middle East",
+    "tier": "others",
+    "file": "others/spectre logo.png"
+  },
+  {
+    "name": "Squaze Architecture & Design",
+    "tier": "others",
+    "file": "others/sqaze.png"
+  },
+  {
+    "name": "Stars Wedding",
+    "tier": "others",
+    "file": "others/abccc.png"
+  },
+  {
+    "name": "Studio 4memories",
+    "tier": "others",
+    "file": "others/4memories logo copy.png",
+    "mode": "silhouette"
+  },
+  {
+    "name": "Tawfeer",
+    "tier": "others",
+    "file": "others/Untitled-1 copy.jpg"
+  },
+  {
+    "name": "The Concept",
+    "tier": "others",
+    "file": "others/The-concept-logo-bw.png",
+    "mode": "silhouette",
+    "keep": [
+      0.03,
+      0,
+      0.97,
+      1
+    ]
+  },
+  {
+    "name": "The Pasta Mix",
+    "tier": "others",
+    "file": "others/IMG_20200209_081404.jpg",
+    "crop": [
+      0.08,
+      0.07,
+      0.84,
+      0.86
+    ]
+  },
+  {
+    "name": "Tivoli",
+    "tier": "others",
+    "file": "others/PHOTO-2019-12-24-22-41-50.jpg"
+  },
+  {
+    "name": "True Story Productions",
+    "tier": "others",
+    "file": "others/true story logo.jpg"
+  },
+  {
+    "name": "Visualized by Jawad",
+    "tier": "others",
+    "file": "others/logo jawaad copy.png"
+  },
+  {
+    "name": "Vivid Gentlemen's Club",
+    "tier": "others",
+    "file": "others/index copy.jpg"
+  },
+  {
+    "name": "Water Beat",
+    "tier": "others",
+    "file": "others/IMG_1734.JPG"
+  },
+  {
+    "name": "Wayla International Cuisine",
+    "tier": "others",
+    "file": "others/Screenshot 2025-12-31 at 6.14.03 PM.png"
+  },
+  {
+    "name": "Wonka Magic Tricks Shop",
+    "tier": "others",
+    "file": "others/Wonka logo copy.png"
+  },
+  {
+    "name": "Youssef Kamoun",
+    "tier": "others",
+    "file": "others/63680_10152523189204466_522380027_n.jpg"
+  },
+  {
+    "name": "Delux Rent a Car",
+    "tier": "others",
+    "file": "others/Logo Delux.pdf"
+  },
+  {
+    "name": "Bak Bak",
+    "tier": "others",
+    "file": "others/123 copy.jpg",
+    "keep": [
+      0,
+      0.2,
+      1,
+      0.32
+    ]
+  }
+]
