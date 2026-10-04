@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Instrument_Sans, DM_Mono, Cinzel } from "next/font/google";
+import { Cormorant_Garamond, Instrument_Sans, DM_Mono, Limelight } from "next/font/google";
 import SoundProvider from "@/components/sound/SoundProvider";
 import { site, baseOpenGraph } from "@/lib/site";
 import "./globals.css";
@@ -26,12 +26,12 @@ const dmMono = DM_Mono({
   weight: ["400", "500"],
 });
 
-// Film-poster capitals for the hero's closing line. It only shows after
+// Old-Hollywood marquee type for the hero's closing line. It only shows after
 // scrolling, so it isn't preloaded ahead of the first paint.
-const cinzel = Cinzel({
+const limelight = Limelight({
   variable: "--font-cinematic",
   subsets: ["latin"],
-  weight: ["700"],
+  weight: "400",
   preload: false,
 });
 
@@ -59,7 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${instrument.variable} ${dmMono.variable} ${cinzel.variable} h-full antialiased`}
+      className={`${cormorant.variable} ${instrument.variable} ${dmMono.variable} ${limelight.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-[var(--bg-dark)] text-[var(--text-primary)]">
         <noscript>

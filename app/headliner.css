@@ -461,12 +461,12 @@
   opacity: clamp(0, calc(1 - var(--p) * 3.2), 1);
   transform: translateY(calc(var(--p) * -120px));
 }
-/* The closing line, set like a film title card. */
+/* The closing line, lit up like a cinema marquee. */
 .hl-cinematic {
-  font-family: var(--font-cinematic), "Trajan Pro", Georgia, serif;
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: 0.08em;
+  font-family: var(--font-cinematic), Georgia, serif;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   text-wrap: balance;
   color: #fff;

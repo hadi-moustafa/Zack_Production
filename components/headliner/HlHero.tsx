@@ -49,7 +49,7 @@ export default function HlHero({ name, headline, tagline }: { name: string; head
           aria-hidden
           className="hl-hero-after pointer-events-none absolute inset-0 flex items-center justify-center px-6 text-center"
         >
-          <span className="hl-cinematic text-[clamp(2.1rem,10.5vw,7.5rem)]">
+          <span className="hl-cinematic text-[clamp(2.4rem,12vw,7.5rem)]">
             {tagline}
           </span>
         </p>
