@@ -93,7 +93,7 @@ export default function EdPricing({ packages, description, paymentNote }: { pack
 
         {paymentNote ? (
           <div className="mt-14 border-t border-[var(--ed-line)] pt-6">
-            <p className="ed-label">(Payment.)</p>
+            <p className="ed-label">Payment</p>
             <p className="ed-body mt-2 whitespace-pre-line">{paymentNote}</p>
           </div>
         ) : null}
@@ -102,31 +102,33 @@ export default function EdPricing({ packages, description, paymentNote }: { pack
   );
 }
 
-// Tiered packages: tall cards side by side; a snap-scrolling row on a phone.
+// Tiered packages: tall cards, stacked on a phone and side by side from a tablet up.
 function Cards({ group, isSelected }: { group: PricingGroup; isSelected: (id: string) => boolean }) {
   return (
     <div>
-      <h3 className="ed-label ed-label-ink">({group.name}.)</h3>
+      <h3 className="ed-label ed-label-ink">{group.name}</h3>
       <InView
         as="ul"
         threshold={0.1}
-        className="ed-snap -mx-[var(--ed-gutter)] mt-6 flex gap-3 overflow-x-auto px-[var(--ed-gutter)] pb-2 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-3 lg:gap-5"
+        className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-5"
       >
         {group.items.map((item, i) => {
           const chosen = isSelected(item.id);
           return (
             <li
               key={item.id}
-              className={`ed-reveal flex w-[82vw] max-w-sm shrink-0 flex-col bg-[var(--ed-bg-alt)] p-6 sm:p-8 md:w-auto md:max-w-none ${
+              className={`ed-reveal flex flex-col bg-[var(--ed-bg-alt)] p-6 sm:p-8 ${
                 item.highlighted ? "border-t-2 border-[var(--ed-accent)]" : "border-t-2 border-transparent"
               } ${chosen ? "outline outline-1 -outline-offset-1 outline-[var(--ed-ink)]" : ""}`}
               style={{ "--d": `${i * 100}ms` } as React.CSSProperties}
             >
-              <p className="ed-label flex flex-wrap justify-between gap-2">
-                <span>[{String(i + 1).padStart(2, "0")}]</span>
-                {item.badge ? <span className="ed-label-ink">— {item.badge}</span> : null}
-              </p>
-              <p className="ed-display mt-10 text-[clamp(2.5rem,5vw,3.75rem)]">{item.name}</p>
+              {/* Without a badge the line is kept side by side, so the names line up. */}
+              {item.badge ? (
+                <p className="ed-label ed-label-ink mb-4">{item.badge}</p>
+              ) : (
+                <p aria-hidden className="ed-label mb-4 hidden md:block">&nbsp;</p>
+              )}
+              <p className="ed-display text-[clamp(2.5rem,5vw,3.75rem)]">{item.name}</p>
               <p className="ed-label ed-label-ink mt-3">{priceLabel(item.price, "cards")}</p>
               <ul className="mt-8 flex-1 border-t border-[var(--ed-line)]">
                 {item.features.map((feature, k) => (
@@ -155,7 +157,7 @@ function Cards({ group, isSelected }: { group: PricingGroup; isSelected: (id: st
 function List({ group, isSelected }: { group: PricingGroup; isSelected: (id: string) => boolean }) {
   return (
     <div>
-      <h3 className="ed-label ed-label-ink">({group.name}.)</h3>
+      <h3 className="ed-label ed-label-ink">{group.name}</h3>
       <ul className="mt-4 border-t border-[var(--ed-line)]">
         {group.items.map((item) => {
           const chosen = isSelected(item.id);

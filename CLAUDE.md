@@ -32,6 +32,8 @@ These standards are mandatory for every change.
   Anton = the hero's cinematic closing line only.
 - Editorial text on the nude page is black (`#111111`), and client logos show in their own
   colours, never greyed out.
+- Editorial labels are plain ("01 — Who we are", "Payment"), with no "(Label.)" or "[01]"
+  wrapping, and a label never repeats the title or caption right next to it.
 - Social profiles are linked in the nav/footer and listed in the structured data (`sameAs`).
 
 ## Every page needs

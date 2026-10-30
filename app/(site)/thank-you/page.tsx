@@ -38,7 +38,7 @@ export default async function ThankYouPage() {
         </PageHeader>
 
         <nav aria-label="While you wait" className="ed-wrap py-[var(--ed-section-y)]">
-          <p className="ed-label">(While you wait.)</p>
+          <p className="ed-label">While you wait</p>
           <EdLinkList
             className="mt-6"
             rows={[

@@ -23,9 +23,9 @@ export default function EdCapabilities({ groups }: { groups: Group[] }) {
         <ol className="mt-12 border-t border-[var(--ed-line)] sm:mt-16">
           {rows.map((g, i) => (
             <InView as="li" key={g.category.id} threshold={0.25} className="grid gap-6 border-b border-[var(--ed-line)] py-8 sm:grid-cols-[4rem_1fr_1fr] sm:items-center sm:gap-x-3 lg:grid-cols-[4rem_5fr_5fr_2fr]">
-              <span className="ed-label ed-label-ink ed-reveal">[{String(i + 1).padStart(2, "0")}]</span>
+              <span className="ed-label ed-label-ink ed-reveal">{String(i + 1).padStart(2, "0")}</span>
               <p className="ed-display ed-reveal text-[clamp(2rem,4vw,3.5rem)]" style={{ "--d": "80ms" } as React.CSSProperties}>
-                {g.category.name}.
+                {g.category.name}
               </p>
               <p className="ed-body ed-reveal" style={{ "--d": "160ms" } as React.CSSProperties}>
                 {g.category.description}

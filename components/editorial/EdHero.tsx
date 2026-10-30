@@ -21,8 +21,8 @@ export default function EdHero({ statement }: { statement: string }) {
 
       <div className="ed-wrap flex flex-1 flex-col justify-between pb-[calc(var(--ed-gutter)+env(safe-area-inset-bottom))] pt-24 sm:pt-28">
         <p className="ed-label flex justify-between gap-4 !text-[var(--ed-night-ink)]">
-          <span>(Photography &amp; Film.)</span>
-          <span className="hidden min-[400px]:inline">[{locationLabel}]</span>
+          <span>Photography &amp; Film</span>
+          <span className="hidden min-[400px]:inline">{locationLabel}</span>
         </p>
 
         <div>

@@ -38,7 +38,7 @@ export default async function WorkPage() {
       <EdStills stills={pickHighlights(groups, "photos", 40, 8)} />
 
       <nav aria-label="Next steps" className="ed-wrap py-[var(--ed-section-y)]">
-        <p className="ed-label">(Next.)</p>
+        <p className="ed-label">Next</p>
         <EdLinkList
           className="mt-6"
           rows={[

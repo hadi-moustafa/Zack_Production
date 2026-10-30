@@ -59,7 +59,7 @@ export default function EdInquiry({
             <dl className="grid gap-6">
               {contact.phone ? (
                 <div>
-                  <dt className="ed-label">(Phone.)</dt>
+                  <dt className="ed-label">Phone</dt>
                   <dd>
                     <a href={telUrl(contact.phone)} className="inline-flex min-h-11 items-center text-[1.125rem] underline-offset-4 hover:underline">
                       {contact.phone}
@@ -69,7 +69,7 @@ export default function EdInquiry({
               ) : null}
               {contact.email ? (
                 <div>
-                  <dt className="ed-label">(Email.)</dt>
+                  <dt className="ed-label">Email</dt>
                   <dd>
                     <a href={`mailto:${contact.email}`} className="inline-flex min-h-11 items-center break-all text-[1.125rem] underline-offset-4 hover:underline">
                       {contact.email}
@@ -78,7 +78,7 @@ export default function EdInquiry({
                 </div>
               ) : null}
               <div>
-                <dt className="ed-label">(Studio.)</dt>
+                <dt className="ed-label">Studio</dt>
                 <dd className="flex min-h-11 items-center text-[1.125rem]">{locationLabel}</dd>
               </div>
             </dl>
@@ -155,10 +155,7 @@ export default function EdInquiry({
                 <button type="submit" disabled={submitting} className="ed-btn w-full sm:w-auto">
                   {submitting ? "Sending…" : "Send message →"}
                 </button>
-                <p className="ed-body text-[1rem]">
-                  {contact.whatsappDigits ? "Your message opens in WhatsApp, ready to send. " : null}
-                  {responsePromise}
-                </p>
+                {contact.whatsappDigits ? <p className="ed-body text-[1rem]">Your message opens in WhatsApp, ready to send.</p> : null}
               </div>
             </div>
           </form>

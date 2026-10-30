@@ -72,11 +72,11 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
       <nav aria-label="More work" className="ed-wrap py-[var(--ed-section-y)]">
         {groups.length > 1 ? (
           <>
-            <p className="ed-label">(Next category.)</p>
+            <p className="ed-label">Next category</p>
             <EdLinkList className="mt-6" rows={[{ href: `/work/${next.category.slug}`, title: next.category.name, meta: countLabel(next) }]} />
           </>
         ) : null}
-        <p className="ed-label mt-16">(Elsewhere.)</p>
+        <p className="ed-label mt-16">Elsewhere</p>
         <EdLinkList
           className="mt-6"
           rows={[

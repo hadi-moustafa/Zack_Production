@@ -434,18 +434,7 @@
   clip-path: inset(0 0 0 0);
 }
 
-/* ---------- Packages: a scroll-snap row on phones ---------- */
-
-.ed-snap {
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-}
-.ed-snap::-webkit-scrollbar {
-  display: none;
-}
-.ed-snap > * {
-  scroll-snap-align: start;
-}
+/* ---------- Packages ---------- */
 
 /* Accordion marker: a plus that turns into a minus. */
 .ed-acc summary {

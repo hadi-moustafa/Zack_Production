@@ -21,7 +21,7 @@ export default function EdPageHeader({
     <header className="border-b border-[var(--ed-line)] pb-14 pt-28 sm:pb-20 sm:pt-36">
       <div className="ed-wrap">
         <Breadcrumbs crumbs={crumbs} structuredData={crumbsStructuredData} />
-        <p className="ed-label mt-10 sm:mt-14">({eyebrow}.)</p>
+        <p className="ed-label mt-10 sm:mt-14">{eyebrow}</p>
         <h1 className="ed-display mt-4 max-w-[16ch] text-[clamp(3rem,9vw,8rem)] text-[var(--ed-ink)]">{title}</h1>
         {children ? <div className="max-w-2xl">{children}</div> : null}
       </div>

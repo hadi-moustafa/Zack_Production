@@ -6,6 +6,7 @@ import { Lightbox } from "@/components/Work";
 import InView from "@/components/headliner/InView";
 import EdLabel from "@/components/editorial/EdLabel";
 import { FilmTile } from "@/components/editorial/EdCategoryGallery";
+import { IconPlay } from "@/components/icons";
 import type { Item } from "@/lib/work";
 
 type Block = { kind: "single"; at: number } | { kind: "pair"; at: [number, number] };
@@ -25,7 +26,12 @@ function rhythm(count: number): Block[] {
 }
 
 const titleOf = (item: Item) => (item.caption ? `“${item.caption}”` : item.category.name);
-const n = (i: number) => String(i + 1).padStart(2, "0");
+
+/** A small caption under a film in a pair: its own title, or its category unless the film before says it already. */
+function pairCaption(films: Item[], i: number) {
+  if (films[i].caption) return titleOf(films[i]);
+  return films[i - 1]?.category.id === films[i].category.id ? null : films[i].category.name;
+}
 
 // The highlight films in an editorial rhythm, alternating a single film
 // beside its caption with a pair. Wide films run edge to edge; upright phone
@@ -50,14 +56,15 @@ export default function EdFilms({ films }: { films: Item[] }) {
             const flip = singles % 2 === 1;
             return (
               <InView key={block.at.join("-")} threshold={0.1} className={`ed-wrap grid grid-cols-2 gap-3 sm:gap-5 lg:w-2/3 ${flip ? "lg:mr-0 lg:ml-auto" : "lg:ml-0 lg:mr-auto"}`}>
-                {block.at.map((i, k) => (
-                  <figure key={films[i].id} className="ed-reveal" style={{ "--d": `${k * 120}ms` } as React.CSSProperties}>
-                    <FilmTile item={films[i]} onOpen={() => setOpen(i)} className="aspect-[4/5]" sizes="(min-width: 1024px) 30vw, 50vw" />
-                    <figcaption className="ed-label mt-3">
-                      [{n(i)}] {titleOf(films[i])}
-                    </figcaption>
-                  </figure>
-                ))}
+                {block.at.map((i, k) => {
+                  const text = pairCaption(films, i);
+                  return (
+                    <figure key={films[i].id} className="ed-reveal" style={{ "--d": `${k * 120}ms` } as React.CSSProperties}>
+                      <FilmTile item={films[i]} onOpen={() => setOpen(i)} className="aspect-[4/5]" sizes="(min-width: 1024px) 30vw, 50vw" />
+                      {text ? <figcaption className="ed-label mt-3">{text}</figcaption> : null}
+                    </figure>
+                  );
+                })}
               </InView>
             );
           }
@@ -67,9 +74,7 @@ export default function EdFilms({ films }: { films: Item[] }) {
           const wide = item.width > item.height;
           const caption = (
             <div className="ed-reveal flex flex-col items-start gap-4" style={{ "--d": "150ms" } as React.CSSProperties}>
-              <p className="ed-label">
-                [{n(block.at)}] ({item.category.name}.)
-              </p>
+              {item.caption ? <p className="ed-label">{item.category.name}</p> : null}
               <h3 className="ed-display text-[clamp(2rem,4vw,3.5rem)]">{titleOf(item)}</h3>
               {item.category.description ? <p className="ed-body">{item.category.description}</p> : null}
               <button type="button" onClick={() => setOpen(block.at)} className="ed-link">
@@ -165,8 +170,8 @@ function FilmPreview({ item, onOpen, className, sizes }: { item: Item; onOpen: (
           className={`object-cover transition-opacity duration-700 ${playing ? "opacity-0" : "opacity-100"}`}
         />
       ) : null}
-      <span aria-hidden className="absolute bottom-4 left-4 border border-white/50 bg-black/30 px-3 py-2 font-mono text-[0.75rem] uppercase tracking-[0.12em] text-white transition group-hover:bg-black/60">
-        ▶ Play with sound
+      <span aria-hidden className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center border border-white/50 bg-black/30 text-white transition group-hover:bg-black/60">
+        <IconPlay className="ml-0.5 h-4 w-4" />
       </span>
     </button>
   );

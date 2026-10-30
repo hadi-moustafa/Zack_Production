@@ -3,14 +3,14 @@ import Link from "next/link";
 
 export type EdLinkRow = { href: string; title: string; meta?: string; external?: boolean };
 
-// Next steps as a numbered index: [01]  Title ............ meta →
+// Next steps as a numbered index: 01  Title ............ meta →
 export default function EdLinkList({ rows, className = "" }: { rows: EdLinkRow[]; className?: string }) {
   return (
     <ul className={`border-t border-[var(--ed-line)] ${className}`}>
       {rows.map((r, i) => {
         const inner = (
           <>
-            <span className="ed-label">[{String(i + 1).padStart(2, "0")}]</span>
+            <span className="ed-label">{String(i + 1).padStart(2, "0")}</span>
             <span className="ed-display text-[clamp(1.75rem,4vw,3rem)] leading-tight text-[var(--ed-ink)] transition-transform duration-500 group-hover:translate-x-2">
               {r.title}
             </span>

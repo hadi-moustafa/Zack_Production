@@ -133,7 +133,7 @@ export default function EdHeader({
                     onFocus={() => setHovered(i)}
                     className="group flex min-h-16 items-baseline gap-4 py-3 sm:gap-6"
                   >
-                    <span className="ed-label w-10 shrink-0">[{String(i + 1).padStart(2, "0")}]</span>
+                    <span className="ed-label w-10 shrink-0">{String(i + 1).padStart(2, "0")}</span>
                     <span className="ed-display text-[clamp(2.5rem,9vw,5.5rem)] transition-transform duration-500 group-hover:translate-x-3">
                       {l.label}
                     </span>

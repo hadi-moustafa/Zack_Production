@@ -30,7 +30,7 @@ export default async function NotFound() {
           </PageHeader>
 
           <nav aria-label="Popular pages" className="ed-wrap py-[var(--ed-section-y)]">
-            <p className="ed-label">(Try one of these.)</p>
+            <p className="ed-label">Try one of these</p>
             <EdLinkList
               className="mt-6"
               rows={[

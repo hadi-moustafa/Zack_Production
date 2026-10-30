@@ -73,7 +73,7 @@ export default function EdWork({ groups, label = true }: { groups: Group[]; labe
     <section id="gallery" aria-label={label ? undefined : "Categories"} className={`scroll-mt-16 ${label ? "ed-section border-t border-[var(--ed-line)]" : "pb-[var(--ed-section-y)] pt-12 sm:pt-16"}`}>
       <InView className="ed-wrap" threshold={0.05}>
         {label ? (
-          <EdLabel as="h2" n={2} after={<span className="hidden sm:inline">[{groups.map((g) => g.category.name).join(" — ")}]</span>}>
+          <EdLabel as="h2" n={2}>
             Selected work
           </EdLabel>
         ) : null}

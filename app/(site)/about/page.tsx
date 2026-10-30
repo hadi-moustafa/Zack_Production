@@ -68,7 +68,7 @@ export default async function AboutPage() {
                 <span aria-hidden className="mr-2 text-[var(--ed-accent)]">
                   ★
                 </span>
-                (Award.)
+                Award
               </p>
               <p className="ed-display mt-3 text-[clamp(1.75rem,3vw,2.5rem)] text-[var(--ed-ink)]">{awardTitle}</p>
               {awardDetail ? <p className="ed-label ed-label-ink mt-2">{awardDetail}</p> : null}
@@ -85,7 +85,7 @@ export default async function AboutPage() {
       ) : null}
 
       <nav aria-label="Next steps" className="ed-wrap pb-[var(--ed-section-y)]">
-        <p className="ed-label">(Next.)</p>
+        <p className="ed-label">Next</p>
         <EdLinkList
           className="mt-6"
           rows={[

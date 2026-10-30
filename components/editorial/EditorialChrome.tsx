@@ -71,7 +71,7 @@ export default async function EditorialChrome({
       <div id="main" className="flex flex-1 flex-col">
         {children}
       </div>
-      <EdFooter logo={<BrandLogo className="h-12" />} data={data} links={links} />
+      <EdFooter logo={<BrandLogo className="h-12" />} data={data} />
       <StickyCta whatsappDigits={data.contact.whatsappDigits} />
       <Analytics />
     </div>

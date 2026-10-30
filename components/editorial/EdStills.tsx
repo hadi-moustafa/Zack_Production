@@ -112,7 +112,7 @@ export default function EdStills({ stills }: { stills: Item[] }) {
         )}
 
         <div className="mt-6 flex items-center justify-between gap-4 border-t border-[var(--ed-night-line)] pt-4">
-          <p className="ed-label min-w-0 truncate">({item.category.name}.)</p>
+          <p className="ed-label min-w-0 truncate">{item.category.name}</p>
           <div className="flex items-center gap-1">
             <button type="button" onClick={() => go(index - 1)} aria-label="Previous still" className={control}>
               ‹
