@@ -42,6 +42,11 @@ export default function HlFooter({ logo, data, links }: { logo: React.ReactNode;
                 </li>
               ))}
               <li>
+                <Link href="/clients" className={linkClass}>
+                  All clients
+                </Link>
+              </li>
+              <li>
                 <Link href="/privacy" className={linkClass}>
                   Privacy policy
                 </Link>
@@ -116,13 +121,6 @@ export default function HlFooter({ logo, data, links }: { logo: React.ReactNode;
               {site.credit.name}
             </a>
           </span>
-          <Link
-            href="/admin/dashboard"
-            rel="nofollow"
-            className="inline-flex min-h-11 min-w-11 items-center justify-center transition hover:text-[var(--accent-gold-bright)]"
-          >
-            Admin
-          </Link>
         </p>
       </div>
     </footer>

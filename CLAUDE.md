@@ -1,7 +1,9 @@
 # Zack Production — working rules
 
 Public site for zackproduction.com (canonical: https://www.zackproduction.com). Next.js App
-Router + Supabase. Single-page site plus /privacy, /thank-you and a custom 404.
+Router + Supabase. Single-page site plus /clients, /privacy, /thank-you and a custom 404. The home
+page can wear one of three designs (Classic, Headliner, Editorial), picked in Admin → Design and
+registered in `lib/design.ts`; all three share the same content.
 
 These standards are mandatory for every change.
 
@@ -22,8 +24,9 @@ These standards are mandatory for every change.
 
 ## Brand
 - The logo appears on every page through `components/BrandLogo.tsx`.
-- Dark theme only. Use the palette tokens in `app/globals.css`; small text never uses a
-  low-contrast accent.
+- Classic and Headliner are dark only. Editorial is a warm bone page with dark ("night") film,
+  stills, clients and footer sections. Use the palette tokens (`app/globals.css`,
+  `app/headliner.css`, `app/editorial.css`); small text never uses a low-contrast accent.
 - Fonts (fixed set): Cormorant Garamond = headings and italic accents, Instrument Sans =
   body, DM Mono = small uppercase labels, Anton = the hero's cinematic closing line only.
 - Social profiles are linked in the nav/footer and listed in the structured data (`sameAs`).
@@ -37,7 +40,8 @@ These standards are mandatory for every change.
 - Descriptive internal links to and from related pages.
 
 ## Site-wide
-- sitemap, robots.txt, llms.txt, custom 404, privacy policy, noindex thank-you page.
+- sitemap, robots.txt, llms.txt, custom 404, privacy policy, /clients, noindex thank-you page.
+- No public link to /admin anywhere on the site.
 - Custom icons only (no framework or hosting branding); `poweredByHeader: false`.
 - Analytics only via `NEXT_PUBLIC_GA_MEASUREMENT_ID`; the privacy policy lists every tracker
   and third-party processor.

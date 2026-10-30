@@ -6,6 +6,7 @@ import { absoluteUrl, site } from "@/lib/site";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: absoluteUrl("/"), changeFrequency: "weekly", priority: 1 },
+    { url: absoluteUrl("/clients"), changeFrequency: "monthly", priority: 0.5 },
     { url: absoluteUrl("/privacy"), lastModified: site.privacyUpdated, changeFrequency: "yearly", priority: 0.2 },
   ];
 }

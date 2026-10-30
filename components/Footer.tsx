@@ -10,6 +10,7 @@ const EXPLORE = [
   { href: "/#about", label: "About Zack" },
   { href: "/#pricing", label: "Packages & pricing" },
   { href: "/#contact", label: "Book a shoot" },
+  { href: "/clients", label: "Our clients" },
   { href: "/privacy", label: "Privacy policy" },
 ];
 
@@ -96,13 +97,6 @@ export default function Footer({ logo, data }: { logo: React.ReactNode; data: Si
               {site.credit.name}
             </a>
           </span>
-          <Link
-            href="/admin/dashboard"
-            rel="nofollow"
-            className="inline-flex min-h-11 min-w-11 items-center justify-center transition hover:text-[var(--accent-gold-bright)]"
-          >
-            Admin
-          </Link>
         </p>
       </div>
     </footer>

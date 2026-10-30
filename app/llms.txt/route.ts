@@ -1,4 +1,5 @@
 import { getSiteData } from "@/lib/siteData";
+import { CLIENT_LOGOS } from "@/lib/clientLogos";
 import { site, absoluteUrl, locationLabel, responsePromise, SECTIONS } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -17,6 +18,7 @@ export async function GET() {
     "",
     `- [Home](${absoluteUrl("/")}): Showreel, about Zack, portfolio, packages and the booking form.`,
     ...SECTIONS.map((s) => `  - [${s.label}](${absoluteUrl("/")}#${s.id}): ${s.description}.`),
+    `- [Clients](${absoluteUrl("/clients")}): The ${CLIENT_LOGOS.length} brands, broadcasters and venues ${site.name} has worked with.`,
     `- [Privacy Policy](${absoluteUrl("/privacy")}): What the contact form collects and which services process it.`,
     "",
     "## Services",
