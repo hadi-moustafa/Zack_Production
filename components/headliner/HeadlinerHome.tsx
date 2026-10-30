@@ -1,5 +1,4 @@
 import { SECTION_PHOTO_KEYS } from "@/lib/content";
-import Intro from "@/components/headliner/Intro";
 import HlHero from "@/components/headliner/HlHero";
 import Ticker from "@/components/headliner/Ticker";
 import HlAbout from "@/components/headliner/HlAbout";
@@ -28,7 +27,6 @@ export default function HeadlinerHome({ data }: { data: HomeData }) {
 
   return (
     <main className="flex-1">
-      <Intro name={name.toUpperCase()} />
       <HlHero name={name} headline={content.hero_headline} tagline={tagline} />
       <Ticker items={ticker} />
       <HlAbout

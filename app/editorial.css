@@ -2,17 +2,18 @@
    Editorial design. Everything is scoped to [data-design="editorial"] (set by
    EditorialChrome), so Classic and Headliner are untouched.
 
-   A warm, light page around dark, full-bleed film: the image leads, the text
-   whispers. Square corners, hairlines, no boxes or gradients.
+   A warm nude page around dark, full-bleed film: the image leads, the text
+   whispers. Square corners and hairlines; framed photos and films sit on a
+   soft warm shadow (.ed-media).
 
    Palette. Contrast ratios (WCAG AA needs 4.5:1 for small text):
-     on --ed-bg #f4f1ec (bone)
-       --ed-ink          #111111  16.8:1  headings, body
-       --ed-ink-soft     #5b5750   6.4:1  secondary copy, labels
-       --ed-accent-text  #7a5a2b   5.6:1  the only small text in gold
-       --ed-accent       #b08d57          star, hairlines, underlines: never text
+     on --ed-bg #ecdcce (nude; --ed-bg-alt #e4d0c0 keeps every pair ≥ 5.2:1)
+       --ed-ink          #1a1411  13.6:1  headings, body
+       --ed-ink-soft     #5a4639   6.6:1  secondary copy, labels
+       --ed-accent-text  #6e4a24   5.9:1  the only small text in gold
+       --ed-accent       #a9805a          star, hairlines, underlines: never text
      on --ed-night #0a0a0a (film sections, footer)
-       --ed-night-ink    #f4f1ec  18.1:1
+       --ed-night-ink    #ecdcce  14.8:1
        --ed-night-soft   #a9a49b   8.0:1
        --ed-night-accent #c9a46a   8.5:1
    The shared token names (--bg-dark, --text-primary, …) are remapped to the
@@ -45,23 +46,25 @@
   --ed-max: 1680px;
   --ed-section-y: clamp(96px, 14vw, 220px);
   --ed-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ed-shadow: 0 0 0; /* media shadow colour, as r g b */
 }
 
 :root:has([data-design="editorial"]),
 [data-design="editorial"] {
   color-scheme: light;
-  --ed-bg: #f4f1ec;
-  --ed-bg-alt: #eae6df;
-  --ed-ink: #111111;
-  --ed-ink-soft: #5b5750;
-  --ed-line: #d8d3ca;
-  --ed-accent: #b08d57;
-  --ed-accent-text: #7a5a2b;
+  --ed-bg: #ecdcce;
+  --ed-bg-alt: #e4d0c0;
+  --ed-ink: #1a1411;
+  --ed-ink-soft: #5a4639;
+  --ed-line: #d4bfad;
+  --ed-accent: #a9805a;
+  --ed-accent-text: #6e4a24;
   --ed-night: #0a0a0a;
-  --ed-night-ink: #f4f1ec;
+  --ed-night-ink: #ecdcce;
   --ed-night-soft: #a9a49b;
-  --ed-night-line: rgba(244, 241, 236, 0.16);
+  --ed-night-line: rgba(236, 220, 206, 0.16);
   --ed-night-accent: #c9a46a;
+  --ed-shadow: 74 46 28;
 
   --bg-dark: var(--ed-bg);
   --bg-dark-alt: var(--ed-bg-alt);
@@ -287,46 +290,31 @@
   transform: none;
 }
 
-/* ---------- Intro: a 1.4s count-in, once per visit ---------- */
+/* ---------- Media: a soft warm shadow and a touch of film ----------
+   Framed photos and films lift off the page on a layered shadow tinted to
+   the palette, with a gentle warm grade. The edge vignette is a heavy
+   effect, so desktop only. The element must be positioned. */
 
-.ed-intro {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--ed-bg);
-  color: var(--ed-ink);
-  animation: ed-intro-out 500ms var(--ed-ease) 1100ms forwards;
+.ed-media {
+  isolation: isolate;
+  box-shadow:
+    0 1px 2px rgb(var(--ed-shadow) / 0.1),
+    0 14px 28px -10px rgb(var(--ed-shadow) / 0.28),
+    0 40px 80px -30px rgb(var(--ed-shadow) / 0.4);
 }
-.ed-intro.is-done,
-.ed-intro[data-seen] {
-  display: none;
+.ed-media img,
+.ed-media video {
+  filter: contrast(1.05) saturate(0.92) sepia(0.08);
 }
-.ed-intro-count {
-  position: absolute;
-  opacity: 0;
-  animation: ed-count 300ms steps(1) forwards;
-}
-.ed-intro-count:nth-child(1) { animation-delay: 0ms; }
-.ed-intro-count:nth-child(2) { animation-delay: 300ms; }
-.ed-intro-count:nth-child(3) { animation-delay: 600ms; }
-.ed-intro-name {
-  opacity: 0;
-  animation: ed-fade-in 400ms var(--ed-ease) 900ms forwards;
-}
-@keyframes ed-count {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
-}
-@keyframes ed-fade-in {
-  to { opacity: 1; }
-}
-@keyframes ed-intro-out {
-  to {
-    clip-path: inset(0 0 100% 0);
-    visibility: hidden;
+@media (min-width: 1024px) and (pointer: fine) {
+  .ed-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.08),
+      inset 0 0 90px rgb(0 0 0 / 0.22);
   }
 }
 
@@ -518,9 +506,6 @@
     transform: none;
     clip-path: none;
     transition: none;
-  }
-  .ed-intro {
-    display: none;
   }
   .ed-header,
   .ed-menu,

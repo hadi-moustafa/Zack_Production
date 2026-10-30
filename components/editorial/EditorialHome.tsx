@@ -1,6 +1,5 @@
 import { SECTION_PHOTO_KEYS } from "@/lib/content";
 import { buildGroups, pickHighlights } from "@/lib/work";
-import EdIntro from "@/components/editorial/EdIntro";
 import EdHero from "@/components/editorial/EdHero";
 import EdAbout from "@/components/editorial/EdAbout";
 import EdWork from "@/components/editorial/EdWork";
@@ -10,11 +9,10 @@ import EdClients from "@/components/editorial/EdClients";
 import EdCapabilities from "@/components/editorial/EdCapabilities";
 import EdPricing from "@/components/editorial/EdPricing";
 import EdInquiry from "@/components/editorial/EdInquiry";
-import { site } from "@/lib/site";
 import type { HomeData } from "@/lib/homeData";
 
 // The Editorial home page, built from the same content as the other designs:
-// intro → hero → award → about → work index → films → stills → clients →
+// hero → award → about → work index → films → stills → clients →
 // capabilities → rate card → inquiry (the footer lives in EditorialChrome).
 export default function EditorialHome({ data }: { data: HomeData }) {
   const { photos, categories, pricingPackages, siteData, instagramReel } = data;
@@ -26,7 +24,6 @@ export default function EditorialHome({ data }: { data: HomeData }) {
 
   return (
     <main className="flex-1">
-      <EdIntro name={site.name} />
       <EdHero statement={content.editorial_statement} />
       <EdAbout
         bio={content.about_bio}

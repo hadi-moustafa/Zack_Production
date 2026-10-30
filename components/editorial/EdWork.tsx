@@ -104,7 +104,7 @@ export default function EdWork({ groups, label = true }: { groups: Group[]; labe
         </ul>
       </InView>
 
-      <div ref={followRef} aria-hidden data-on="0" className="ed-follow hidden bg-[var(--ed-bg-alt)] lg:block">
+      <div ref={followRef} aria-hidden data-on="0" className="ed-follow ed-media hidden bg-[var(--ed-bg-alt)] lg:block">
         {/* eslint-disable-next-line @next/next/no-img-element -- swapped by hand on hover, no layout to reserve */}
         <img ref={followImg} alt="" className="h-full w-full object-cover" />
       </div>

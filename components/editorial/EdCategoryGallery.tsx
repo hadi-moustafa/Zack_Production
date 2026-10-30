@@ -60,7 +60,7 @@ export default function EdCategoryGallery({ group }: { group: Group }) {
         <ul className="mt-10 columns-2 gap-3 sm:columns-3 sm:gap-5 lg:columns-4">
           {list.slice(0, limit).map((item, i) => (
             <li key={item.id} className="mb-3 break-inside-avoid sm:mb-5">
-              <button type="button" onClick={() => setOpen(i)} aria-label={`Enlarge: ${item.label}`} className="group block w-full overflow-hidden bg-[var(--ed-bg-alt)]">
+              <button type="button" onClick={() => setOpen(i)} aria-label={`Enlarge: ${item.label}`} className="ed-media group relative block w-full overflow-hidden bg-[var(--ed-bg-alt)]">
                 <Image
                   src={item.src}
                   alt={item.label}
@@ -100,7 +100,7 @@ export default function EdCategoryGallery({ group }: { group: Group }) {
 /** A film's preview frame with a quiet play mark; opens the player. */
 export function FilmTile({ item, onOpen, sizes, className = "aspect-[9/16]" }: { item: Item; onOpen: () => void; sizes: string; className?: string }) {
   return (
-    <button type="button" onClick={onOpen} aria-label={`Play: ${item.label}`} className={`group relative block w-full overflow-hidden bg-[var(--ed-night)] ${className}`}>
+    <button type="button" onClick={onOpen} aria-label={`Play: ${item.label}`} className={`ed-media group relative block w-full overflow-hidden bg-[var(--ed-night)] ${className}`}>
       {item.still ? (
         <Image
           src={item.still}

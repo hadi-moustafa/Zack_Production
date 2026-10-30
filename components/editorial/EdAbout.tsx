@@ -46,7 +46,7 @@ export default function EdAbout({
 
           <div className="mt-10 grid gap-12 lg:grid-cols-12 lg:gap-8">
             {photoPath ? (
-              <div className="ed-reveal relative aspect-[4/5] w-full max-w-md bg-[var(--ed-bg-alt)] lg:col-span-5 lg:max-w-none">
+              <div className="ed-media ed-reveal relative aspect-[4/5] w-full max-w-md bg-[var(--ed-bg-alt)] lg:col-span-5 lg:max-w-none">
                 <Image
                   src={photoPublicUrl(photoPath)}
                   alt={`${site.founder}, photographer and filmmaker at ${site.name}`}

@@ -128,29 +128,4 @@ export const sfx = {
     tone(ac, "triangle", a, a, t, 0.09, envelope(ac, t, 0.18, 0.004, 0.1));
     tone(ac, "triangle", b, b, t + 0.08, 0.16, envelope(ac, t + 0.08, 0.18, 0.004, 0.2));
   },
-
-  /** Film-leader countdown beep. */
-  beep() {
-    const ac = audio();
-    if (!ac) return;
-    const t = ac.currentTime;
-    tone(ac, "sine", 1000, 1000, t, 0.12, envelope(ac, t, 0.16, 0.004, 0.13));
-  },
-
-  /** The big cinematic "braam": detuned saws through an opening filter. */
-  braam() {
-    const ac = audio();
-    if (!ac) return;
-    const t = ac.currentTime;
-    const out = envelope(ac, t, 0.32, 0.06, 2.4);
-    const lp = ac.createBiquadFilter();
-    lp.type = "lowpass";
-    lp.Q.value = 6;
-    lp.frequency.setValueAtTime(140, t);
-    lp.frequency.exponentialRampToValueAtTime(1600, t + 0.35);
-    lp.frequency.exponentialRampToValueAtTime(220, t + 2.2);
-    lp.connect(out);
-    for (const f of [55, 55.6, 82.4, 110.3]) tone(ac, "sawtooth", f, f * 0.985, t, 2.3, lp);
-    tone(ac, "sine", 41, 36, t, 2.2, envelope(ac, t, 0.5, 0.03, 2.2));
-  },
 };

@@ -24,7 +24,7 @@ These standards are mandatory for every change.
 
 ## Brand
 - The logo appears on every page through `components/BrandLogo.tsx`.
-- Classic and Headliner are dark only. Editorial is a warm bone page with dark ("night") film,
+- Classic and Headliner are dark only. Editorial is a warm nude page with dark ("night") film,
   stills, clients and footer sections. Use the palette tokens (`app/globals.css`,
   `app/headliner.css`, `app/editorial.css`); small text never uses a low-contrast accent.
 - Fonts (fixed set): Cormorant Garamond = headings and italic accents, Instrument Sans =
@@ -51,6 +51,8 @@ These standards are mandatory for every change.
 - A sticky mobile CTA and the response-time promise ("within 24 hours"). The hero's only
   button is "View my work": the owner asked (2026-10-02) for no "Book a shoot" button in the
   hero or the nav, so don't add one back there.
+- No opening intro or countdown in any design: the owner asked (2026-10-30) for the site to
+  open straight onto the hero.
 
 ## Content integrity
 - No placeholders, ever. Reviews, testimonials and photos must be real, and their components

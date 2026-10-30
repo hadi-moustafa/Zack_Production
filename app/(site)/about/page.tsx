@@ -45,7 +45,7 @@ export default async function AboutPage() {
 
       <section aria-label="Biography" className="ed-wrap grid gap-12 py-14 sm:py-20 lg:grid-cols-12 lg:gap-8">
         {photo ? (
-          <div className="relative aspect-[4/5] w-full max-w-md bg-[var(--ed-bg-alt)] lg:col-span-5 lg:max-w-none">
+          <div className="ed-media relative aspect-[4/5] w-full max-w-md bg-[var(--ed-bg-alt)] lg:col-span-5 lg:max-w-none">
             <Image
               src={photoPublicUrl(photo)}
               alt={`${name}, photographer and filmmaker at ${site.name}`}

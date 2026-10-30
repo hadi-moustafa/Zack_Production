@@ -29,12 +29,12 @@ const SWATCH: Record<DesignId, React.ReactNode> = {
     </div>
   ),
   editorial: (
-    <div className="flex h-full flex-col bg-[#f4f1ec]">
+    <div className="flex h-full flex-col bg-[#ecdcce]">
       <div className="relative flex flex-1 flex-col justify-end bg-[#0a0a0a] p-4">
-        <p className="font-mono text-[0.55rem] uppercase tracking-[0.12em] text-[#f4f1ec]">(Photography &amp; Film.)</p>
-        <p className="mt-1 font-serif text-3xl leading-none text-[#f4f1ec]">Real moments, beautifully told.</p>
+        <p className="font-mono text-[0.55rem] uppercase tracking-[0.12em] text-[#ecdcce]">(Photography &amp; Film.)</p>
+        <p className="mt-1 font-serif text-3xl leading-none text-[#ecdcce]">Real moments, beautifully told.</p>
       </div>
-      <p className="px-4 py-2 font-mono text-[0.55rem] uppercase tracking-[0.12em] text-[#111]">[01] (Who we are.)</p>
+      <p className="px-4 py-2 font-mono text-[0.55rem] uppercase tracking-[0.12em] text-[#1a1411]">[01] (Who we are.)</p>
     </div>
   ),
 };

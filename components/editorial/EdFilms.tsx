@@ -140,7 +140,7 @@ function FilmPreview({ item, onOpen, className, sizes }: { item: Item; onOpen: (
   }, [src, item.src]);
 
   return (
-    <button type="button" onClick={onOpen} aria-label={`Play: ${item.label}`} className={`group relative block overflow-hidden bg-[var(--ed-night)] ${className}`}>
+    <button type="button" onClick={onOpen} aria-label={`Play: ${item.label}`} className={`ed-media group relative block overflow-hidden bg-[var(--ed-night)] ${className}`}>
       <video
         ref={ref}
         aria-hidden
