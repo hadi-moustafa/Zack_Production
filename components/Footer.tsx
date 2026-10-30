@@ -6,8 +6,8 @@ import { telUrl, whatsappUrl } from "@/lib/contact";
 import type { SiteData } from "@/lib/siteData";
 
 const EXPLORE = [
-  { href: "/#gallery", label: "Wedding, graduation & promo work" },
-  { href: "/#about", label: "About Zack" },
+  { href: "/work", label: "Wedding, graduation & promo work" },
+  { href: "/about", label: "About Zack" },
   { href: "/#pricing", label: "Packages & pricing" },
   { href: "/#contact", label: "Book a shoot" },
   { href: "/clients", label: "Our clients" },

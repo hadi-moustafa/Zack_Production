@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
-import { IconArrowRight } from "@/components/icons";
+import EdLinkList from "@/components/editorial/EdLinkList";
 import { getClients } from "@/lib/clients";
 import { CLIENT_LOGOS, logoHeight } from "@/lib/clientLogos";
-import { site, baseOpenGraph } from "@/lib/site";
+import { site, baseOpenGraph, responsePromise } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -71,32 +70,16 @@ export default async function ClientsPage() {
         ) : null}
       </section>
 
-      <nav aria-label="Next steps" className="mx-auto max-w-3xl px-5 py-14 sm:px-10 sm:py-20">
-        <h2 className="font-serif-display text-3xl font-semibold text-[var(--text-primary)]">Your project next?</h2>
-        <ul className="mt-6 grid gap-4 sm:grid-cols-2">
-          <li>
-            <Link
-              href="/#gallery"
-              className="group flex h-full min-h-28 flex-col justify-between border border-[var(--border-subtle)] p-6 transition hover:border-[var(--accent-gold)]"
-            >
-              <span className="text-lg font-semibold text-[var(--text-primary)]">See the films and photos we made</span>
-              <span className="mt-3 inline-flex items-center gap-2 text-[var(--accent-gold-bright)]">
-                Browse the work <IconArrowRight aria-hidden className="h-4 w-4 transition group-hover:translate-x-1" />
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/#contact"
-              className="group flex h-full min-h-28 flex-col justify-between border border-[var(--border-subtle)] p-6 transition hover:border-[var(--accent-gold)]"
-            >
-              <span className="text-lg font-semibold text-[var(--text-primary)]">Tell us about your date or launch</span>
-              <span className="mt-3 inline-flex items-center gap-2 text-[var(--accent-gold-bright)]">
-                Get in touch <IconArrowRight aria-hidden className="h-4 w-4 transition group-hover:translate-x-1" />
-              </span>
-            </Link>
-          </li>
-        </ul>
+      <nav aria-label="Next steps" className="ed-wrap py-[var(--ed-section-y)]">
+        <h2 className="ed-label">(Your project next?)</h2>
+        <EdLinkList
+          className="mt-6"
+          rows={[
+            { href: "/work", title: "See the films and photos we made", meta: "Selected work" },
+            { href: "/about", title: `Meet ${site.founder}`, meta: "Behind the lens" },
+            { href: "/#contact", title: "Tell us about your date or launch", meta: responsePromise },
+          ]}
+        />
       </nav>
     </main>
   );

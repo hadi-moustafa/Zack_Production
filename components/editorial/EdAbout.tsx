@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import InView from "@/components/headliner/InView";
 import EdLabel from "@/components/editorial/EdLabel";
 import { photoPublicUrl } from "@/lib/media";
@@ -7,7 +8,7 @@ import { site } from "@/lib/site";
 const d = (ms: number) => ({ "--d": `${ms}ms` }) as React.CSSProperties;
 
 // The award as one quiet line, then the portrait beside the name, roles and
-// bio. The bio's opening paragraph shows; the rest opens on request.
+// the bio's opening paragraph; the whole story is on /about.
 export default function EdAbout({
   bio,
   photoPath,
@@ -23,7 +24,7 @@ export default function EdAbout({
   award: string;
   tagline: string;
 }) {
-  const [first, ...rest] = bio.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+  const [first] = bio.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
   const roleList = roles.split(/[·•|]/).map((r) => r.trim()).filter(Boolean);
 
   return (
@@ -70,18 +71,9 @@ export default function EdAbout({
                   {first}
                 </p>
               ) : null}
-              {rest.length ? (
-                <details className="ed-acc ed-reveal mt-6" style={d(400)}>
-                  <summary className="ed-link w-fit">
-                    More about {name.split(/\s+/)[0]} <span aria-hidden className="ed-plus" />
-                  </summary>
-                  {rest.map((p, i) => (
-                    <p key={i} className="ed-body mt-4">
-                      {p}
-                    </p>
-                  ))}
-                </details>
-              ) : null}
+              <Link href="/about" className="ed-link ed-reveal mt-6 w-fit" style={d(400)}>
+                More about {name.split(/\s+/)[0]} →
+              </Link>
             </div>
           </div>
         </InView>

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Lightbox } from "@/components/Work";
 import InView from "@/components/headliner/InView";
 import EdLabel from "@/components/editorial/EdLabel";
-import { FilmTile } from "@/components/editorial/EdWork";
+import { FilmTile } from "@/components/editorial/EdCategoryGallery";
 import type { Item } from "@/lib/work";
 
 type Block = { kind: "single"; at: number } | { kind: "pair"; at: [number, number] };

@@ -13,7 +13,13 @@ declare global {
 // Reopens the exact WhatsApp message from the form (if the popup was blocked
 // or closed), falling back to a plain chat link. Also records the lead in
 // analytics, when analytics is enabled.
-export default function ThankYouActions({ fallbackUrl }: { fallbackUrl: string | null }) {
+export default function ThankYouActions({
+  fallbackUrl,
+  className = "inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-6 font-semibold text-[#0a0a0a] transition hover:brightness-110",
+}: {
+  fallbackUrl: string | null;
+  className?: string;
+}) {
   const [url, setUrl] = useState(fallbackUrl);
 
   useEffect(() => {
@@ -35,7 +41,7 @@ export default function ThankYouActions({ fallbackUrl }: { fallbackUrl: string |
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-6 font-semibold text-[#0a0a0a] transition hover:brightness-110"
+      className={className}
     >
       <IconWhatsapp aria-hidden className="h-5 w-5" /> WhatsApp didn&apos;t open? Send it here
     </a>

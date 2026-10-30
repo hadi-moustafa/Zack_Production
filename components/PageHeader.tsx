@@ -1,10 +1,13 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { Flourish } from "@/components/Ornaments";
+import EdPageHeader from "@/components/editorial/EdPageHeader";
+import { getSiteData } from "@/lib/siteData";
+import { designFrom } from "@/lib/design";
 import type { Crumb } from "@/lib/structuredData";
 
 // Title block for inner pages: clears the fixed nav, shows breadcrumbs and
-// the page's single <h1>.
-export default function PageHeader({
+// the page's single <h1>. Wears the Editorial header when that design is live.
+export default async function PageHeader({
   crumbs,
   crumbsStructuredData = true,
   eyebrow,
@@ -18,6 +21,15 @@ export default function PageHeader({
   title: string;
   children?: React.ReactNode;
 }) {
+  const { content } = await getSiteData();
+  if (designFrom(content) === "editorial") {
+    return (
+      <EdPageHeader crumbs={crumbs} crumbsStructuredData={crumbsStructuredData} eyebrow={eyebrow} title={title}>
+        {children}
+      </EdPageHeader>
+    );
+  }
+
   return (
     <header className="relative overflow-hidden border-b border-[var(--border-subtle)] bg-[var(--bg-dark-alt)] pb-12 pt-32 sm:pb-16 sm:pt-40">
       <div className="mx-auto max-w-3xl px-5 sm:px-10">

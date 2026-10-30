@@ -2,15 +2,51 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteChrome from "@/components/SiteChrome";
 import PageHeader from "@/components/PageHeader";
+import EdLinkList from "@/components/editorial/EdLinkList";
 import { IconArrowRight } from "@/components/icons";
-import { SECTIONS } from "@/lib/site";
+import { getSiteData } from "@/lib/siteData";
+import { designFrom } from "@/lib/design";
+import { SECTIONS, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Page Not Found",
   description: "This page doesn't exist. Head back to Zack Production's photography and film work.",
 };
 
-export default function NotFound() {
+export default async function NotFound() {
+  const { content } = await getSiteData();
+
+  if (designFrom(content) === "editorial") {
+    return (
+      <SiteChrome>
+        <main className="flex-1">
+          <PageHeader crumbs={[{ name: "Page not found", path: "/404" }]} crumbsStructuredData={false} eyebrow="Error 404" title="Out of frame.">
+            <p className="ed-lead mt-6">
+              The page you&apos;re looking for has moved or never existed. Everything else is right where we left it.
+            </p>
+            <Link href="/" className="ed-btn mt-8">
+              Back to the home page →
+            </Link>
+          </PageHeader>
+
+          <nav aria-label="Popular pages" className="ed-wrap py-[var(--ed-section-y)]">
+            <p className="ed-label">(Try one of these.)</p>
+            <EdLinkList
+              className="mt-6"
+              rows={[
+                { href: "/work", title: "Selected work", meta: "Films & photos" },
+                { href: "/about", title: `About ${site.founder}`, meta: "Behind the lens" },
+                { href: "/clients", title: "Our clients", meta: "Who trusted us" },
+                { href: "/#pricing", title: "Packages & pricing", meta: "The rate card" },
+                { href: "/#contact", title: "Get in touch", meta: "Book a shoot" },
+              ]}
+            />
+          </nav>
+        </main>
+      </SiteChrome>
+    );
+  }
+
   return (
     <SiteChrome>
       <main className="flex-1">

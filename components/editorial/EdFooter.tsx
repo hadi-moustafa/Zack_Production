@@ -59,11 +59,17 @@ export default function EdFooter({ logo, data, links }: { logo: React.ReactNode;
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link href="/clients" className={linkClass}>
-                  All clients
-                </Link>
-              </li>
+              {[
+                { href: "/work", label: "All work" },
+                { href: "/about", label: "About Zack" },
+                { href: "/clients", label: "All clients" },
+              ].map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className={linkClass}>
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
 

@@ -18,6 +18,8 @@ export type Item = {
   featured: boolean;
   category: Category;
   label: string;
+  /** When it was uploaded (ISO), e.g. a film's uploadDate in structured data. */
+  createdAt: string;
 };
 
 export type Group = {
@@ -41,6 +43,7 @@ function toItem(p: Photo, category: Category): Item {
     featured: p.featured,
     category,
     label: workAlt(category.name, isVideo ? "video" : "photo", p.caption),
+    createdAt: p.created_at,
   };
 }
 

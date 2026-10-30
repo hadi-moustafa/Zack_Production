@@ -17,7 +17,35 @@
        --ed-night-accent #c9a46a   8.5:1
    The shared token names (--bg-dark, --text-primary, …) are remapped to the
    light palette so the shared pages (privacy, thank-you, 404) follow along.
+
+   Outside the Editorial design (the inner pages /work, /about and /clients
+   use these components whichever design is live), every --ed-* colour falls
+   back to that design's own palette, so they read as part of it.
    ========================================================================== */
+
+:root {
+  --ed-bg: var(--bg-dark);
+  --ed-bg-alt: var(--bg-dark-alt);
+  --ed-ink: var(--text-primary);
+  --ed-ink-soft: var(--text-secondary);
+  --ed-line: var(--border-subtle);
+  --ed-accent: var(--accent-gold);
+  --ed-accent-text: var(--accent-gold-bright);
+  --ed-night: var(--bg-dark);
+  --ed-night-ink: var(--text-primary);
+  --ed-night-soft: var(--text-secondary);
+  --ed-night-line: var(--border-subtle);
+  --ed-night-accent: var(--accent-gold-bright);
+
+  --ed-fs-label: 0.75rem;
+  --ed-fs-lead: clamp(1.125rem, 1.6vw, 1.375rem);
+  --ed-fs-h2: clamp(2rem, 5vw, 4.5rem);
+  --ed-fs-h1: clamp(3rem, 11vw, 11rem);
+  --ed-gutter: clamp(16px, 3vw, 40px);
+  --ed-max: 1680px;
+  --ed-section-y: clamp(96px, 14vw, 220px);
+  --ed-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
 
 :root:has([data-design="editorial"]),
 [data-design="editorial"] {
@@ -34,15 +62,6 @@
   --ed-night-soft: #a9a49b;
   --ed-night-line: rgba(244, 241, 236, 0.16);
   --ed-night-accent: #c9a46a;
-
-  --ed-fs-label: 0.75rem;
-  --ed-fs-lead: clamp(1.125rem, 1.6vw, 1.375rem);
-  --ed-fs-h2: clamp(2rem, 5vw, 4.5rem);
-  --ed-fs-h1: clamp(3rem, 11vw, 11rem);
-  --ed-gutter: clamp(16px, 3vw, 40px);
-  --ed-max: 1680px;
-  --ed-section-y: clamp(96px, 14vw, 220px);
-  --ed-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 
   --bg-dark: var(--ed-bg);
   --bg-dark-alt: var(--ed-bg-alt);

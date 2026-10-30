@@ -3,9 +3,11 @@ import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import ThankYouActions from "@/components/ThankYouActions";
 import { IconArrowRight } from "@/components/icons";
+import EdLinkList from "@/components/editorial/EdLinkList";
 import { getSiteData } from "@/lib/siteData";
+import { designFrom } from "@/lib/design";
 import { whatsappUrl } from "@/lib/contact";
-import { responsePromise, baseOpenGraph } from "@/lib/site";
+import { site, responsePromise, baseOpenGraph } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -18,8 +20,39 @@ export const metadata: Metadata = {
 };
 
 export default async function ThankYouPage() {
-  const { contact, socialLinks } = await getSiteData();
+  const { contact, socialLinks, content } = await getSiteData();
   const instagram = socialLinks.find((l) => l.platform === "instagram");
+  const fallbackUrl = contact.whatsappDigits ? whatsappUrl(contact.whatsappDigits) : null;
+
+  if (designFrom(content) === "editorial") {
+    return (
+      <main className="flex-1">
+        <PageHeader crumbs={[{ name: "Thank You", path: "/thank-you" }]} eyebrow="Message sent" title="Thank you.">
+          <p className="ed-lead mt-6">
+            Your message is on its way to {site.name}. {responsePromise} If WhatsApp opened, just tap send there so it reaches us
+            straight away.
+          </p>
+          <div className="mt-8">
+            <ThankYouActions fallbackUrl={fallbackUrl} className="ed-btn" />
+          </div>
+        </PageHeader>
+
+        <nav aria-label="While you wait" className="ed-wrap py-[var(--ed-section-y)]">
+          <p className="ed-label">(While you wait.)</p>
+          <EdLinkList
+            className="mt-6"
+            rows={[
+              { href: "/work", title: "Browse the work", meta: "Films & photos by category" },
+              { href: "/about", title: `Meet ${site.founder}`, meta: "Behind the lens" },
+              instagram
+                ? { href: instagram.url, title: "Latest reels on Instagram", meta: "Follow along", external: true }
+                : { href: "/#pricing", title: "Compare packages", meta: "The rate card" },
+            ]}
+          />
+        </nav>
+      </main>
+    );
+  }
 
   return (
     <main className="flex-1">
@@ -29,7 +62,7 @@ export default async function ThankYouPage() {
           so it reaches us straight away.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          <ThankYouActions fallbackUrl={contact.whatsappDigits ? whatsappUrl(contact.whatsappDigits) : null} />
+          <ThankYouActions fallbackUrl={fallbackUrl} />
         </div>
       </PageHeader>
 
@@ -38,7 +71,7 @@ export default async function ThankYouPage() {
         <ul className="mt-6 grid gap-4 sm:grid-cols-2">
           <li>
             <Link
-              href="/#gallery"
+              href="/work"
               className="group flex h-full min-h-28 flex-col justify-between rounded-xl border border-[var(--border-subtle)] p-6 transition hover:border-[var(--accent-gold)]"
             >
               <span className="text-lg font-semibold text-[var(--text-primary)]">Browse wedding & event films</span>
