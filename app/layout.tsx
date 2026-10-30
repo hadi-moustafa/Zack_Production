@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Instrument_Sans, DM_Mono, Anton } from "next/font/google";
+import { Cormorant_Garamond, Instrument_Serif, Instrument_Sans, DM_Mono, Anton } from "next/font/google";
 import SoundProvider from "@/components/sound/SoundProvider";
 import { site, baseOpenGraph } from "@/lib/site";
 import "./globals.css";
@@ -10,6 +10,17 @@ const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
+});
+
+// The Editorial design's headings and italic accents (it swaps --font-display
+// for this, app/editorial.css). Only that design uses it, so it isn't
+// preloaded on every page.
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-editorial",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  preload: false,
 });
 
 // Body copy (and, condensed via its width axis, the Headliner design's display type)
@@ -59,7 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${instrument.variable} ${dmMono.variable} ${anton.variable} h-full antialiased`}
+      className={`${cormorant.variable} ${instrumentSerif.variable} ${instrument.variable} ${dmMono.variable} ${anton.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-[var(--bg-dark)] text-[var(--text-primary)]">
         <noscript>

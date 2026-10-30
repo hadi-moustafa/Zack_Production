@@ -27,8 +27,11 @@ These standards are mandatory for every change.
 - Classic and Headliner are dark only. Editorial is a warm nude page with dark ("night") film,
   stills, clients and footer sections. Use the palette tokens (`app/globals.css`,
   `app/headliner.css`, `app/editorial.css`); small text never uses a low-contrast accent.
-- Fonts (fixed set): Cormorant Garamond = headings and italic accents, Instrument Sans =
-  body, DM Mono = small uppercase labels, Anton = the hero's cinematic closing line only.
+- Fonts (fixed set): Cormorant Garamond = headings and italic accents (Instrument Serif
+  instead in the Editorial design), Instrument Sans = body, DM Mono = small uppercase labels,
+  Anton = the hero's cinematic closing line only.
+- Editorial text on the nude page is black (`#111111`), and client logos show in their own
+  colours, never greyed out.
 - Social profiles are linked in the nav/footer and listed in the structured data (`sameAs`).
 
 ## Every page needs

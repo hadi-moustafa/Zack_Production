@@ -4,7 +4,7 @@ import InView from "@/components/headliner/InView";
 import EdLabel from "@/components/editorial/EdLabel";
 import { CLIENT_LOGOS, FEATURED_CLIENT_LOGOS, logoHeight } from "@/lib/clientLogos";
 
-// A curated dozen, quiet in grey until pointed at; the full list lives on
+// A curated dozen in their own colours; the full list lives on
 // /clients. The logos are drawn for dark backgrounds, so this sits on night.
 export default function EdClients() {
   if (FEATURED_CLIENT_LOGOS.length === 0) return null;

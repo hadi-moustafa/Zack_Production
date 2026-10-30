@@ -7,10 +7,10 @@
    soft warm shadow (.ed-media).
 
    Palette. Contrast ratios (WCAG AA needs 4.5:1 for small text):
-     on --ed-bg #ecdcce (nude; --ed-bg-alt #e4d0c0 keeps every pair ≥ 5.2:1)
-       --ed-ink          #1a1411  13.6:1  headings, body
-       --ed-ink-soft     #5a4639   6.6:1  secondary copy, labels
-       --ed-accent-text  #6e4a24   5.9:1  the only small text in gold
+     on --ed-bg #ecdcce (nude; on --ed-bg-alt #e4d0c0 still ≥ 13:1)
+       --ed-ink          #111111  14.6:1  all text is black: headings, body,
+       --ed-ink-soft     #111111          secondary copy, labels
+       --ed-accent-text  #111111
        --ed-accent       #a9805a          star, hairlines, underlines: never text
      on --ed-night #0a0a0a (film sections, footer)
        --ed-night-ink    #ecdcce  14.8:1
@@ -54,17 +54,20 @@
   color-scheme: light;
   --ed-bg: #ecdcce;
   --ed-bg-alt: #e4d0c0;
-  --ed-ink: #1a1411;
-  --ed-ink-soft: #5a4639;
+  --ed-ink: #111111;
+  --ed-ink-soft: #111111;
   --ed-line: #d4bfad;
   --ed-accent: #a9805a;
-  --ed-accent-text: #6e4a24;
+  --ed-accent-text: #111111;
   --ed-night: #0a0a0a;
   --ed-night-ink: #ecdcce;
   --ed-night-soft: #a9a49b;
   --ed-night-line: rgba(236, 220, 206, 0.16);
   --ed-night-accent: #c9a46a;
   --ed-shadow: 74 46 28;
+
+  /* Headings in Instrument Serif instead of Cormorant. */
+  --font-display: var(--font-editorial);
 
   --bg-dark: var(--ed-bg);
   --bg-dark-alt: var(--ed-bg-alt);
@@ -120,6 +123,11 @@
   }
 }
 
+/* Instrument Serif has one weight: never fake a bold on the shared pages. */
+[data-design="editorial"] .font-serif-display {
+  font-weight: 400;
+}
+
 /* Shared form fields and buttons (contact form, shared pages, sticky bar). */
 [data-design="editorial"] .field-label {
   color: var(--ed-ink-soft);
@@ -161,12 +169,12 @@
 
 /* ---------- Type ---------- */
 
-/* The one big voice: Cormorant, light and sentence case. */
+/* The one big voice: Instrument Serif, sentence case. */
 .ed-display {
   font-family: var(--font-display), Georgia, serif;
   font-weight: 400;
   line-height: 0.95;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
@@ -476,17 +484,6 @@
   width: auto;
   max-width: 100%;
   object-fit: contain;
-  filter: grayscale(1) brightness(1.15) contrast(0.9);
-  opacity: 0.8;
-  transition:
-    filter 400ms var(--ed-ease),
-    opacity 400ms var(--ed-ease);
-}
-@media (hover: hover) {
-  .ed-logo-cell:hover .ed-logo {
-    filter: none;
-    opacity: 1;
-  }
 }
 
 /* ---------- Stills viewer ---------- */
