@@ -7,7 +7,7 @@
 export type ContentField = {
   key: string;
   label: string;
-  group: "Brand" | "Hero" | "About" | "Pricing" | "Contact & Footer" | "Headliner design";
+  group: "Brand" | "Hero" | "About" | "Pricing" | "Contact & Footer" | "Headliner design" | "Editorial design";
   multiline?: boolean;
   placeholder?: string;
   fallback?: string;
@@ -48,6 +48,11 @@ export const CONTENT_FIELDS: ContentField[] = [
     multiline: true,
     placeholder: "Best DoP — Afdal Awards 2025 & 2026 · MTV Lebanon · 35+ countries",
   },
+
+  // Only the Editorial design shows these.
+  { key: "editorial_statement", label: "Hero statement (the big line over the film)", group: "Editorial design", placeholder: "Real moments, beautifully told.", fallback: "Real moments, beautifully told." },
+  { key: "editorial_inquiry", label: "Contact headline", group: "Editorial design", placeholder: "Let's make something worth watching.", fallback: "Let's make something worth watching." },
+  { key: "editorial_footer_line", label: "Footer sign-off line", group: "Editorial design", placeholder: "Made to look effortless. It wasn't.", fallback: "Made to look effortless. It wasn't." },
 ];
 
 // Which uploaded photo (by storage_path) backs each section's background image.

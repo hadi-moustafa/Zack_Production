@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
   // doesn't need the full node_modules folder.
   output: "standalone",
   images: {
+    // Nothing is ever drawn wider than 2048px, so never generate the 2560/3840 variants.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     remotePatterns: [
       ...(supabaseHostname
         ? [

@@ -1,0 +1,515 @@
+/* ==========================================================================
+   Editorial design. Everything is scoped to [data-design="editorial"] (set by
+   EditorialChrome), so Classic and Headliner are untouched.
+
+   A warm, light page around dark, full-bleed film: the image leads, the text
+   whispers. Square corners, hairlines, no boxes or gradients.
+
+   Palette. Contrast ratios (WCAG AA needs 4.5:1 for small text):
+     on --ed-bg #f4f1ec (bone)
+       --ed-ink          #111111  16.8:1  headings, body
+       --ed-ink-soft     #5b5750   6.4:1  secondary copy, labels
+       --ed-accent-text  #7a5a2b   5.6:1  the only small text in gold
+       --ed-accent       #b08d57          star, hairlines, underlines: never text
+     on --ed-night #0a0a0a (film sections, footer)
+       --ed-night-ink    #f4f1ec  18.1:1
+       --ed-night-soft   #a9a49b   8.0:1
+       --ed-night-accent #c9a46a   8.5:1
+   The shared token names (--bg-dark, --text-primary, …) are remapped to the
+   light palette so the shared pages (privacy, thank-you, 404) follow along.
+   ========================================================================== */
+
+:root:has([data-design="editorial"]),
+[data-design="editorial"] {
+  color-scheme: light;
+  --ed-bg: #f4f1ec;
+  --ed-bg-alt: #eae6df;
+  --ed-ink: #111111;
+  --ed-ink-soft: #5b5750;
+  --ed-line: #d8d3ca;
+  --ed-accent: #b08d57;
+  --ed-accent-text: #7a5a2b;
+  --ed-night: #0a0a0a;
+  --ed-night-ink: #f4f1ec;
+  --ed-night-soft: #a9a49b;
+  --ed-night-line: rgba(244, 241, 236, 0.16);
+  --ed-night-accent: #c9a46a;
+
+  --ed-fs-label: 0.75rem;
+  --ed-fs-lead: clamp(1.125rem, 1.6vw, 1.375rem);
+  --ed-fs-h2: clamp(2rem, 5vw, 4.5rem);
+  --ed-fs-h1: clamp(3rem, 11vw, 11rem);
+  --ed-gutter: clamp(16px, 3vw, 40px);
+  --ed-max: 1680px;
+  --ed-section-y: clamp(96px, 14vw, 220px);
+  --ed-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --bg-dark: var(--ed-bg);
+  --bg-dark-alt: var(--ed-bg-alt);
+  --text-primary: var(--ed-ink);
+  --text-secondary: var(--ed-ink-soft);
+  --accent-gold: var(--ed-accent);
+  --accent-gold-bright: var(--ed-accent-text);
+  --border-subtle: var(--ed-line);
+}
+
+/* Inside media: the same names, flipped to night. */
+[data-design="editorial"] .ed-night {
+  --bg-dark: var(--ed-night);
+  --bg-dark-alt: #141414;
+  --text-primary: var(--ed-night-ink);
+  --text-secondary: var(--ed-night-soft);
+  --accent-gold: var(--ed-night-accent);
+  --accent-gold-bright: var(--ed-night-accent);
+  --border-subtle: var(--ed-night-line);
+  --ed-ink: var(--ed-night-ink);
+  --ed-ink-soft: var(--ed-night-soft);
+  --ed-line: var(--ed-night-line);
+  --ed-accent: var(--ed-night-accent);
+  --ed-accent-text: var(--ed-night-accent);
+  background: var(--ed-night);
+  color: var(--ed-night-ink);
+}
+
+[data-design="editorial"] {
+  background: var(--ed-bg);
+  color: var(--ed-ink);
+}
+
+:root:has([data-design="editorial"]) body {
+  background: var(--ed-bg);
+}
+
+[data-design="editorial"] ::selection {
+  background: var(--ed-ink);
+  color: var(--ed-bg);
+}
+
+[data-design="editorial"] :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* No film grain or vignette on a light page. */
+@media (min-width: 1024px) and (pointer: fine) {
+  :root:has([data-design="editorial"]) body::before,
+  :root:has([data-design="editorial"]) body::after {
+    display: none;
+  }
+}
+
+/* Shared form fields and buttons (contact form, shared pages, sticky bar). */
+[data-design="editorial"] .field-label {
+  color: var(--ed-ink-soft);
+}
+[data-design="editorial"] .field-input {
+  border-bottom-color: var(--ed-line);
+  color: var(--ed-ink);
+}
+[data-design="editorial"] .field-input:focus {
+  border-bottom-color: var(--ed-ink);
+  box-shadow: 0 1px 0 0 var(--ed-ink);
+}
+[data-design="editorial"] .btn-gold {
+  background: var(--ed-ink);
+  color: var(--ed-bg);
+  border-radius: 0;
+  font-weight: 500;
+}
+[data-design="editorial"] .btn-gold:hover {
+  box-shadow: none;
+  opacity: 0.85;
+}
+[data-design="editorial"] .btn-ghost {
+  border-radius: 0;
+}
+
+/* ---------- Layout ---------- */
+
+.ed-wrap {
+  width: 100%;
+  max-width: var(--ed-max);
+  margin-inline: auto;
+  padding-inline: var(--ed-gutter);
+}
+
+.ed-section {
+  padding-block: var(--ed-section-y);
+}
+
+/* ---------- Type ---------- */
+
+/* The one big voice: Cormorant, light and sentence case. */
+.ed-display {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.ed-h1 {
+  font-size: var(--ed-fs-h1);
+}
+
+.ed-h2 {
+  font-size: var(--ed-fs-h2);
+  line-height: 1;
+}
+
+.ed-lead {
+  font-size: var(--ed-fs-lead);
+  line-height: 1.55;
+  color: var(--ed-ink-soft);
+}
+
+.ed-body {
+  max-width: 60ch;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--ed-ink-soft);
+}
+
+/* The tiny voice: (About.)  [01]  ( Selected work ) */
+.ed-label {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--ed-fs-label);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--ed-ink-soft);
+}
+
+.ed-label-ink {
+  color: var(--ed-ink);
+}
+
+/* A text link with a hairline that draws in. */
+.ed-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 44px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ed-ink);
+}
+.ed-link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 10px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0.35);
+  transform-origin: left;
+  transition: transform var(--ed-t, 500ms) var(--ed-ease);
+}
+.ed-link:hover::after,
+.ed-link:focus-visible::after,
+.ed-link[aria-pressed="true"]::after {
+  transform: scaleX(1);
+}
+/* A switch that's off: softer, no underline until hovered. */
+.ed-link[aria-pressed="false"] {
+  color: var(--ed-ink-soft);
+}
+.ed-link[aria-pressed="false"]:not(:hover)::after {
+  transform: scaleX(0);
+}
+
+/* The one solid button: ink block, square. */
+.ed-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 52px;
+  padding: 0.9rem 1.75rem;
+  background: var(--ed-ink);
+  color: var(--ed-bg);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: opacity 200ms var(--ed-ease);
+}
+.ed-btn:hover {
+  opacity: 0.85;
+}
+.ed-btn:disabled {
+  opacity: 0.6;
+}
+.ed-night .ed-btn {
+  background: var(--ed-night-ink);
+  color: var(--ed-night);
+}
+
+.ed-rule {
+  border-color: var(--ed-line);
+}
+
+/* ---------- Motion: fade + 24px rise, once ---------- */
+
+.ed-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 600ms var(--ed-ease) var(--d, 0ms),
+    transform 600ms var(--ed-ease) var(--d, 0ms);
+}
+[data-inview="1"] .ed-reveal,
+.ed-reveal[data-inview="1"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Intro: a 1.4s count-in, once per visit ---------- */
+
+.ed-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ed-bg);
+  color: var(--ed-ink);
+  animation: ed-intro-out 500ms var(--ed-ease) 1100ms forwards;
+}
+.ed-intro.is-done,
+.ed-intro[data-seen] {
+  display: none;
+}
+.ed-intro-count {
+  position: absolute;
+  opacity: 0;
+  animation: ed-count 300ms steps(1) forwards;
+}
+.ed-intro-count:nth-child(1) { animation-delay: 0ms; }
+.ed-intro-count:nth-child(2) { animation-delay: 300ms; }
+.ed-intro-count:nth-child(3) { animation-delay: 600ms; }
+.ed-intro-name {
+  opacity: 0;
+  animation: ed-fade-in 400ms var(--ed-ease) 900ms forwards;
+}
+@keyframes ed-count {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes ed-fade-in {
+  to { opacity: 1; }
+}
+@keyframes ed-intro-out {
+  to {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+
+/* ---------- Header ---------- */
+
+.ed-header {
+  transition:
+    transform 400ms var(--ed-ease),
+    background-color 300ms var(--ed-ease),
+    color 300ms var(--ed-ease),
+    border-color 300ms var(--ed-ease);
+}
+.ed-header[data-hidden="1"] {
+  transform: translateY(-100%);
+}
+.ed-header[data-solid="0"] {
+  color: var(--ed-night-ink);
+  background: transparent;
+  border-color: transparent;
+}
+.ed-header[data-solid="1"] {
+  color: var(--ed-ink);
+  background: var(--ed-bg);
+  border-color: var(--ed-line);
+}
+
+/* Full-screen menu: wipes down from the top. */
+.ed-menu {
+  clip-path: inset(0 0 100% 0);
+  visibility: hidden;
+  transition:
+    clip-path 500ms var(--ed-ease),
+    visibility 0s linear 500ms;
+}
+.ed-menu[data-open="1"] {
+  clip-path: inset(0 0 0 0);
+  visibility: visible;
+  transition: clip-path 500ms var(--ed-ease);
+}
+.ed-menu-preview img {
+  opacity: 0;
+  transform: scale(1.03);
+  transition:
+    opacity 500ms var(--ed-ease),
+    transform 900ms var(--ed-ease);
+}
+.ed-menu-preview img[data-on="1"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Hero ---------- */
+
+.ed-hero-scrim {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 55%), linear-gradient(to bottom, rgba(0, 0, 0, 0.35), transparent 30%);
+}
+
+/* ---------- Index (selected work) ---------- */
+
+.ed-index-row {
+  transition: color 300ms var(--ed-ease);
+}
+.ed-index-name {
+  transition:
+    transform 500ms var(--ed-ease),
+    color 300ms var(--ed-ease);
+}
+@media (hover: hover) {
+  .ed-index:hover .ed-index-row:not(:hover) {
+    color: var(--ed-ink-soft);
+  }
+  .ed-index-row:hover .ed-index-name {
+    transform: translateX(0.75rem);
+  }
+}
+
+/* The thumbnail that trails the pointer (desktop only). */
+.ed-follow {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 30;
+  width: 240px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(var(--fx, -999px), var(--fy, -999px), 0) translate(-50%, -50%) scale(0.96);
+  transition: opacity 300ms var(--ed-ease);
+}
+.ed-follow[data-on="1"] {
+  opacity: 1;
+}
+.ed-follow[data-on="1"] img {
+  transform: scale(1);
+}
+.ed-follow img {
+  transform: scale(1.04);
+  transition: transform 500ms var(--ed-ease);
+}
+
+/* ---------- Capabilities ---------- */
+
+.ed-cap-img {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 700ms var(--ed-ease);
+}
+[data-inview="1"] .ed-cap-img {
+  clip-path: inset(0 0 0 0);
+}
+
+/* ---------- Packages: a scroll-snap row on phones ---------- */
+
+.ed-snap {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.ed-snap::-webkit-scrollbar {
+  display: none;
+}
+.ed-snap > * {
+  scroll-snap-align: start;
+}
+
+/* Accordion marker: a plus that turns into a minus. */
+.ed-acc summary {
+  list-style: none;
+  cursor: pointer;
+}
+.ed-acc summary::-webkit-details-marker {
+  display: none;
+}
+.ed-acc .ed-plus {
+  position: relative;
+  width: 14px;
+  height: 14px;
+}
+.ed-acc .ed-plus::before,
+.ed-acc .ed-plus::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6.5px;
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+  transition: transform 300ms var(--ed-ease);
+}
+.ed-acc .ed-plus::after {
+  transform: rotate(90deg);
+}
+.ed-acc[open] .ed-plus::after {
+  transform: rotate(0deg);
+}
+
+/* ---------- Clients ---------- */
+
+.ed-logo {
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  filter: grayscale(1) brightness(1.15) contrast(0.9);
+  opacity: 0.8;
+  transition:
+    filter 400ms var(--ed-ease),
+    opacity 400ms var(--ed-ease);
+}
+@media (hover: hover) {
+  .ed-logo-cell:hover .ed-logo {
+    filter: none;
+    opacity: 1;
+  }
+}
+
+/* ---------- Stills viewer ---------- */
+
+.ed-still {
+  opacity: 0;
+  transition: opacity 500ms var(--ed-ease);
+}
+.ed-still[data-on="1"] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ed-reveal,
+  .ed-cap-img {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition: none;
+  }
+  .ed-intro {
+    display: none;
+  }
+  .ed-header,
+  .ed-menu,
+  .ed-menu[data-open="1"],
+  .ed-menu-preview img,
+  .ed-index-name,
+  .ed-still,
+  .ed-follow {
+    transition: none;
+  }
+}

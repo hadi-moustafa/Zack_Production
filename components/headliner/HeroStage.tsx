@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore } from "react";
+import { useEffect, useRef } from "react";
 
 // Drives the hero's fly-through: writes scroll progress through the hero
 // (0 → 1) into the --p custom property, which the CSS turns into scale/fade.
@@ -38,25 +38,4 @@ export function HeroScroll({ children }: { children: React.ReactNode }) {
   );
 }
 
-const beirutTime = new Intl.DateTimeFormat("en-GB", {
-  timeZone: "Asia/Beirut",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
-  hour12: false,
-});
-
-function subscribe(onChange: () => void) {
-  const id = window.setInterval(onChange, 1000);
-  return () => clearInterval(id);
-}
-
-/** Live local time in Beirut, ticking every second (blank until hydrated). */
-export function BeirutClock() {
-  const time = useSyncExternalStore(
-    subscribe,
-    () => beirutTime.format(Math.floor(Date.now() / 1000) * 1000),
-    () => "--:--:--"
-  );
-  return <span className="tabular-nums">{time}</span>;
-}
+export { default as BeirutClock } from "@/components/BeirutClock";

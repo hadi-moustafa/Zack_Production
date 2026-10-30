@@ -1,4 +1,4 @@
-// The public site can wear one of two designs, picked in Admin → Design and
+// The public site can wear one of three designs, picked in Admin → Design and
 // stored in page_content under DESIGN_KEY. Everything else (copy, photos,
 // prices, contact details) is shared, so switching never loses content.
 
@@ -13,6 +13,11 @@ export const DESIGNS = {
     name: "Headliner",
     summary:
       "Loud, kinetic and unapologetic: video inside the name, magenta & volt on black, crossed ticker tapes, VIP-pass pricing, a client wall, sound effects.",
+  },
+  editorial: {
+    name: "Editorial",
+    summary:
+      "Calm and image-led: a warm bone page around dark, full-bleed film, small numbered labels, a full-screen stills viewer and a quiet rate card.",
   },
 } as const;
 

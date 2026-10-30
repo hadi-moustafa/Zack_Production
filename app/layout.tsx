@@ -63,7 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="flex min-h-full flex-col bg-[var(--bg-dark)] text-[var(--text-primary)]">
         <noscript>
-          <style>{`.reveal,.hl-rise,.hl-slam,.hl-wipe,.hl-words .w>span{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}`}</style>
+          <style>{`.reveal,.hl-rise,.hl-slam,.hl-wipe,.hl-words .w>span,.ed-reveal,.ed-cap-img{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}`}</style>
         </noscript>
         <SoundProvider>{children}</SoundProvider>
       </body>

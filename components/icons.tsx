@@ -164,3 +164,11 @@ export function IconTwitter(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function IconPause(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" />
+    </svg>
+  );
+}

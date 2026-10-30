@@ -5,7 +5,7 @@ import Image from "next/image";
 import { photoPublicUrl } from "@/lib/media";
 import InView from "@/components/headliner/InView";
 import { Kicker, SplitWords } from "@/components/headliner/Kinetic";
-import { CLIENT_LOGOS, type ClientLogo } from "@/lib/clientLogos";
+import { CLIENT_LOGOS, logoHeight, type ClientLogo } from "@/lib/clientLogos";
 import type { Client } from "@/lib/types";
 
 // Brands and well-known people we've worked with: the logo wall from
@@ -45,17 +45,6 @@ function Wrap({ client, className, children }: { client: Client; className: stri
   ) : (
     <div className={className}>{children}</div>
   );
-}
-
-/**
- * Same visual weight for every logo. A square mark is drawn taller than a
- * long wordmark (height ∝ aspect^-0.4), and a thin, airy mark a little
- * larger than a heavy solid one (by its ink density), all within limits.
- */
-function logoHeight(logo: ClientLogo) {
-  const shape = Math.min(1.1, Math.max(0.4, (logo.width / logo.height) ** -0.4));
-  const weight = Math.min(1.2, Math.max(0.85, (0.25 / Math.max(logo.density, 0.01)) ** 0.25));
-  return `calc(var(--lh) * ${(shape * weight).toFixed(3)})`;
 }
 
 function Logo({ logo, sizes }: { logo: ClientLogo; sizes: string }) {
