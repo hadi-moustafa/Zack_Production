@@ -5,6 +5,7 @@ import { DESIGNS, DESIGN_IDS, isDesign } from "@/lib/design";
 import { site } from "@/lib/site";
 import ClassicHome from "@/components/ClassicHome";
 import HeadlinerHome from "@/components/headliner/HeadlinerHome";
+import EditorialHome from "@/components/editorial/EditorialHome";
 
 export const revalidate = 60;
 export const dynamicParams = false;
@@ -29,5 +30,6 @@ export default async function PreviewPage({ params }: { params: Promise<{ design
   const { design } = await params;
   if (!isDesign(design)) notFound();
   const data = await getHomeData();
+  if (design === "editorial") return <EditorialHome data={data} />;
   return design === "headliner" ? <HeadlinerHome data={data} /> : <ClassicHome data={data} />;
 }

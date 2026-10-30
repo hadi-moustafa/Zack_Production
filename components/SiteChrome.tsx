@@ -4,6 +4,7 @@ import StickyCta from "@/components/StickyCta";
 import Analytics from "@/components/Analytics";
 import BrandLogo from "@/components/BrandLogo";
 import HeadlinerChrome from "@/components/headliner/HeadlinerChrome";
+import EditorialChrome from "@/components/editorial/EditorialChrome";
 import { getSiteData } from "@/lib/siteData";
 import { designFrom, type DesignId } from "@/lib/design";
 import { organizationGraph, jsonLd } from "@/lib/structuredData";
@@ -19,6 +20,9 @@ export default async function SiteChrome({ children, design }: { children: React
 
   if (activeDesign === "headliner") {
     return <HeadlinerChrome data={data} structuredData={structuredData}>{children}</HeadlinerChrome>;
+  }
+  if (activeDesign === "editorial") {
+    return <EditorialChrome data={data} structuredData={structuredData}>{children}</EditorialChrome>;
   }
 
   return (

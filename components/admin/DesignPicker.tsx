@@ -28,6 +28,15 @@ const SWATCH: Record<DesignId, React.ReactNode> = {
       <p className="font-serif text-lg italic text-[#ff2e7e]">Real Moments</p>
     </div>
   ),
+  editorial: (
+    <div className="flex h-full flex-col bg-[#f4f1ec]">
+      <div className="relative flex flex-1 flex-col justify-end bg-[#0a0a0a] p-4">
+        <p className="font-mono text-[0.55rem] uppercase tracking-[0.12em] text-[#f4f1ec]">(Photography &amp; Film.)</p>
+        <p className="mt-1 font-serif text-3xl leading-none text-[#f4f1ec]">Real moments, beautifully told.</p>
+      </div>
+      <p className="px-4 py-2 font-mono text-[0.55rem] uppercase tracking-[0.12em] text-[#111]">[01] (Who we are.)</p>
+    </div>
+  ),
 };
 
 export default function DesignPicker({ initialDesign }: { initialDesign: DesignId }) {
@@ -57,10 +66,10 @@ export default function DesignPicker({ initialDesign }: { initialDesign: DesignI
     <Card>
       <SectionHeading
         title="Site design"
-        description="Pick how the public site looks. Both designs use the same photos, films, text, prices and contact details, so you can switch back and forth any time without losing anything. Preview opens a design in a new tab without changing the live site."
+        description="Pick how the public site looks. Every design uses the same photos, films, text, prices and contact details, so you can switch back and forth any time without losing anything. Preview opens a design in a new tab without changing the live site."
       />
       {error ? <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
-      <ul className="grid gap-4 sm:grid-cols-2">
+      <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {DESIGN_IDS.map((id) => {
           const isLive = live === id;
           return (
