@@ -46,6 +46,8 @@ export type PricingPackage = {
   /** Heading it's grouped under, e.g. "Wedding Packages". */
   group_name: string;
   name: string;
+  /** Optional short line under the name in a price list, e.g. "15 outfits". */
+  description: string;
   /** Display price, e.g. "$150". Blank means "price on request". */
   price: string;
   /** What's included; items with any are shown as cards, others as list rows. */

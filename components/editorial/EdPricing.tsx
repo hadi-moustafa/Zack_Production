@@ -46,7 +46,7 @@ export default function EdPricing({ packages, description, paymentNote }: { pack
             group.layout === "cards" ? (
               <Cards key={group.name} group={group} isSelected={isSelected} />
             ) : (
-              <List key={group.name} group={group} isSelected={isSelected} />
+              <List key={group.name} group={group} isSelected={isSelected} bookable />
             )
           )}
         </div>
@@ -117,8 +117,8 @@ function Cards({ group, isSelected }: { group: PricingGroup; isSelected: (id: st
           return (
             <li
               key={item.id}
-              className={`ed-reveal flex flex-col bg-[var(--ed-bg-alt)] p-6 sm:p-8 ${
-                item.highlighted ? "border-t-2 border-[var(--ed-accent)]" : "border-t-2 border-transparent"
+              className={`ed-reveal flex flex-col border-t-2 p-6 sm:p-8 ${
+                item.highlighted ? "ed-night border-[var(--ed-night-accent)]" : "border-transparent bg-[var(--ed-bg-alt)]"
               } ${chosen ? "outline outline-1 -outline-offset-1 outline-[var(--ed-ink)]" : ""}`}
               style={{ "--d": `${i * 100}ms` } as React.CSSProperties}
             >
@@ -129,7 +129,9 @@ function Cards({ group, isSelected }: { group: PricingGroup; isSelected: (id: st
                 <p aria-hidden className="ed-label mb-4 hidden md:block">&nbsp;</p>
               )}
               <p className="ed-display text-[clamp(2.5rem,5vw,3.75rem)]">{item.name}</p>
-              <p className="ed-label ed-label-ink mt-3">{priceLabel(item.price, "cards")}</p>
+              <p className={`ed-display mt-3 text-[1.75rem] ${item.highlighted ? "text-[var(--ed-night-accent)]" : ""}`}>
+                {priceLabel(item.price, "cards")}
+              </p>
               <ul className="mt-8 flex-1 border-t border-[var(--ed-line)]">
                 {item.features.map((feature, k) => (
                   <li key={k} className="border-b border-[var(--ed-line)] py-2.5 text-[1rem] text-[var(--ed-ink-soft)]">
@@ -140,10 +142,10 @@ function Cards({ group, isSelected }: { group: PricingGroup; isSelected: (id: st
               <a
                 href="#contact"
                 onClick={() => planSelection.select(toSelected(item, group))}
-                aria-label={chosen ? `${item.name} selected, continue to booking` : `Choose the ${item.name} package`}
-                className="ed-link mt-8 self-start"
+                aria-label={chosen ? `${item.name} selected, continue to booking` : `Book the ${item.name} package`}
+                className="ed-btn mt-8 w-full sm:w-auto sm:self-start"
               >
-                {chosen ? "Selected ✓ Continue →" : "Choose →"}
+                {chosen ? "Selected ✓ Continue →" : "Book now →"}
               </a>
             </li>
           );
@@ -153,8 +155,9 @@ function Cards({ group, isSelected }: { group: PricingGroup; isSelected: (id: st
   );
 }
 
-// A simple price list: tap a line to add it, tap again to remove it.
-function List({ group, isSelected }: { group: PricingGroup; isSelected: (id: string) => boolean }) {
+// A simple price list: tap a line to add it, tap again to remove it. Lists in
+// the main packages part get their own Book now link.
+function List({ group, isSelected, bookable = false }: { group: PricingGroup; isSelected: (id: string) => boolean; bookable?: boolean }) {
   return (
     <div>
       <h3 className="ed-label ed-label-ink">{group.name}</h3>
@@ -172,9 +175,10 @@ function List({ group, isSelected }: { group: PricingGroup; isSelected: (id: str
                 <span aria-hidden className={`w-4 shrink-0 font-mono text-sm ${chosen ? "text-[var(--ed-ink)]" : "text-[var(--ed-ink-soft)]"}`}>
                   {chosen ? "✓" : "+"}
                 </span>
-                <span className={`flex-1 text-[1.0625rem] ${chosen ? "text-[var(--ed-ink)]" : "text-[var(--ed-ink-soft)] group-hover:text-[var(--ed-ink)]"}`}>
-                  {item.name}
+                <span className={`min-w-0 flex-1 text-[1.0625rem] ${chosen ? "text-[var(--ed-ink)]" : "text-[var(--ed-ink-soft)] group-hover:text-[var(--ed-ink)]"}`}>
+                  <span className={item.description ? "font-medium" : undefined}>{item.name}</span>
                   {item.badge ? <span className="ed-label ed-label-ink ml-2">— {item.badge}</span> : null}
+                  {item.description ? <span className="mt-0.5 block text-base">{item.description}</span> : null}
                 </span>
                 <span className={`shrink-0 tabular-nums ${item.price.trim() ? "ed-display text-[1.5rem] text-[var(--ed-ink)]" : "ed-label"}`}>
                   {priceLabel(item.price, "list")}
@@ -184,6 +188,11 @@ function List({ group, isSelected }: { group: PricingGroup; isSelected: (id: str
           );
         })}
       </ul>
+      {bookable ? (
+        <a href="#contact" className="ed-link mt-4">
+          Book now →
+        </a>
+      ) : null}
     </div>
   );
 }

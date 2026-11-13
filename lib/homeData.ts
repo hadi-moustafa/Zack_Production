@@ -20,6 +20,7 @@ export async function getHomeData() {
   const categories = (categoriesRes.data ?? []) as Category[];
   const pricingPackages = (pricingRes.data ?? []).map((p) => ({
     ...p,
+    description: typeof p.description === "string" ? p.description : "",
     features: Array.isArray(p.features) ? p.features : [],
   })) as PricingPackage[];
 

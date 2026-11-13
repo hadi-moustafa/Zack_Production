@@ -55,7 +55,7 @@ export default function Pricing({
             <span className="eyebrow">Pricing</span>
           </div>
           <h2 className="font-serif-display mt-4 text-[clamp(2.5rem,9vw,4.25rem)] font-medium leading-[1] text-[var(--text-primary)]">
-            Packages &amp; Prices
+            Packages &amp; Pricing
           </h2>
           <Flourish center />
           {description ? (
@@ -81,7 +81,7 @@ export default function Pricing({
               group.layout === "cards" ? (
                 <CardGroup key={group.name} group={group} isSelected={isSelected} />
               ) : (
-                <ListGroup key={group.name} group={group} isSelected={isSelected} />
+                <ListGroup key={group.name} group={group} isSelected={isSelected} bookable />
               )
             )}
           </Part>
@@ -213,11 +213,11 @@ function CardGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id
               </ul>
               <Link
                 href="/#contact"
-                aria-label={chosen ? `${item.name} selected, continue to booking` : `Choose the ${item.name} package`}
+                aria-label={chosen ? `${item.name} selected, continue to booking` : `Book the ${item.name} package`}
                 onClick={() => planSelection.select(toSelected(item, group))}
                 className={`${chosen || item.highlighted ? "btn-gold" : "btn-ghost"} mt-6 w-full justify-center !px-4`}
               >
-                {chosen ? "Selected ✓" : "Choose"}
+                {chosen ? "Selected ✓" : "Book now"}
               </Link>
             </li>
           );
@@ -227,9 +227,19 @@ function CardGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id
   );
 }
 
-function ListGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id: string) => boolean }) {
+// A price list. In the Packages part it's a card of its own, so it gets a
+// Book now button; Singles lists are add-ons and use the shared summary bar.
+function ListGroup({
+  group,
+  isSelected,
+  bookable = false,
+}: {
+  group: PricingGroup;
+  isSelected: (id: string) => boolean;
+  bookable?: boolean;
+}) {
   return (
-    <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-dark)] px-5 pb-2 pt-5 sm:px-6">
+    <div className={`rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-dark)] px-5 pt-5 sm:px-6 ${bookable ? "pb-5" : "pb-2"}`}>
       <h4 className="eyebrow">{group.name}</h4>
       <ul className="mt-2">
         {group.items.map((item) => {
@@ -252,9 +262,10 @@ function ListGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id
                 >
                   {chosen ? "✓" : "+"}
                 </span>
-                <span className={`flex-1 ${chosen || item.highlighted ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
-                  {item.name}
+                <span className={`min-w-0 flex-1 ${chosen || item.highlighted ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
+                  <span className={item.description ? "font-medium text-[var(--text-primary)]" : undefined}>{item.name}</span>
                   {item.badge ? <OfferBadge text={item.badge} className="ml-2 align-middle" gold={item.highlighted} /> : null}
+                  {item.description ? <span className="mt-0.5 block text-base text-[var(--text-secondary)]">{item.description}</span> : null}
                 </span>
                 <span
                   className={`shrink-0 tabular-nums ${
@@ -268,6 +279,11 @@ function ListGroup({ group, isSelected }: { group: PricingGroup; isSelected: (id
           );
         })}
       </ul>
+      {bookable ? (
+        <Link href="/#contact" className="btn-ghost mt-4 w-full justify-center !px-4 sm:w-auto">
+          Book now <IconArrowRight className="h-4 w-4" />
+        </Link>
+      ) : null}
     </div>
   );
 }

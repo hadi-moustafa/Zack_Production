@@ -36,7 +36,7 @@ export default function PricingManager({ initialPackages }: { initialPackages: P
     const res = await fetch("/api/pricing", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ section, group_name: group, name: "New item", price: "", features: [], sort_order: sortOrder }),
+      body: JSON.stringify({ section, group_name: group, name: "New item", description: "", price: "", features: [], sort_order: sortOrder }),
     });
     const body = await res.json().catch(() => ({}));
     if (res.ok) setItems((prev) => [...prev, body.package]);
@@ -245,6 +245,17 @@ function ItemEditor({
                 ))}
               </datalist>
             </div>
+          </div>
+
+          <div>
+            <Label>Short description (optional, shown under the name in a price list)</Label>
+            <TextInput
+              value={item.description ?? ""}
+              maxLength={160}
+              placeholder="e.g. 6 teaser videos + 8 photos"
+              onChange={(e) => onChange({ description: e.target.value })}
+              onBlur={() => onSave()}
+            />
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 sm:items-end">

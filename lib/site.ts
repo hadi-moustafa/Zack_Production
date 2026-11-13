@@ -49,6 +49,6 @@ export function absoluteUrl(path = "/") {
 export const SECTIONS = [
   { id: "about", label: "Who We Are", description: "Meet Zack, the photographer and filmmaker behind Zack Production" },
   { id: "gallery", label: "Work", description: "Wedding, graduation, food and promotional photography and films" },
-  { id: "pricing", label: "Pricing", description: "Photography and film packages" },
+  { id: "pricing", label: "Packages & Pricing", description: "Photography, film, social media management and makeup shoot packages, in USD" },
   { id: "contact", label: "Contact", description: "Book a shoot or ask a question" },
 ] as const;

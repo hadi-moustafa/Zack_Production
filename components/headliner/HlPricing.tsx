@@ -64,7 +64,7 @@ export default function HlPricing({
             group.layout === "cards" ? (
               <Passes key={group.name} group={group} isSelected={isSelected} />
             ) : (
-              <Menu key={group.name} group={group} isSelected={isSelected} />
+              <Menu key={group.name} group={group} isSelected={isSelected} bookable />
             )
           )}
         </div>
@@ -179,14 +179,14 @@ function Passes({ group, isSelected }: { group: PricingGroup; isSelected: (id: s
               <a
                 href="#contact"
                 data-sfx="none"
-                aria-label={chosen ? `${item.name} selected, continue to booking` : `Choose the ${item.name} package`}
+                aria-label={chosen ? `${item.name} selected, continue to booking` : `Book the ${item.name} package`}
                 onClick={() => {
                   if (!chosen) sfx.select(true);
                   planSelection.select(toSelected(item, group));
                 }}
                 className={`${chosen || item.highlighted ? "hl-btn" : "hl-btn-ghost"} mt-6 w-full`}
               >
-                {chosen ? "Selected ✓" : "Choose"}
+                {chosen ? "Selected ✓" : "Book now"}
               </a>
             </li>
           );
@@ -196,8 +196,9 @@ function Passes({ group, isSelected }: { group: PricingGroup; isSelected: (id: s
   );
 }
 
-// Everything else as a club-menu price list: tap a line to add it.
-function Menu({ group, isSelected }: { group: PricingGroup; isSelected: (id: string) => boolean }) {
+// Everything else as a club-menu price list: tap a line to add it. Lists in
+// the main packages part get their own Book now button.
+function Menu({ group, isSelected, bookable = false }: { group: PricingGroup; isSelected: (id: string) => boolean; bookable?: boolean }) {
   return (
     <div>
       <h3 className="hl-label">{group.name}</h3>
@@ -226,13 +227,14 @@ function Menu({ group, isSelected }: { group: PricingGroup; isSelected: (id: str
                 >
                   {chosen ? "✓" : "+"}
                 </span>
-                <span className={`text-[1.05rem] ${chosen || item.highlighted ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"} group-hover:text-[var(--text-primary)]`}>
+                <span className={`min-w-0 text-[1.05rem] ${chosen || item.highlighted || item.description ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"} group-hover:text-[var(--text-primary)]`}>
                   {item.name}
                   {item.badge ? (
                     <span className="ml-2 inline-block rounded-full border border-[var(--hl-volt)] px-2 py-0.5 align-middle font-mono text-[0.75rem] uppercase tracking-[0.1em] text-[var(--hl-volt)]">
                       {item.badge}
                     </span>
                   ) : null}
+                  {item.description ? <span className="mt-0.5 block text-base text-[var(--text-secondary)]">{item.description}</span> : null}
                 </span>
                 <span aria-hidden className="mx-1 hidden h-px flex-1 translate-y-1 border-b border-dotted border-white/25 sm:block" />
                 <span
@@ -247,6 +249,11 @@ function Menu({ group, isSelected }: { group: PricingGroup; isSelected: (id: str
           );
         })}
       </ul>
+      {bookable ? (
+        <a href="#contact" className="hl-btn-ghost mt-5 w-full sm:w-auto">
+          Book now <IconArrowRight aria-hidden className="h-4 w-4" />
+        </a>
+      ) : null}
     </div>
   );
 }

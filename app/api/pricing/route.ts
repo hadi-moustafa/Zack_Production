@@ -6,6 +6,7 @@ type PackageInput = {
   section?: string;
   group_name?: string;
   name?: string;
+  description?: string;
   price?: string;
   features?: string[];
   sort_order?: number;
@@ -18,6 +19,7 @@ function sanitize(input: PackageInput) {
     section: input.section === "singles" ? "singles" : "packages",
     group_name: String(input.group_name ?? "").trim().slice(0, 100),
     name: String(input.name ?? "").slice(0, 100),
+    description: String(input.description ?? "").trim().slice(0, 160),
     price: String(input.price ?? "").slice(0, 50),
     features: Array.isArray(input.features)
       ? input.features.map((f) => String(f).slice(0, 200)).slice(0, 30)
