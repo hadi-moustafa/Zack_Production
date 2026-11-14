@@ -4,7 +4,7 @@ import Ticker from "@/components/headliner/Ticker";
 import HlAbout from "@/components/headliner/HlAbout";
 import HlClients from "@/components/headliner/HlClients";
 import HlWork from "@/components/headliner/HlWork";
-import HlPricing from "@/components/headliner/HlPricing";
+import HlPricing, { HlSocial } from "@/components/headliner/HlPricing";
 import HlContact from "@/components/headliner/HlContact";
 import type { HomeData } from "@/lib/homeData";
 
@@ -41,6 +41,7 @@ export default function HeadlinerHome({ data }: { data: HomeData }) {
       <HlClients clients={clients} />
       <HlWork photos={photos} categories={categories} />
       <HlPricing packages={pricingPackages} description={content.pricing_description} paymentNote={content.pricing_payment_note} />
+      <HlSocial packages={pricingPackages} />
       <HlContact description={content.contact_description} contact={contact} socialLinks={socialLinks} instagramReel={instagramReel} />
     </main>
   );

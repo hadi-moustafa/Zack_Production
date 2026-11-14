@@ -12,6 +12,7 @@ const EXPLORE = [
   { href: "/work", label: "Work" },
   { href: "/clients", label: "Clients" },
   { href: "/#pricing", label: "Pricing" },
+  { href: "/#social-media", label: "Social Media" },
   { href: "/#contact", label: "Contact" },
 ];
 

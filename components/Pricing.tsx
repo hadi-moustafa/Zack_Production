@@ -138,6 +138,44 @@ export default function Pricing({
   );
 }
 
+// Social media management has a section of its own, after Packages & Pricing.
+export function SocialPricing({ packages }: { packages: PricingPackage[] }) {
+  const selected = usePlanSelection();
+  const groups = groupPricing(packages).social;
+  if (groups.length === 0) return null;
+  const isSelected = (id: string) => selected.some((s) => s.id === id);
+
+  return (
+    <section id="social-media" className="scroll-mt-20 bg-[var(--bg-dark)] py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-5 sm:px-10">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <div className="section-index justify-center">
+            <span className="num">IV</span>
+            <span className="line" />
+            <span className="eyebrow">Social media</span>
+          </div>
+          <h2 className="font-serif-display mt-4 text-[clamp(2.5rem,9vw,4.25rem)] font-medium leading-[1] text-[var(--text-primary)]">
+            Your page, handled
+          </h2>
+          <Flourish center />
+          <p className="mt-6 text-[1.05rem] leading-relaxed text-[var(--text-secondary)] sm:text-[1.1rem]">
+            Monthly management of your social media: content, design, security and growth, done for you.
+          </p>
+        </Reveal>
+        <div className="mt-12 space-y-10 sm:mt-16">
+          {groups.map((group) =>
+            group.layout === "cards" ? (
+              <CardGroup key={group.name} group={group} isSelected={isSelected} />
+            ) : (
+              <ListGroup key={group.name} group={group} isSelected={isSelected} bookable />
+            )
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Part({
   id,
   numeral,

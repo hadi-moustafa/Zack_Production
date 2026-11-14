@@ -42,6 +42,7 @@ export default async function EditorialChrome({
     gallery: stills[0] ?? null,
     clients: stills[1] ?? null,
     pricing: stills[2] ?? null,
+    "social-media": stills[3] ?? null,
     contact: heroPoster.src,
   };
 

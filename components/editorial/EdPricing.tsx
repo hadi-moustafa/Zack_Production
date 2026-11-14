@@ -102,6 +102,39 @@ export default function EdPricing({ packages, description, paymentNote }: { pack
   );
 }
 
+// Social media management has a section of its own, after the rate card.
+export function EdSocial({ packages }: { packages: PricingPackage[] }) {
+  const selected = usePlanSelection();
+  const groups = groupPricing(packages).social;
+  if (groups.length === 0) return null;
+  const isSelected = (id: string) => selected.some((s) => s.id === id);
+
+  return (
+    <section id="social-media" className="ed-section scroll-mt-16">
+      <div className="ed-wrap">
+        <InView>
+          <EdLabel n={5}>Social media</EdLabel>
+          <h2 className="ed-display ed-h2 ed-reveal mt-6" style={{ "--d": "100ms" } as React.CSSProperties}>
+            Your page, handled.
+          </h2>
+          <p className="ed-lead ed-reveal mt-6 max-w-xl" style={{ "--d": "200ms" } as React.CSSProperties}>
+            Monthly management of your social media: content, design, security and growth, done for you.
+          </p>
+        </InView>
+        <div className="mt-14 space-y-16 sm:mt-20 sm:space-y-24">
+          {groups.map((group) =>
+            group.layout === "cards" ? (
+              <Cards key={group.name} group={group} isSelected={isSelected} />
+            ) : (
+              <List key={group.name} group={group} isSelected={isSelected} bookable />
+            )
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // Tiered packages: tall cards, stacked on a phone and side by side from a tablet up.
 function Cards({ group, isSelected }: { group: PricingGroup; isSelected: (id: string) => boolean }) {
   return (

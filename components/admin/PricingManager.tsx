@@ -6,7 +6,7 @@ import { groupPricing } from "@/lib/pricing";
 import { Card, SectionHeading, Label, TextInput, SecondaryButton, DangerLink } from "@/components/admin/ui";
 import { IconClose } from "@/components/icons";
 
-const SECTION_LABEL: Record<PricingSection, string> = { packages: "Part 1 · Packages", singles: "Part 2 · Singles" };
+const SECTION_LABEL: Record<PricingSection, string> = { packages: "Part 1 · Packages", singles: "Part 2 · Singles", social: "Social Media section" };
 
 export default function PricingManager({ initialPackages }: { initialPackages: PricingPackage[] }) {
   const [items, setItems] = useState<PricingPackage[]>(initialPackages);
@@ -69,7 +69,7 @@ export default function PricingManager({ initialPackages }: { initialPackages: P
       <Card>
         <SectionHeading
           title="Price list"
-          description="Items are grouped under headings in two parts: Packages and Singles. Items with “What's included” lines show as cards; the rest show as a tappable price list. Leave the price blank to show “Price on request”. Changes save when you leave a field."
+          description="Items are grouped under headings in two parts, Packages and Singles, plus a separate Social Media section. Items with “What's included” lines show as cards; the rest show as a tappable price list. Leave the price blank to show “Price on request”. Changes save when you leave a field."
         />
         {error ? <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
         {legacy.length > 0 ? (
@@ -80,7 +80,7 @@ export default function PricingManager({ initialPackages }: { initialPackages: P
         ) : null}
       </Card>
 
-      {(["packages", "singles"] as const).map((section) => (
+      {(["packages", "singles", "social"] as const).map((section) => (
         <div key={section} className="space-y-4">
           <h2 className="px-1 text-sm font-semibold uppercase tracking-widest text-neutral-500">{SECTION_LABEL[section]}</h2>
           {grouped[section].length === 0 ? <p className="px-1 text-sm text-neutral-500">No groups yet.</p> : null}
@@ -129,6 +129,7 @@ export default function PricingManager({ initialPackages }: { initialPackages: P
             >
               <option value="packages">Packages</option>
               <option value="singles">Singles</option>
+              <option value="social">Social Media</option>
             </select>
           </div>
           <div>
@@ -229,6 +230,7 @@ function ItemEditor({
               >
                 <option value="packages">Packages</option>
                 <option value="singles">Singles</option>
+                <option value="social">Social Media</option>
               </select>
             </div>
             <div>

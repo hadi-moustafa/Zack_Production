@@ -30,7 +30,7 @@ export default function EdInquiry({
     <section id="contact" className="ed-section scroll-mt-16 border-t border-[var(--ed-line)]">
       <div className="ed-wrap">
         <InView>
-          <EdLabel n={5}>Inquiries</EdLabel>
+          <EdLabel n={6}>Inquiries</EdLabel>
           <h2 className="ed-display ed-reveal mt-6 max-w-[16ch] text-[clamp(2.75rem,8vw,8rem)]" style={{ "--d": "100ms" } as React.CSSProperties}>
             {headline}
           </h2>

@@ -2,7 +2,7 @@ import { SECTION_PHOTO_KEYS } from "@/lib/content";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Work from "@/components/Work";
-import Pricing from "@/components/Pricing";
+import Pricing, { SocialPricing } from "@/components/Pricing";
 import ContactForm from "@/components/ContactForm";
 import { OrnamentDivider } from "@/components/Ornaments";
 import type { HomeData } from "@/lib/homeData";
@@ -37,6 +37,7 @@ export default function ClassicHome({ data }: { data: HomeData }) {
         description={content.pricing_description}
         paymentNote={content.pricing_payment_note}
       />
+      <SocialPricing packages={pricingPackages} />
       <OrnamentDivider />
       <ContactForm
         description={content.contact_description}

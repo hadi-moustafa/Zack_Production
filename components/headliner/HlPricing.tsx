@@ -125,6 +125,39 @@ export default function HlPricing({
   );
 }
 
+// Social media management has a section of its own, after the rate card.
+export function HlSocial({ packages }: { packages: PricingPackage[] }) {
+  const selected = usePlanSelection();
+  const groups = groupPricing(packages).social;
+  if (groups.length === 0) return null;
+  const isSelected = (id: string) => selected.some((s) => s.id === id);
+
+  return (
+    <section id="social-media" className="relative scroll-mt-20 overflow-hidden bg-[var(--bg-dark)] py-20 sm:py-28">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <InView>
+          <Kicker n="05">Social media</Kicker>
+          <h2 className="hl-display mt-5 text-[clamp(3.4rem,16vw,10rem)]">
+            <SplitWords text="Your page," /> <span className="hl-em">handled.</span>
+          </h2>
+          <p className="hl-rise mt-5 max-w-xl text-[1.05rem] text-[var(--text-secondary)]" style={{ "--d": "250ms" } as React.CSSProperties}>
+            Monthly management of your social media: content, design, security and growth, done for you.
+          </p>
+        </InView>
+        <div className="mt-14 space-y-16">
+          {groups.map((group) =>
+            group.layout === "cards" ? (
+              <Passes key={group.name} group={group} isSelected={isSelected} />
+            ) : (
+              <Menu key={group.name} group={group} isSelected={isSelected} bookable />
+            )
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // Tiered packages as holographic all-access passes.
 function Passes({ group, isSelected }: { group: PricingGroup; isSelected: (id: string) => boolean }) {
   return (

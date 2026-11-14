@@ -16,7 +16,7 @@ type PackageInput = {
 
 function sanitize(input: PackageInput) {
   return {
-    section: input.section === "singles" ? "singles" : "packages",
+    section: input.section === "singles" || input.section === "social" ? input.section : "packages",
     group_name: String(input.group_name ?? "").trim().slice(0, 100),
     name: String(input.name ?? "").slice(0, 100),
     description: String(input.description ?? "").trim().slice(0, 160),

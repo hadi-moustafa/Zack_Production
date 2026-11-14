@@ -37,11 +37,11 @@ export type Category = {
   created_at: string;
 };
 
-export type PricingSection = "packages" | "singles";
+export type PricingSection = "packages" | "singles" | "social";
 
 export type PricingPackage = {
   id: string;
-  /** Which half of the pricing section it sits in. */
+  /** Which part it sits in: Packages or Singles (Pricing), or the Social Media section. */
   section: PricingSection;
   /** Heading it's grouped under, e.g. "Wedding Packages". */
   group_name: string;
