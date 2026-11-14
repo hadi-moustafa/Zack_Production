@@ -9,6 +9,7 @@ const EXPLORE = [
   { href: "/work", label: "Wedding, graduation & promo work" },
   { href: "/about", label: "About Zack" },
   { href: "/#pricing", label: "Packages & pricing" },
+  { href: "/social-media", label: "Social media management" },
   { href: "/#contact", label: "Book a shoot" },
   { href: "/clients", label: "Our clients" },
   { href: "/privacy", label: "Privacy policy" },

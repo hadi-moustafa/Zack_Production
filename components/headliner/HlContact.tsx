@@ -34,7 +34,7 @@ export default function HlContact({
       />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <InView>
-          <Kicker n="06">Get in touch</Kicker>
+          <Kicker n="05">Get in touch</Kicker>
           <h2 className="hl-display mt-5 text-[clamp(3.4rem,16vw,10rem)]">
             <SplitWords text="Let's make" /> <span className="hl-em">noise.</span>
           </h2>

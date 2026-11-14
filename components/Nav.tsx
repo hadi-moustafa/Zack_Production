@@ -41,7 +41,7 @@ export default function Nav({ logo, socialLinks }: { logo: React.ReactNode; soci
           {SECTIONS.map((s) => (
             <Link
               key={s.id}
-              href={`/#${s.id}`}
+              href={s.href}
               className="relative flex min-h-11 items-center text-base font-medium tracking-wide text-[var(--text-primary)] transition hover:text-[var(--accent-gold-bright)] after:absolute after:bottom-2 after:left-0 after:h-px after:w-0 after:bg-[var(--accent-gold)] after:transition-all after:duration-300 hover:after:w-full"
             >
               {s.label}
@@ -78,7 +78,7 @@ export default function Nav({ logo, socialLinks }: { logo: React.ReactNode; soci
         {SECTIONS.map((s) => (
           <Link
             key={s.id}
-            href={`/#${s.id}`}
+            href={s.href}
             onClick={() => setOpen(false)}
             className="flex min-h-12 items-center border-b border-[var(--border-subtle)] text-lg font-medium text-[var(--text-primary)] hover:text-[var(--accent-gold-bright)]"
           >

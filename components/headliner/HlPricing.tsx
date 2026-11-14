@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import InView from "@/components/headliner/InView";
 import { Kicker, SplitWords } from "@/components/headliner/Kinetic";
 import { IconArrowRight } from "@/components/icons";
@@ -40,7 +41,7 @@ export default function HlPricing({
   paymentNote: string;
 }) {
   const selected = usePlanSelection();
-  const { packages: packageGroups, singles: singleGroups } = groupPricing(packages);
+  const { packages: packageGroups, singles: singleGroups, social: socialGroups } = groupPricing(packages);
   if (packageGroups.length === 0 && singleGroups.length === 0) return null;
   const isSelected = (id: string) => selected.some((s) => s.id === id);
 
@@ -56,6 +57,15 @@ export default function HlPricing({
             <p className="hl-rise mt-5 max-w-xl text-[1.05rem] text-[var(--text-secondary)]" style={{ "--d": "250ms" } as React.CSSProperties}>
               {description}
             </p>
+          ) : null}
+          {socialGroups.length ? (
+            <Link
+              href="/social-media"
+              className="hl-rise mt-4 inline-flex min-h-11 items-center gap-2 font-semibold text-[var(--accent-gold-bright)] underline-offset-4 hover:underline"
+              style={{ "--d": "300ms" } as React.CSSProperties}
+            >
+              Social media management plans <IconArrowRight className="h-4 w-4" />
+            </Link>
           ) : null}
         </InView>
 
@@ -120,39 +130,6 @@ export default function HlPricing({
             <p className="mt-2 max-w-xl whitespace-pre-line text-base leading-relaxed text-[var(--text-secondary)]">{paymentNote}</p>
           </div>
         ) : null}
-      </div>
-    </section>
-  );
-}
-
-// Social media management has a section of its own, after the rate card.
-export function HlSocial({ packages }: { packages: PricingPackage[] }) {
-  const selected = usePlanSelection();
-  const groups = groupPricing(packages).social;
-  if (groups.length === 0) return null;
-  const isSelected = (id: string) => selected.some((s) => s.id === id);
-
-  return (
-    <section id="social-media" className="relative scroll-mt-20 overflow-hidden bg-[var(--bg-dark)] py-20 sm:py-28">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <InView>
-          <Kicker n="05">Social media</Kicker>
-          <h2 className="hl-display mt-5 text-[clamp(3.4rem,16vw,10rem)]">
-            <SplitWords text="Your page," /> <span className="hl-em">handled.</span>
-          </h2>
-          <p className="hl-rise mt-5 max-w-xl text-[1.05rem] text-[var(--text-secondary)]" style={{ "--d": "250ms" } as React.CSSProperties}>
-            Monthly management of your social media: content, design, security and growth, done for you.
-          </p>
-        </InView>
-        <div className="mt-14 space-y-16">
-          {groups.map((group) =>
-            group.layout === "cards" ? (
-              <Passes key={group.name} group={group} isSelected={isSelected} />
-            ) : (
-              <Menu key={group.name} group={group} isSelected={isSelected} bookable />
-            )
-          )}
-        </div>
       </div>
     </section>
   );

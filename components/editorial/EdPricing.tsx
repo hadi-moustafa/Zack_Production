@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import InView from "@/components/headliner/InView";
 import EdLabel from "@/components/editorial/EdLabel";
 import { groupPricing, priceLabel, type PricingGroup } from "@/lib/pricing";
@@ -22,7 +23,7 @@ function toSelected(item: PricingPackage, group: PricingGroup): SelectedItem {
 // Choosing anything adds it to the booking request in the contact form.
 export default function EdPricing({ packages, description, paymentNote }: { packages: PricingPackage[]; description: string; paymentNote: string }) {
   const selected = usePlanSelection();
-  const { packages: packageGroups, singles: singleGroups } = groupPricing(packages);
+  const { packages: packageGroups, singles: singleGroups, social: socialGroups } = groupPricing(packages);
   if (packageGroups.length === 0 && singleGroups.length === 0) return null;
   const isSelected = (id: string) => selected.some((s) => s.id === id);
 
@@ -38,6 +39,11 @@ export default function EdPricing({ packages, description, paymentNote }: { pack
             <p className="ed-lead ed-reveal mt-6 max-w-xl" style={{ "--d": "200ms" } as React.CSSProperties}>
               {description}
             </p>
+          ) : null}
+          {socialGroups.length ? (
+            <Link href="/social-media" className="ed-link ed-reveal mt-4" style={{ "--d": "250ms" } as React.CSSProperties}>
+              Social media management plans →
+            </Link>
           ) : null}
         </InView>
 
@@ -97,39 +103,6 @@ export default function EdPricing({ packages, description, paymentNote }: { pack
             <p className="ed-body mt-2 whitespace-pre-line">{paymentNote}</p>
           </div>
         ) : null}
-      </div>
-    </section>
-  );
-}
-
-// Social media management has a section of its own, after the rate card.
-export function EdSocial({ packages }: { packages: PricingPackage[] }) {
-  const selected = usePlanSelection();
-  const groups = groupPricing(packages).social;
-  if (groups.length === 0) return null;
-  const isSelected = (id: string) => selected.some((s) => s.id === id);
-
-  return (
-    <section id="social-media" className="ed-section scroll-mt-16">
-      <div className="ed-wrap">
-        <InView>
-          <EdLabel n={5}>Social media</EdLabel>
-          <h2 className="ed-display ed-h2 ed-reveal mt-6" style={{ "--d": "100ms" } as React.CSSProperties}>
-            Your page, handled.
-          </h2>
-          <p className="ed-lead ed-reveal mt-6 max-w-xl" style={{ "--d": "200ms" } as React.CSSProperties}>
-            Monthly management of your social media: content, design, security and growth, done for you.
-          </p>
-        </InView>
-        <div className="mt-14 space-y-16 sm:mt-20 sm:space-y-24">
-          {groups.map((group) =>
-            group.layout === "cards" ? (
-              <Cards key={group.name} group={group} isSelected={isSelected} />
-            ) : (
-              <List key={group.name} group={group} isSelected={isSelected} bookable />
-            )
-          )}
-        </div>
       </div>
     </section>
   );

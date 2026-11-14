@@ -24,7 +24,7 @@ export default async function HeadlinerChrome({
 }) {
   const clients = await getClients();
   const links: NavLink[] = SECTIONS.flatMap((s) => {
-    const link = { href: `/#${s.id}`, label: s.label };
+    const link = { href: s.href, label: s.label };
     return s.id === "about" && (clients.length || CLIENT_LOGOS.length) ? [link, { href: "/#clients", label: "Clients" }] : [link];
   });
 

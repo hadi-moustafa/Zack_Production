@@ -40,7 +40,7 @@ export default function Pricing({
   paymentNote: string;
 }) {
   const selected = usePlanSelection();
-  const { packages: packageGroups, singles: singleGroups } = groupPricing(packages);
+  const { packages: packageGroups, singles: singleGroups, social: socialGroups } = groupPricing(packages);
   if (packageGroups.length === 0 && singleGroups.length === 0) return null;
 
   const isSelected = (id: string) => selected.some((s) => s.id === id);
@@ -61,6 +61,13 @@ export default function Pricing({
           {description ? (
             <p className="mt-6 text-[1.05rem] leading-relaxed text-[var(--text-secondary)] sm:text-[1.1rem]">
               {description}
+            </p>
+          ) : null}
+          {socialGroups.length > 0 ? (
+            <p className="mt-4">
+              <Link href="/social-media" className="inline-flex min-h-11 items-center gap-2 text-[var(--accent-gold-bright)] underline-offset-4 hover:underline">
+                Social media management plans have their own page <IconArrowRight className="h-4 w-4" />
+              </Link>
             </p>
           ) : null}
           {packageGroups.length > 0 && singleGroups.length > 0 ? (
@@ -133,44 +140,6 @@ export default function Pricing({
             </p>
           </div>
         ) : null}
-      </div>
-    </section>
-  );
-}
-
-// Social media management has a section of its own, after Packages & Pricing.
-export function SocialPricing({ packages }: { packages: PricingPackage[] }) {
-  const selected = usePlanSelection();
-  const groups = groupPricing(packages).social;
-  if (groups.length === 0) return null;
-  const isSelected = (id: string) => selected.some((s) => s.id === id);
-
-  return (
-    <section id="social-media" className="scroll-mt-20 bg-[var(--bg-dark)] py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl px-5 sm:px-10">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <div className="section-index justify-center">
-            <span className="num">IV</span>
-            <span className="line" />
-            <span className="eyebrow">Social media</span>
-          </div>
-          <h2 className="font-serif-display mt-4 text-[clamp(2.5rem,9vw,4.25rem)] font-medium leading-[1] text-[var(--text-primary)]">
-            Your page, handled
-          </h2>
-          <Flourish center />
-          <p className="mt-6 text-[1.05rem] leading-relaxed text-[var(--text-secondary)] sm:text-[1.1rem]">
-            Monthly management of your social media: content, design, security and growth, done for you.
-          </p>
-        </Reveal>
-        <div className="mt-12 space-y-10 sm:mt-16">
-          {groups.map((group) =>
-            group.layout === "cards" ? (
-              <CardGroup key={group.name} group={group} isSelected={isSelected} />
-            ) : (
-              <ListGroup key={group.name} group={group} isSelected={isSelected} bookable />
-            )
-          )}
-        </div>
       </div>
     </section>
   );

@@ -109,6 +109,31 @@ export function categoryPage(group: Group, description: string) {
   };
 }
 
+/** /social-media: the monthly management service and its plans as offers. */
+export function socialMediaService(plans: { name: string; price: string; features: string[] }[], description: string) {
+  const offers = plans.map((p) => {
+    const amount = p.price.replace(/[^0-9.]/g, "");
+    return {
+      "@type": "Offer",
+      name: p.name,
+      ...(amount ? { price: amount, priceCurrency: "USD" } : {}),
+      ...(p.features.length ? { description: p.features.join(", ") } : {}),
+    };
+  });
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${absoluteUrl("/social-media")}#service`,
+    name: "Social media management",
+    serviceType: "Social media management",
+    description,
+    url: absoluteUrl("/social-media"),
+    provider: { "@id": ORG_ID },
+    areaServed: { "@type": "Country", name: site.location.country },
+    ...(offers.length ? { hasOfferCatalog: { "@type": "OfferCatalog", name: "Social media management plans", itemListElement: offers } } : {}),
+  };
+}
+
 export type Crumb = { name: string; path: string };
 
 export function breadcrumbList(crumbs: Crumb[]) {

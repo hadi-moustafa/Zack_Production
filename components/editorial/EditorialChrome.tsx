@@ -48,7 +48,7 @@ export default async function EditorialChrome({
 
   // In page order: Clients sits after Work.
   const links: EdNavLink[] = SECTIONS.flatMap((s) => {
-    const link = { href: `/#${s.id}`, label: s.label, preview: preview[s.id] ?? null };
+    const link = { href: s.href, label: s.label, preview: preview[s.id] ?? null };
     return s.id === "gallery" && CLIENT_LOGOS.length ? [link, { href: "/#clients", label: "Clients", preview: preview.clients }] : [link];
   });
 

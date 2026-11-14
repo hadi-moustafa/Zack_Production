@@ -38,6 +38,7 @@ export default async function NotFound() {
                 { href: "/about", title: `About ${site.founder}`, meta: "Behind the lens" },
                 { href: "/clients", title: "Our clients", meta: "Who trusted us" },
                 { href: "/#pricing", title: "Packages & pricing", meta: "The rate card" },
+                { href: "/social-media", title: "Social media management", meta: "Monthly plans" },
                 { href: "/#contact", title: "Get in touch", meta: "Book a shoot" },
               ]}
             />
@@ -65,7 +66,7 @@ export default async function NotFound() {
             {SECTIONS.map((s) => (
               <li key={s.id}>
                 <Link
-                  href={`/#${s.id}`}
+                  href={s.href}
                   className="group flex h-full min-h-24 flex-col justify-between rounded-xl border border-[var(--border-subtle)] p-6 transition hover:border-[var(--accent-gold)]"
                 >
                   <span className="text-lg font-semibold text-[var(--text-primary)]">{s.description}</span>

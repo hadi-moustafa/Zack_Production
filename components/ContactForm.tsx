@@ -47,7 +47,7 @@ export default function ContactForm({
       <div className="relative mx-auto max-w-6xl px-5 sm:px-10">
         <Reveal className="mx-auto max-w-2xl text-center">
           <div className="section-index justify-center">
-            <span className="num">V</span>
+            <span className="num">IV</span>
             <span className="line" />
             <span className="eyebrow">Get in touch</span>
           </div>

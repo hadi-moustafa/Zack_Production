@@ -45,11 +45,14 @@ export function absoluteUrl(path = "/") {
   return `${site.url}${path === "/" ? "/" : path}`;
 }
 
-/** Sections of the one-page site, used by the nav, footer and llms.txt. */
+/**
+ * The main nav, in order: sections of the home page (href "/#id"), plus Social
+ * Media, which has a page of its own. Used by the nav, footer, 404 and llms.txt.
+ */
 export const SECTIONS = [
-  { id: "about", label: "Who We Are", description: "Meet Zack, the photographer and filmmaker behind Zack Production" },
-  { id: "gallery", label: "Work", description: "Wedding, graduation, food and promotional photography and films" },
-  { id: "pricing", label: "Packages & Pricing", description: "Photography, film and makeup shoot packages, in USD" },
-  { id: "social-media", label: "Social Media", description: "Monthly social media management packages, in USD" },
-  { id: "contact", label: "Contact", description: "Book a shoot or ask a question" },
+  { id: "about", href: "/#about", label: "Who We Are", description: "Meet Zack, the photographer and filmmaker behind Zack Production" },
+  { id: "gallery", href: "/#gallery", label: "Work", description: "Wedding, graduation, food and promotional photography and films" },
+  { id: "pricing", href: "/#pricing", label: "Packages & Pricing", description: "Photography, film and makeup shoot packages, in USD" },
+  { id: "social-media", href: "/social-media", label: "Social Media", description: "Monthly social media management packages, in USD" },
+  { id: "contact", href: "/#contact", label: "Contact", description: "Book a shoot or ask a question" },
 ] as const;
