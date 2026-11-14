@@ -146,6 +146,10 @@
   border-radius: 0;
   font-weight: 500;
 }
+/* On night the ink is nude, so the label takes the night colour. */
+[data-design="editorial"] .ed-night .btn-gold {
+  color: var(--ed-night);
+}
 [data-design="editorial"] .btn-gold:hover {
   box-shadow: none;
   opacity: 0.85;

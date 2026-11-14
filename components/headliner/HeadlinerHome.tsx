@@ -5,6 +5,7 @@ import HlAbout from "@/components/headliner/HlAbout";
 import HlClients from "@/components/headliner/HlClients";
 import HlWork from "@/components/headliner/HlWork";
 import HlPricing from "@/components/headliner/HlPricing";
+import { SocialHome } from "@/components/social/SocialFeed";
 import HlContact from "@/components/headliner/HlContact";
 import type { HomeData } from "@/lib/homeData";
 
@@ -41,6 +42,7 @@ export default function HeadlinerHome({ data }: { data: HomeData }) {
       <HlClients clients={clients} />
       <HlWork photos={photos} categories={categories} />
       <HlPricing packages={pricingPackages} description={content.pricing_description} paymentNote={content.pricing_payment_note} />
+      <SocialHome packages={pricingPackages} photos={photos} />
       <HlContact description={content.contact_description} contact={contact} socialLinks={socialLinks} instagramReel={instagramReel} />
     </main>
   );

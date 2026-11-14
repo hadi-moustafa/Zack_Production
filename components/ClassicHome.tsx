@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Work from "@/components/Work";
 import Pricing from "@/components/Pricing";
+import { SocialHome } from "@/components/social/SocialFeed";
 import ContactForm from "@/components/ContactForm";
 import { OrnamentDivider } from "@/components/Ornaments";
 import type { HomeData } from "@/lib/homeData";
@@ -37,6 +38,7 @@ export default function ClassicHome({ data }: { data: HomeData }) {
         description={content.pricing_description}
         paymentNote={content.pricing_payment_note}
       />
+      <SocialHome packages={pricingPackages} photos={photos} />
       <OrnamentDivider />
       <ContactForm
         description={content.contact_description}

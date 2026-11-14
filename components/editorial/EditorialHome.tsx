@@ -8,12 +8,13 @@ import EdStills from "@/components/editorial/EdStills";
 import EdClients from "@/components/editorial/EdClients";
 import EdCapabilities from "@/components/editorial/EdCapabilities";
 import EdPricing from "@/components/editorial/EdPricing";
+import { SocialHome } from "@/components/social/SocialFeed";
 import EdInquiry from "@/components/editorial/EdInquiry";
 import type { HomeData } from "@/lib/homeData";
 
 // The Editorial home page, built from the same content as the other designs:
 // hero → award → about → work index → films → stills → clients →
-// capabilities → rate card → inquiry (the footer lives in EditorialChrome).
+// capabilities → rate card → social media → inquiry (the footer lives in EditorialChrome).
 export default function EditorialHome({ data }: { data: HomeData }) {
   const { photos, categories, pricingPackages, siteData, instagramReel } = data;
   const { content, contact } = siteData;
@@ -39,6 +40,7 @@ export default function EditorialHome({ data }: { data: HomeData }) {
       <EdClients />
       <EdCapabilities groups={groups} />
       <EdPricing packages={pricingPackages} description={content.pricing_description} paymentNote={content.pricing_payment_note} />
+      <SocialHome packages={pricingPackages} photos={photos} />
       <EdInquiry headline={content.editorial_inquiry} description={content.contact_description} contact={contact} instagramReel={instagramReel} />
     </main>
   );
